@@ -1,0 +1,497 @@
+/* 排行榜页面样式 */
+
+.leaderboard-page {
+  min-height: 100vh;
+  background-color: #f9f7f9;
+  color: #333;
+  line-height: 1.5;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 顶部导航栏 */
+.leaderboard-page .nav-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(221, 194, 230, 0.3);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 100;
+}
+
+.leaderboard-page .nav-top .back-btn {
+  font-size: 20px;
+  color: #9d65c9;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+.leaderboard-page .nav-top .title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #5a3372;
+  flex: 1;
+  text-align: center;
+}
+
+.leaderboard-page .nav-top .home-btn {
+  font-size: 20px;
+  color: #9d65c9;
+  cursor: pointer;
+}
+
+/* 页面容器 */
+.leaderboard-page .container {
+  padding: 66px 20px 80px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* 子页面切换标签 */
+.leaderboard-page .tab-container {
+  display: flex;
+  background-color: #f0e6f5;
+  border-radius: 25px;
+  padding: 4px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+}
+
+.leaderboard-page .tab-btn {
+  flex: 1;
+  height: 36px;
+  border-radius: 20px;
+  background-color: transparent;
+  color: #7a5490;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.leaderboard-page .tab-btn.active {
+  background-color: #fff;
+  color: #9d65c9;
+  box-shadow: 0 2px 6px rgba(157, 101, 201, 0.2);
+}
+
+/* 排行榜页面 */
+.leaderboard-page .ranking-page {
+  display: block;
+}
+
+/* 榜单类型切换 */
+.leaderboard-page .ranking-tab {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.leaderboard-page .ranking-type {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  background-color: #fff;
+  color: #666;
+  border: 1px solid #e0d0e8;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.leaderboard-page .ranking-type.active {
+  background-color: #f0e6f5;
+  border-color: #9d65c9;
+  color: #9d65c9;
+  font-weight: 500;
+}
+
+/* 我的排名 */
+.leaderboard-page .my-rank {
+  background-color: #f0e6f5;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.leaderboard-page .my-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 18px;
+  border: 2px solid #9d65c9;
+}
+
+.leaderboard-page .my-info {
+  flex: 1;
+}
+
+.leaderboard-page .my-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.leaderboard-page .my-rank-desc {
+  font-size: 13px;
+  color: #7a5490;
+}
+
+.leaderboard-page .my-score {
+  font-size: 15px;
+  font-weight: 600;
+  color: #9d65c9;
+}
+
+/* 前三名展示 */
+.leaderboard-page .top3-ranking {
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 25px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(221, 194, 230, 0.2);
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.leaderboard-page .top-ranker {
+  text-align: center;
+  flex: 1;
+  position: relative;
+}
+
+.leaderboard-page .rank-medal {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0 auto 8px;
+}
+
+.leaderboard-page .medal-1 {
+  background-color: #ffd700;
+}
+
+.leaderboard-page .medal-2 {
+  background-color: #c0c0c0;
+}
+
+.leaderboard-page .medal-3 {
+  background-color: #cd7f32;
+}
+
+.leaderboard-page .top-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 18px;
+  margin: 0 auto 8px;
+}
+
+.leaderboard-page .top-name {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.leaderboard-page .top-score {
+  font-size: 14px;
+  font-weight: 600;
+  color: #9d65c9;
+}
+
+/* 榜单列表（4名及以后） */
+.leaderboard-page .ranking-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.leaderboard-page .ranker-item {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 2px 6px rgba(221, 194, 230, 0.1);
+}
+
+.leaderboard-page .rank-number {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #888;
+  background-color: #f9f7f9;
+}
+
+.leaderboard-page .rank-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 16px;
+}
+
+.leaderboard-page .rank-info {
+  flex: 1;
+}
+
+.leaderboard-page .rank-name {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.leaderboard-page .rank-desc {
+  font-size: 12px;
+  color: #888;
+}
+
+.leaderboard-page .rank-score {
+  font-size: 14px;
+  font-weight: 600;
+  color: #9d65c9;
+}
+
+/* 广告征集页面样式 */
+.leaderboard-page .ad-page {
+  display: none;
+}
+
+.leaderboard-page .ad-page.active {
+  display: block;
+}
+
+/* 广告头部banner */
+.leaderboard-page .ad-banner {
+  background: linear-gradient(135deg, #f0e6f5 0%, #e0d0e8 100%);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 25px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(221, 194, 230, 0.2);
+}
+
+.leaderboard-page .ad-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #5a3372;
+  margin-bottom: 10px;
+}
+
+.leaderboard-page .ad-subtitle {
+  font-size: 14px;
+  color: #7a5490;
+  margin-bottom: 15px;
+}
+
+.leaderboard-page .ad-btn {
+  padding: 10px 25px;
+  border-radius: 25px;
+  background-color: #9d65c9;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(157, 101, 201, 0.3);
+}
+
+/* 奖品展示区 */
+.leaderboard-page .prize-section {
+  margin-bottom: 25px;
+}
+
+.leaderboard-page .section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #5a3372;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+}
+
+.leaderboard-page .section-title::after {
+  content: "";
+  width: 4px;
+  height: 16px;
+  background-color: #c888d8;
+  margin-right: 8px;
+}
+
+.leaderboard-page .prize-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.leaderboard-page .prize-card {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(221, 194, 230, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.leaderboard-page .prize-card:hover {
+  transform: translateY(-3px);
+}
+
+.leaderboard-page .prize-img {
+  height: 160px;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 40px;
+  position: relative;
+}
+
+.leaderboard-page .prize-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff6b8b;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.leaderboard-page .prize-info {
+  padding: 12px 15px;
+}
+
+.leaderboard-page .prize-name {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.leaderboard-page .prize-desc {
+  font-size: 12px;
+  color: #888;
+}
+
+/* 规则说明区 */
+.leaderboard-page .rule-section {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+}
+
+.leaderboard-page .rule-list {
+  padding-left: 20px;
+}
+
+.leaderboard-page .rule-item {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.leaderboard-page .rule-item:last-child {
+  margin-bottom: 0;
+}
+
+.leaderboard-page .rule-item .highlight {
+  font-weight: 600;
+  color: #9d65c9;
+}
+
+/* 已入选名单 */
+.leaderboard-page .winner-section {
+  margin-bottom: 20px;
+}
+
+.leaderboard-page .winner-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.leaderboard-page .winner-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 14px;
+  position: relative;
+}
+
+.leaderboard-page .winner-avatar::after {
+  content: "🎁";
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  font-size: 12px;
+}
+
+/* 底部提示 */
+.leaderboard-page .bottom-tip {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #888;
+  border-top: 1px solid #f0e6f5;
+  z-index: 90;
+}
+
+.leaderboard-page .bottom-tip span {
+  color: #9d65c9;
+  margin: 0 3px;
+}

@@ -1,0 +1,379 @@
+/* MainSchedulePage.css */
+
+/* Custom Tailwind CSS variables and utilities */
+:root {
+  --color-study: #3b82f6;
+  --color-life: #10b981;
+  --color-play: #f59e0b;
+  --color-work: #6366f1;
+  --color-ai: #10b981;
+  --color-warning: #ef4444;
+  --color-frequent: #8b5cf6;
+  --color-primary: #6366f1;
+}
+
+.main-schedule-page {
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* Custom scrollbar styles */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 2px;
+}
+
+/* Color utility classes */
+.text-study {
+  color: var(--color-study);
+}
+
+.text-life {
+  color: var(--color-life);
+}
+
+.text-play {
+  color: var(--color-play);
+}
+
+.text-work {
+  color: var(--color-work);
+}
+
+.text-ai {
+  color: var(--color-ai);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-frequent {
+  color: var(--color-frequent);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.bg-study {
+  background-color: var(--color-study);
+}
+
+.bg-life {
+  background-color: var(--color-life);
+}
+
+.bg-play {
+  background-color: var(--color-play);
+}
+
+.bg-work {
+  background-color: var(--color-work);
+}
+
+.bg-ai {
+  background-color: var(--color-ai);
+}
+
+.bg-warning {
+  background-color: var(--color-warning);
+}
+
+.bg-frequent {
+  background-color: var(--color-frequent);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+/* Background with opacity */
+.bg-study\/10 {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.bg-life\/10 {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.bg-play\/10 {
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+.bg-work\/10 {
+  background-color: rgba(99, 102, 241, 0.1);
+}
+
+.bg-ai\/10 {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.bg-ai\/5 {
+  background-color: rgba(16, 185, 129, 0.05);
+}
+
+.bg-primary\/10 {
+  background-color: rgba(99, 102, 241, 0.1);
+}
+
+.bg-primary\/5 {
+  background-color: rgba(99, 102, 241, 0.05);
+}
+
+.bg-primary\/90 {
+  background-color: rgba(99, 102, 241, 0.9);
+}
+
+/* Border colors */
+.border-study {
+  border-color: var(--color-study);
+}
+
+.border-life {
+  border-color: var(--color-life);
+}
+
+.border-play {
+  border-color: var(--color-play);
+}
+
+.border-work {
+  border-color: var(--color-work);
+}
+
+.border-ai\/30 {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.border-ai\/20 {
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.border-primary {
+  border-color: var(--color-primary);
+}
+
+.border-primary\/30 {
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Task item hover effects */
+.task-item:hover {
+  background-color: rgba(249, 250, 251, 1);
+}
+
+/* Time slot styles */
+.time-slot {
+  transition: all 0.2s ease-in-out;
+}
+
+.time-slot:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Mood button styles */
+.mood-btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.mood-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Chart container styles */
+.chart-container {
+  position: relative;
+  height: 160px;
+  width: 100%;
+}
+
+/* Animation for task expansion */
+.task-expansion {
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+.task-expansion.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+.task-expansion.expanded {
+  max-height: 500px;
+  opacity: 1;
+}
+
+/* AI recommendation styles */
+.ai-recommendation {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.1));
+  border-left: 3px solid var(--color-ai);
+}
+
+/* High frequency task indicator */
+.high-frequency-indicator {
+  background: linear-gradient(45deg, var(--color-frequent), #a855f7);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+/* Warning task indicator */
+.warning-indicator {
+  background: linear-gradient(45deg, var(--color-warning), #f87171);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Progress bar styles */
+.progress-bar {
+  background: linear-gradient(90deg, var(--color-primary), #8b5cf6);
+  border-radius: 9999px;
+  transition: width 0.5s ease-in-out;
+}
+
+/* Filter tag active state */
+.filter-tag.active {
+  background: var(--color-primary);
+  color: white;
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+}
+
+/* Status indicators */
+.status-completed {
+  color: #10b981;
+}
+
+.status-in-progress {
+  color: #3b82f6;
+}
+
+.status-pending {
+  color: #f59e0b;
+}
+
+/* Quick input area */
+.quick-input {
+  background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.quick-input:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Statistics cards */
+.stat-card {
+  background: linear-gradient(135deg, #ffffff, #f9fafb);
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease-in-out;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Full stats page slide animation */
+.full-stats-enter {
+  transform: translateX(100%);
+}
+
+.full-stats-enter-active {
+  transform: translateX(0);
+  transition: transform 300ms ease-in-out;
+}
+
+.full-stats-exit {
+  transform: translateX(0);
+}
+
+.full-stats-exit-active {
+  transform: translateX(100%);
+  transition: transform 300ms ease-in-out;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .main-schedule-page {
+    padding: 0;
+  }
+  
+  .grid.lg\\:grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .lg\\:col-span-1,
+  .lg\\:col-span-2 {
+    grid-column: span 1;
+  }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  .main-schedule-page {
+    background-color: #111827;
+    color: #f9fafb;
+  }
+  
+  .bg-white {
+    background-color: #1f2937;
+  }
+  
+  .bg-gray-50 {
+    background-color: #374151;
+  }
+  
+  .border-gray-100 {
+    border-color: #374151;
+  }
+  
+  .text-gray-500 {
+    color: #9ca3af;
+  }
+  
+  .text-gray-600 {
+    color: #d1d5db;
+  }
+  
+  .text-gray-700 {
+    color: #e5e7eb;
+  }
+}
+
+/* Accessibility improvements */
+.task-item:focus,
+.mood-btn:focus,
+button:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .main-schedule-page {
+    background: white;
+    color: black;
+  }
+  
+  .shadow-sm,
+  .shadow-lg {
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+  }
+} 

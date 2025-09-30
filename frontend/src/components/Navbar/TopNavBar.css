@@ -1,0 +1,36 @@
+/* TopNavBar.css */
+.top-nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.top-nav-bar .scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.top-nav-bar .scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.top-nav-bar .scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 2px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .top-nav-bar {
+    position: sticky;
+  }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .top-nav-bar {
+    background: #1f2937;
+    border-color: #374151;
+  }
+}

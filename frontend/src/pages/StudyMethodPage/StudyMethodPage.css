@@ -1,0 +1,100 @@
+/* StudyMethodPage.css - 学习方法区页面样式 */
+
+.study-method-page {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.study-method-content {
+  padding: 1rem;
+  padding-bottom: 6rem; /* 为底部导航留出空间 */
+}
+
+.study-method-card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.study-method-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.study-method-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.study-method-description {
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.study-method-icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 6rem;
+  height: 6rem;
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.study-method-icon {
+  font-size: 3rem;
+  color: #2563eb;
+}
+
+.coming-soon-text {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .study-method-content {
+    padding: 0.75rem;
+    padding-bottom: 6rem;
+  }
+  
+  .study-method-card {
+    padding: 1rem;
+  }
+  
+  .study-method-title {
+    font-size: 1.25rem;
+  }
+  
+  .study-method-icon-container {
+    width: 5rem;
+    height: 5rem;
+  }
+  
+  .study-method-icon {
+    font-size: 2.5rem;
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.study-method-card {
+  animation: fadeIn 0.5s ease-out;
+} 

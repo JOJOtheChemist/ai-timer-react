@@ -1,0 +1,418 @@
+/* 消息界面页面样式 */
+
+.message-page {
+  min-height: 100vh;
+  background-color: #f9f7f9;
+  color: #333;
+  line-height: 1.5;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 顶部导航栏 */
+.message-page .nav-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(221, 194, 230, 0.3);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 100;
+}
+
+.message-page .nav-top .back-btn {
+  font-size: 20px;
+  color: #9d65c9;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+.message-page .nav-top .title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #5a3372;
+  flex: 1;
+  text-align: center;
+}
+
+.message-page .nav-top .setting-btn {
+  font-size: 20px;
+  color: #9d65c9;
+  cursor: pointer;
+}
+
+/* 页面容器 */
+.message-page .container {
+  padding: 56px 0 10px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* 标签页切换 */
+.message-page .tab-container {
+  display: flex;
+  background-color: #fff;
+  border-bottom: 1px solid #f0e6f5;
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  max-width: 500px;
+  margin: 0 auto;
+  z-index: 90;
+}
+
+.message-page .tab-btn {
+  flex: 1;
+  padding: 14px 0;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  color: #666;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.message-page .tab-btn.active {
+  color: #9d65c9;
+}
+
+.message-page .tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background-color: #9d65c9;
+  border-radius: 3px;
+}
+
+.message-page .tab-btn .badge {
+  position: absolute;
+  top: 8px;
+  right: 30%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #ff6b8b;
+  color: white;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 消息列表容器 */
+.message-page .msg-container {
+  padding: 70px 20px 15px;
+  min-height: calc(100vh - 120px);
+}
+
+.message-page .msg-container.active {
+  display: block;
+}
+
+/* 搜索栏（仅私信页有） */
+.message-page .search-bar {
+  height: 40px;
+  background-color: #f9f7f9;
+  border-radius: 20px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.message-page .search-bar i {
+  color: #c1a3d1;
+  margin-right: 8px;
+}
+
+.message-page .search-bar input {
+  border: none;
+  outline: none;
+  flex: 1;
+  background-color: transparent;
+  font-size: 14px;
+  color: #666;
+}
+
+.message-page .search-bar input::placeholder {
+  color: #d1c0d9;
+}
+
+/* 消息项通用样式 */
+.message-page .msg-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.message-page .msg-item {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 1px 4px rgba(221, 194, 230, 0.15);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.message-page .msg-item:hover {
+  background-color: #f9f7f9;
+}
+
+.message-page .msg-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.message-page .msg-avatar.tutor {
+  background-color: #e6f5f0;
+  color: #65c985;
+}
+
+.message-page .msg-avatar.system {
+  background-color: #f5e6f0;
+  color: #c9659d;
+}
+
+.message-page .msg-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.message-page .msg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.message-page .msg-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.message-page .msg-time {
+  font-size: 12px;
+  color: #a88cb8;
+}
+
+.message-page .msg-text {
+  font-size: 13px;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.message-page .msg-text.highlight {
+  color: #9d65c9;
+  font-weight: 500;
+}
+
+.message-page .msg-badge {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ff6b8b;
+  display: inline-block;
+}
+
+.message-page .msg-tag {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background-color: #e6f5f0;
+  color: #65c985;
+  margin-left: 5px;
+}
+
+/* 导师反馈详情弹窗 */
+.message-page .detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.message-page .detail-modal.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.message-page .modal-content {
+  background-color: #fff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.message-page .modal-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0e6f5;
+  margin-bottom: 20px;
+}
+
+.message-page .modal-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #e6f5f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #65c985;
+  font-size: 24px;
+}
+
+.message-page .modal-info {
+  flex: 1;
+}
+
+.message-page .modal-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #5a3372;
+  margin-bottom: 4px;
+}
+
+.message-page .modal-meta {
+  font-size: 12px;
+  color: #a88cb8;
+}
+
+.message-page .close-modal {
+  font-size: 24px;
+  color: #a88cb8;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.message-page .modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.message-page .feedback-item {
+  background-color: #f9f7f9;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.message-page .feedback-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.message-page .feedback-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #5a3372;
+}
+
+.message-page .feedback-time {
+  font-size: 11px;
+  color: #a88cb8;
+}
+
+.message-page .feedback-content {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.message-page .feedback-highlight {
+  color: #9d65c9;
+  font-weight: 500;
+}
+
+.message-page .feedback-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.message-page .feedback-btn {
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+}
+
+.message-page .feedback-btn.primary {
+  background-color: #f0e6f5;
+  color: #9d65c9;
+}
+
+.message-page .feedback-btn.secondary {
+  background-color: #f9f7f9;
+  color: #888;
+  border: 1px solid #e0d0e8;
+}
+
+/* 底部提示 */
+.message-page .bottom-tip {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #888;
+  border-top: 1px solid #f0e6f5;
+  z-index: 80;
+}
+
+.message-page .bottom-tip span {
+  color: #9d65c9;
+  margin: 0 3px;
+}

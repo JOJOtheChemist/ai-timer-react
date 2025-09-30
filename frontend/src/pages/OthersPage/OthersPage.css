@@ -1,0 +1,375 @@
+/* 他人界面页面样式 */
+
+.others-page {
+  min-height: 100vh;
+  background-color: #f9f7f9;
+  color: #333;
+  line-height: 1.5;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 顶部导航栏 */
+.others-page .page-header {
+  height: 56px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 2px 8px rgba(221, 194, 230, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.others-page .back-btn {
+  font-size: 20px;
+  color: #5a3372;
+  cursor: pointer;
+}
+
+.others-page .page-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #5a3372;
+  flex: 1;
+  text-align: center;
+}
+
+.others-page .more-btn {
+  font-size: 20px;
+  color: #5a3372;
+  cursor: pointer;
+}
+
+/* 页面容器 */
+.others-page .container {
+  padding: 0 20px 80px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* 个人信息卡（访客视角） */
+.others-page .profile-card {
+  background: linear-gradient(135deg, #f0e6f5 0%, #e0d0e8 100%);
+  border-radius: 18px;
+  padding: 20px;
+  margin: 15px 0 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(221, 194, 230, 0.2);
+}
+
+.others-page .profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 36px;
+  margin-bottom: 12px;
+  border: 3px solid #fff;
+}
+
+.others-page .profile-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #5a3372;
+  margin-bottom: 5px;
+}
+
+.others-page .profile-meta {
+  font-size: 13px;
+  color: #7a5490;
+  margin-bottom: 15px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* 核心数据统计区（访客可见版） */
+.others-page .core-stats {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  padding: 5px 0 10px;
+}
+
+.others-page .stat-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 70px;
+}
+
+.others-page .stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #5a3372;
+}
+
+.others-page .stat-label {
+  font-size: 12px;
+  color: #7a5490;
+}
+
+/* 访客操作区 */
+.others-page .visitor-action {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.others-page .follow-btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  background-color: #9d65c9;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(157, 101, 201, 0.2);
+}
+
+.others-page .follow-btn.following {
+  background-color: #f0e6f5;
+  color: #9d65c9;
+}
+
+.others-page .message-btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  background-color: #fff;
+  color: #9d65c9;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #9d65c9;
+  cursor: pointer;
+}
+
+/* 学习成果展示区 */
+.others-page .achievement-section {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+}
+
+.others-page .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.others-page .section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #5a3372;
+}
+
+.others-page .section-more {
+  font-size: 12px;
+  color: #9d65c9;
+  cursor: pointer;
+}
+
+/* 徽章墙（访客可见版） */
+.others-page .badge-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.others-page .badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.others-page .badge-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.others-page .badge-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 动态展示区 */
+.others-page .post-section {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+}
+
+.others-page .post-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #f0e6f5;
+}
+
+.others-page .post-item:last-child {
+  border-bottom: none;
+}
+
+.others-page .post-date {
+  font-size: 12px;
+  color: #a88cb8;
+  margin-bottom: 8px;
+}
+
+.others-page .post-content {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.others-page .post-media {
+  width: 100%;
+  height: 180px;
+  border-radius: 8px;
+  background-color: #f0e6f5;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.others-page .post-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.others-page .post-actions {
+  display: flex;
+  gap: 15px;
+  font-size: 13px;
+  color: #888;
+}
+
+.others-page .post-action {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.others-page .post-action.liked {
+  color: #ff6b8b;
+}
+
+/* 徽章详情弹窗 */
+.others-page .badge-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.others-page .badge-modal.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.others-page .modal-content {
+  background-color: #fff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.others-page .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0e6f5;
+}
+
+.others-page .modal-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #5a3372;
+}
+
+.others-page .close-modal {
+  font-size: 20px;
+  color: #a88cb8;
+  cursor: pointer;
+}
+
+.others-page .badge-detail-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.others-page .badge-detail-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 36px;
+  margin-bottom: 15px;
+}
+
+.others-page .badge-detail-name {
+  font-size: 18px;
+  color: #5a3372;
+  margin-bottom: 8px;
+}
+
+.others-page .badge-detail-desc {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  max-width: 300px;
+}
+
+.others-page .badge-detail-date {
+  font-size: 13px;
+  color: #a88cb8;
+}

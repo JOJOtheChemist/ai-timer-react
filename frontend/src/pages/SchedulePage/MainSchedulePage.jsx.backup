@@ -1,0 +1,525 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import { Bar, Doughnut } from 'react-chartjs-2';
+import TaskItem from './Components/TaskItem';
+import TimeSlot from './Components/TimeSlot';
+import TopNavBar from "../../components/common/TopNavBar";
+import BottomNavBar from '../../components/common/BottomNavBar';
+import './MainSchedulePage.css';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
+
+const MainSchedulePage = () => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("我的时间表");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [expandedTasks, setExpandedTasks] = useState({});
+  const [activeFilter, setActiveFilter] = useState("全部");
+  const [showFullStats, setShowFullStats] = useState(false);
+  const [quickInput, setQuickInput] = useState("");
+  const [selectedMoods, setSelectedMoods] = useState({});
+  // 任务数据
+  const [tasks] = useState([
+    {
+      id: 1,
+      name: '考研复习',
+      category: '学习',
+      type: 'study',
+      isHighFrequency: true,
+      weeklyHours: 8.5,
+      subTasks: [
+        { id: 11, name: '英语阅读训练', isHighFrequency: true, hours: 3 },
+        { id: 12, name: '数学公式背诵', isOvercome: true, hours: 2 },
+        { id: 13, name: '专业课复习', hours: 3.5 }
+      ]
+    },
+    {
+      id: 2,
+      name: '日常作息',
+      category: '生活',
+      type: 'life',
+      weeklyHours: 5,
+      subTasks: []
+    },
+    {
+      id: 3,
+      name: '兼职工作',
+      category: '工作',
+      type: 'work',
+      weeklyHours: 4,
+      subTasks: [
+        { id: 31, name: '撰写报告', isOvercome: true, hours: 2.5 },
+        { id: 32, name: '整理资料', isHighFrequency: true, hours: 1.5 }
+      ]
+    },
+    {
+      id: 4,
+      name: '运动健身',
+      category: '生活',
+      type: 'life',
+      isHighFrequency: true,
+      weeklyHours: 2.5,
+      subTasks: []
+    }
+  ]);
+
+  // 时间表数据
+  const [timeSlots] = useState([
+    {
+      id: 1,
+      time: '07:30-08:30',
+      task: '数学公式背诵',
+      category: '学习',
+      type: 'study',
+      isOvercome: true,
+      status: 'completed',
+      note: '完成了微积分前3章公式背诵，正确率85%',
+      mood: 'focused'
+    },
+    {
+      id: 2,
+      time: '09:00-11:00',
+      task: '英语阅读训练',
+      category: '学习',
+      type: 'study',
+      isHighFrequency: true,
+      status: 'in-progress',
+      note: '完成2篇考研阅读，重点突破长难句分析',
+      aiRecommendation: '每篇阅读控制在18分钟内，完成后花2分钟总结错题类型',
+      mood: 'happy'
+    },
+    {
+      id: 3,
+      time: '11:00-13:00',
+      task: '午餐与休息',
+      category: '生活',
+      type: 'life',
+      status: 'pending',
+      isAIRecommended: true,
+      aiRecommendation: '午餐后休息15分钟，可提高下午学习效率30%'
+    },
+    {
+      id: 4,
+      time: '14:00-16:00',
+      task: '专业课复习',
+      category: '学习',
+      type: 'study',
+      status: 'pending',
+      note: '重点复习第5章，结合课堂笔记和习题'
+    },
+    {
+      id: 5,
+      time: '16:00-18:00',
+      task: null,
+      status: 'empty',
+      aiRecommendation: '安排运动健身（根据你的高频任务）'
+    }
+  ]);
+
+  // 图表数据
+  const weeklyChartData = {
+    labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+    datasets: [
+      {
+        label: '学习',
+        data: [1.5, 2, 0, 1.5, 3.5, 0, 0],
+        backgroundColor: '#3b82f6',
+        borderRadius: 3
+      },
+      {
+        label: '生活',
+        data: [1, 1, 0, 1, 2, 0, 0],
+        backgroundColor: '#10b981',
+        borderRadius: 3
+      },
+      {
+        label: '工作',
+        data: [0, 0, 2, 2, 0, 0, 0],
+        backgroundColor: '#6366f1',
+        borderRadius: 3
+      }
+    ]
+  };
+
+  const detailedChartData = {
+    labels: ['学习', '生活', '工作', '玩乐'],
+    datasets: [{
+      data: [8.5, 5, 4, 2],
+      backgroundColor: ['#3b82f6', '#10b981', '#6366f1', '#f59e0b'],
+      borderWidth: 0
+    }]
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { stacked: true },
+      y: {
+        stacked: true,
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: '时长(小时)',
+          font: { size: 10 }
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          boxWidth: 8,
+          padding: 10,
+          font: { size: 10 }
+        }
+      }
+    }
+  };
+
+  const doughnutOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          boxWidth: 10,
+          padding: 15,
+          font: { size: 11 }
+        }
+      }
+    }
+  };
+
+  // 切换任务展开状态
+  const toggleTaskExpansion = (taskId) => {
+    setExpandedTasks(prev => ({
+      ...prev,
+      [taskId]: !prev[taskId]
+    }));
+  };
+
+  // 设置心情
+  const setMood = (slotId, mood) => {
+    setSelectedMoods(prev => ({
+      ...prev,
+      [slotId]: mood
+    }));
+  };
+
+  // 获取心情图标
+  const getMoodIcon = (mood) => {
+    switch (mood) {
+      case 'happy': return 'fa-smile-o';
+      case 'focused': return 'fa-eye';
+      case 'tired': return 'fa-frown-o';
+      default: return 'fa-plus';
+    }
+  };
+
+  // 获取心情样式
+  const getMoodStyle = (mood) => {
+    switch (mood) {
+      case 'happy': return 'bg-yellow-100 text-yellow-500';
+      case 'focused': return 'bg-blue-100 text-blue-500';
+      case 'tired': return 'bg-red-100 text-red-500';
+      default: return 'bg-gray-100 text-gray-500';
+    }
+  };
+
+  // 获取任务类型图标
+  const getTaskIcon = (type) => {
+    switch (type) {
+      case 'study': return 'fa-book';
+      case 'life': return 'fa-home';
+      case 'work': return 'fa-briefcase';
+      case 'play': return 'fa-gamepad';
+      default: return 'fa-circle-o';
+    }
+  };
+
+  // 获取任务类型颜色
+  const getTaskColor = (type) => {
+    switch (type) {
+      case 'study': return 'study';
+      case 'life': return 'life';
+      case 'work': return 'work';
+      case 'play': return 'play';
+      default: return 'gray-500';
+    }
+  };
+
+  // 获取状态图标
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'completed': return 'fa-check-circle text-green-500';
+      case 'in-progress': return 'fa-clock-o text-blue-500';
+      case 'pending': return 'fa-hourglass-half text-yellow-500';
+      default: return 'fa-plus-circle text-gray-400';
+    }
+  };
+
+  // 处理标签栏点击
+  const handleTabClick = (tab) => {
+    if (tab === "上岸时间表") {
+      navigate("/schedule");
+    } else if (tab === "导师推荐") {
+      navigate("/tutor");
+    } else {
+      setActiveTab(tab);
+    }
+  };
+  return (
+    <div className="main-schedule-page bg-gray-50 font-sans text-gray-800">
+      <TopNavBar />      {/* 主内容区 */}
+      <TopNavBar />
+      <main className="px-4 py-3">
+        <div className="bg-white rounded-xl shadow-sm p-3 mb-3">
+          <div className="flex flex-wrap justify-between items-center gap-2">
+            <div>
+              <div className="text-sm font-medium">2025年9月19日 星期五</div>
+              <div className="text-xs text-gray-500">9月第3周 · 已完成 3/8 任务</div>
+            </div>
+            <div className="flex items-center gap-4">
+              </div>
+              <button className="text-xs bg-primary/10 text-primary px-2.5 py-1 rounded-full">
+                周视图
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 核心功能区：任务列表 + 时间表 */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-4">
+          {/* 左侧：任务列表（带标记和统计） */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-xl shadow-sm p-3 h-full">
+              {/* 标签筛选 */}
+              <div className="flex gap-2 mb-3 overflow-x-auto scrollbar-thin pb-1">
+                {['全部', '学习', '生活', '玩乐', '工作'].map(filter => (
+                  <button
+                    key={filter}
+                    className={`px-3 py-1 rounded-full text-xs whitespace-nowrap ${
+                      activeFilter === filter
+                        ? 'bg-primary text-white'
+                        : `bg-${getTaskColor(filter === '学习' ? 'study' : filter === '生活' ? 'life' : filter === '工作' ? 'work' : filter === '玩乐' ? 'play' : 'gray')}/10 text-${getTaskColor(filter === '学习' ? 'study' : filter === '生活' ? 'life' : filter === '工作' ? 'work' : filter === '玩乐' ? 'play' : 'gray')}`
+                    }`}
+                    onClick={() => setActiveFilter(filter)}
+                  >
+                    {filter !== '全部' && <i className={`fa ${getTaskIcon(filter === '学习' ? 'study' : filter === '生活' ? 'life' : filter === '工作' ? 'work' : filter === '玩乐' ? 'play' : '')} mr-1`}></i>}
+                    {filter}
+                  </button>
+                ))}
+              </div>
+
+              {/* 任务搜索和筛选 */}
+              <div className="flex gap-2 mb-3">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    placeholder="搜索任务..."
+                    className="w-full pl-8 pr-3 py-1.5 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <i className="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                </div>
+                <button className="bg-gray-100 hover:bg-gray-200 p-1.5 rounded-lg text-gray-500">
+                  <i className="fa fa-filter"></i>
+                </button>
+              </div>
+
+              {/* 任务列表标题 */}
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="font-medium text-sm">高频任务库</h2>
+                <button className="text-xs text-primary">
+                  <i className="fa fa-plus mr-1"></i> 新增
+                </button>
+              </div>
+
+              {/* 任务标记说明 */}
+              <div className="flex gap-3 mb-2 text-xs text-gray-500">
+                <div className="flex items-center">
+                  <span className="w-2 h-2 bg-frequent rounded-full mr-1"></span>
+                  <span>高频</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="w-2 h-2 bg-warning rounded-full mr-1"></span>
+                  <span>待克服</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="w-2 h-2 bg-gray-300 rounded-full mr-1"></span>
+                  <span>本周时长</span>
+                </div>
+              </div>
+
+              {/* 任务列表 */}
+              <div className="space-y-1 max-h-[400px] overflow-y-auto scrollbar-thin pr-1">
+                {tasks.map(task => (
+                  <TaskItem
+                    key={task.id}
+                    task={task}
+                    isExpanded={expandedTasks[task.id]}
+                    onToggleExpansion={toggleTaskExpansion}
+                    getTaskIcon={getTaskIcon}
+                    getTaskColor={getTaskColor}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 右侧：时间表 */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-sm p-3 h-full">
+              <div className="flex justify-between items-center mb-3">
+                <h2 className="font-medium text-sm">今日时间表</h2>
+                <div className="flex gap-2">
+                  <button className="text-xs text-gray-500 hover:text-primary">
+                    <i className="fa fa-refresh mr-1"></i> 重置
+                  </button>
+                  <button className="text-xs bg-ai/10 text-ai">
+                    <i className="fa fa-magic mr-1"></i> AI规划
+                  </button>
+                </div>
+              </div>
+
+              {/* 时间表内容 */}
+              <div className="space-y-2 max-h-[400px] overflow-y-auto scrollbar-thin pr-1">
+                {timeSlots.map(slot => (
+                  <TimeSlot
+                    key={slot.id}
+                    slot={slot}
+                    selectedMoods={selectedMoods}
+                    onSetMood={setMood}
+                    getTaskColor={getTaskColor}
+                    getStatusIcon={getStatusIcon}
+                    getMoodIcon={getMoodIcon}
+                    getMoodStyle={getMoodStyle}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 快捷输入区 */}
+        <div className="bg-white rounded-xl shadow-sm p-3 mb-4">
+          <div className="flex gap-2">
+            <button className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-primary hover:text-white transition-colors">
+              <i className="fa fa-microphone"></i>
+            </button>
+            <input
+              type="text"
+              placeholder="添加任务备注或对AI说..."
+              className="flex-1 px-3 py-2 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+              value={quickInput}
+              onChange={(e) => setQuickInput(e.target.value)}
+            />
+            <button className="px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary/90 transition-colors">
+              确认
+            </button>
+          </div>
+        </div>
+
+        {/* 统计分析区 */}
+        <div className="space-y-3 mb-24">
+          {/* 本周统计概览 */}
+          <div className="bg-white rounded-xl shadow-sm p-3">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="font-medium text-sm">本周统计概览</h2>
+              <button 
+                className="text-xs text-primary"
+                onClick={() => setShowFullStats(true)}
+              >
+                查看完整统计 →
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <StatCard title="总学习时长" value="8.5h" colorClass="text-study" />
+              <StatCard title="高频任务完成" value="4/5" colorClass="text-frequent" />
+              <StatCard title="待克服任务" value="1/2" colorClass="text-warning" />
+              <StatCard title="AI推荐采纳率" value="75%" colorClass="text-ai" />
+            </div>
+            
+            {/* 本周时间分布图表 */}
+            <div className="h-[160px]">
+              <Bar data={weeklyChartData} options={chartOptions} />
+            </div>
+          </div>
+
+          {/* 行为分析 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* 心情-任务相关性分析 */}
+            <div className="bg-white rounded-xl shadow-sm p-3">
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="font-medium text-sm">心情-效率分析</h2>
+                <button className="text-xs text-primary">详情</button>
+              </div>
+              <div className="text-xs text-gray-600 space-y-1.5">
+                <p>• 专注状态下完成高频任务效率提升42%</p>
+                <p>• 数学类任务在心情愉快时正确率高出28%</p>
+                <p>• 建议避开疲惫时段处理待克服任务</p>
+              </div>
+            </div>
+
+            {/* AI智能建议 */}
+            <div className="bg-white rounded-xl shadow-sm p-3">
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="font-medium text-sm">AI优化建议</h2>
+                <button className="text-xs text-primary">更多</button>
+              </div>
+              <div className="text-xs text-gray-600 space-y-1.5">
+                <p>• 可将"数学公式背诵"安排在19:00-20:00（你的记忆黄金时段）</p>
+                <p>• 建议增加"撰写报告"的预备时间，历史完成时间比计划长30%</p>
+                <p>• 周六安排1小时集中处理未完成的待克服任务</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* 底部导航栏 */}
+      <BottomNavBar />
+
+      {/* 完整统计页面 */}
+      {showFullStats && (
+        <div className="fixed inset-0 bg-white z-50 transform transition-transform duration-300 w-full">
+          <div className="p-4 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white z-10">
+            <h3 className="font-semibold">完整统计分析</h3>
+            <button 
+              className="text-gray-500 p-1.5"
+              onClick={() => setShowFullStats(false)}
+            >
+              <i className="fa fa-times"></i>
+            </button>
+          </div>
+          
+          <div className="p-4 overflow-y-auto max-h-[calc(100vh-4rem)]">
+            {/* 统计周期选择 */}
+            <div className="flex gap-2 mb-6">
+              <button className="bg-primary text-white px-3 py-1.5 rounded-full text-sm">本周</button>
+              <button className="bg-gray-100 text-gray-500 px-3 py-1.5 rounded-full text-sm hover:bg-gray-200">本月</button>
+              <button className="bg-gray-100 text-gray-500 px-3 py-1.5 rounded-full text-sm hover:bg-gray-200">全部</button>
+            </div>
+            
+            {/* 详细图表 */}
+            <div className="mb-6">
+              <h4 className="font-medium text-sm mb-3">任务类别分布</h4>
+              <div className="h-[220px] bg-gray-50 rounded-lg p-3">
+                <Doughnut data={detailedChartData} options={doughnutOptions} />
+              </div>
+            </div>
+            
+            {/* 其他统计内容... */}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default MainSchedulePage; 

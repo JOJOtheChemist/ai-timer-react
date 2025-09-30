@@ -1,0 +1,102 @@
+/* BottomNavBar.css */
+.bottom-nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.5rem 0;
+  z-index: 50;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 0.5rem;
+  min-width: 60px;
+  color: #6b7280;
+}
+
+.nav-item:hover {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--item-color, #6366f1);
+}
+
+.nav-item.active {
+  color: var(--item-color, #6366f1);
+  background-color: rgba(99, 102, 241, 0.1);
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.nav-item.active .nav-icon {
+  transform: scale(1.1);
+}
+
+.nav-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-item.active .nav-label {
+  font-weight: 600;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .bottom-nav-bar {
+    padding: 0.25rem 0;
+  }
+  
+  .nav-item {
+    min-width: 50px;
+    padding: 0.25rem;
+  }
+  
+  .nav-icon {
+    font-size: 1rem;
+  }
+  
+  .nav-label {
+    font-size: 0.625rem;
+  }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .bottom-nav-bar {
+    background: #1f2937;
+    border-top-color: #374151;
+  }
+  
+  .nav-item {
+    color: #d1d5db;
+  }
+  
+  .nav-item:hover {
+    background-color: rgba(139, 92, 246, 0.1);
+    color: var(--item-color, #8b5cf6);
+  }
+  
+  .nav-item.active {
+    color: var(--item-color, #8b5cf6);
+    background-color: rgba(139, 92, 246, 0.1);
+  }
+}

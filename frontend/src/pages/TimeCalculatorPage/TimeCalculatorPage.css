@@ -1,0 +1,403 @@
+/* 时间计算器页面样式 */
+
+.time-calculator-page {
+  min-height: 100vh;
+  background-color: #f9f7f9;
+  color: #333;
+  line-height: 1.5;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 顶部导航栏 */
+.time-calculator-page .nav-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(221, 194, 230, 0.3);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 100;
+}
+
+.time-calculator-page .nav-top .back-btn {
+  font-size: 20px;
+  color: #9d65c9;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+.time-calculator-page .nav-top .title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #5a3372;
+  flex: 1;
+  text-align: center;
+}
+
+.time-calculator-page .nav-top .home-btn {
+  font-size: 20px;
+  color: #9d65c9;
+  cursor: pointer;
+}
+
+/* 页面容器 */
+.time-calculator-page .container {
+  padding: 66px 20px 80px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* 说明栏 */
+.time-calculator-page .intro-bar {
+  background-color: #f0e6f5;
+  border-radius: 12px;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #7a5490;
+  display: flex;
+  align-items: flex-start;
+}
+
+.time-calculator-page .intro-bar i {
+  margin-right: 8px;
+  color: #9d65c9;
+  font-size: 16px;
+  margin-top: 1px;
+}
+
+.time-calculator-page .intro-bar span.highlight {
+  font-weight: 600;
+  color: #9d65c9;
+}
+
+/* 目标选择区 */
+.time-calculator-page .section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #5a3372;
+  margin: 20px 0 12px;
+  display: flex;
+  align-items: center;
+}
+
+.time-calculator-page .section-title::after {
+  content: "";
+  width: 4px;
+  height: 16px;
+  background-color: #c888d8;
+  margin-right: 8px;
+}
+
+.time-calculator-page .target-categories {
+  margin-bottom: 15px;
+}
+
+.time-calculator-page .category-tab {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.time-calculator-page .category-tab::-webkit-scrollbar {
+  display: none;
+}
+
+.time-calculator-page .tab-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  background-color: #fff;
+  border: 1px solid #e0d0e8;
+  color: #666;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.time-calculator-page .tab-btn.active {
+  background-color: #f0e6f5;
+  border-color: #9d65c9;
+  color: #9d65c9;
+  font-weight: 500;
+}
+
+.time-calculator-page .target-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.time-calculator-page .target-card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #e0d0e8;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.time-calculator-page .target-card.active {
+  border-color: #9d65c9;
+  background-color: #f0e6f5;
+}
+
+.time-calculator-page .target-card .target-name {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.time-calculator-page .target-card .base-time {
+  font-size: 12px;
+  color: #7a5490;
+}
+
+.time-calculator-page .target-card .source {
+  font-size: 10px;
+  color: #a88cb8;
+  margin-top: 2px;
+}
+
+/* 个性化测算区 */
+.time-calculator-page .calculator-form {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+  margin-bottom: 20px;
+}
+
+.time-calculator-page .form-group {
+  margin-bottom: 18px;
+}
+
+.time-calculator-page .form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #5a3372;
+  margin-bottom: 8px;
+}
+
+.time-calculator-page .form-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 15px;
+  border-radius: 8px;
+  border: 1px solid #e0d0e8;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.time-calculator-page .form-input:focus {
+  border-color: #9d65c9;
+}
+
+.time-calculator-page .input-note {
+  font-size: 12px;
+  color: #a88cb8;
+  margin-top: 4px;
+}
+
+.time-calculator-page .select-group {
+  width: 100%;
+  height: 42px;
+  padding: 0 15px;
+  border-radius: 8px;
+  border: 1px solid #e0d0e8;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239d65c9' viewBox='0 0 16 16'%3E%3Cpath d='M8 11l4-4H4l4 4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+}
+
+.time-calculator-page .situation-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.time-calculator-page .situation-tag {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  border: 1px solid #e0d0e8;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.time-calculator-page .situation-tag.active {
+  background-color: #f0e6f5;
+  border-color: #9d65c9;
+  color: #9d65c9;
+}
+
+.time-calculator-page .situation-tag .coefficient {
+  font-size: 10px;
+  background-color: #9d65c9;
+  color: white;
+  padding: 1px 4px;
+  border-radius: 4px;
+  margin-left: 4px;
+}
+
+/* 计算按钮 */
+.time-calculator-page .calc-btn {
+  width: 100%;
+  height: 48px;
+  background-color: #9d65c9;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 10px 0 25px;
+  box-shadow: 0 4px 12px rgba(157, 101, 201, 0.3);
+  transition: background-color 0.2s;
+}
+
+.time-calculator-page .calc-btn:hover {
+  background-color: #8b5bb8;
+}
+
+/* 结果展示区 */
+.time-calculator-page .result-area {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+  margin-bottom: 25px;
+  display: none; /* 初始隐藏，测算后显示 */
+}
+
+.time-calculator-page .result-area.show {
+  display: block;
+}
+
+.time-calculator-page .result-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #5a3372;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.time-calculator-page .result-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.time-calculator-page .result-card {
+  background-color: #f0e6f5;
+  border-radius: 10px;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.time-calculator-page .result-card .result-label {
+  font-size: 12px;
+  color: #7a5490;
+  margin-bottom: 4px;
+}
+
+.time-calculator-page .result-card .result-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #9d65c9;
+}
+
+.time-calculator-page .result-desc {
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+  padding: 8px 0;
+  border-top: 1px dashed #e0d0e8;
+}
+
+/* 推荐区 */
+.time-calculator-page .recommend-area {
+  margin-bottom: 20px;
+}
+
+.time-calculator-page .recommend-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.time-calculator-page .recommend-card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(221, 194, 230, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.time-calculator-page .recommend-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 20px;
+}
+
+.time-calculator-page .recommend-info {
+  flex: 1;
+}
+
+.time-calculator-page .recommend-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.time-calculator-page .recommend-desc {
+  font-size: 12px;
+  color: #a88cb8;
+}
+
+/* 底部提示 */
+.time-calculator-page .bottom-tip {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #888;
+  border-top: 1px solid #f0e6f5;
+  z-index: 90;
+}
+
+.time-calculator-page .bottom-tip span {
+  color: #9d65c9;
+  margin: 0 3px;
+}

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>导师平台 | 女性成长时间管理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        body { background-color: #f9f7f9; color: #333; line-height: 1.5; }
+        
+        /* 顶部导航栏 */
+        .nav-top {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 56px; background-color: #fff;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.3);
+            display: flex; align-items: center; padding: 0 20px;
+            z-index: 100;
+        }
+        .nav-top .back-btn { font-size: 20px; color: #9d65c9; margin-right: 15px; }
+        .nav-top .title { font-size: 18px; font-weight: 600; color: #5a3372; flex: 1; text-align: center; }
+        .nav-top .home-btn { font-size: 20px; color: #9d65c9; }
+
+        /* 页面容器 */
+        .container {
+            padding: 66px 20px 80px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* 搜索栏 */
+        .search-bar {
+            height: 40px; background-color: #fff;
+            border-radius: 20px; padding: 0 15px;
+            display: flex; align-items: center;
+            box-shadow: 0 1px 3px rgba(221, 194, 230, 0.2);
+            margin-bottom: 20px;
+        }
+        .search-bar i { color: #c1a3d1; margin-right: 8px; }
+        .search-bar input {
+            border: none; outline: none; flex: 1;
+            font-size: 14px; color: #666;
+        }
+        .search-bar input::placeholder { color: #d1c0d9; }
+
+        /* 筛选区 */
+        .filter-area {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+        }
+        .filter-group {
+            margin-bottom: 12px;
+        }
+        .filter-group:last-child { margin-bottom: 0; }
+        .filter-group .group-title {
+            font-size: 14px; font-weight: 500; color: #5a3372;
+            margin-bottom: 8px;
+        }
+        .filter-tags {
+            display: flex; flex-wrap: wrap; gap: 8px;
+        }
+        .filter-tag {
+            padding: 6px 14px; border-radius: 20px;
+            font-size: 13px; cursor: pointer;
+            border: 1px solid #e0d0e8; color: #666;
+            transition: all 0.2s;
+        }
+        .filter-tag.active {
+            background-color: #f0e6f5; border-color: #9d65c9;
+            color: #9d65c9; font-weight: 500;
+        }
+        .filter-tag.reset {
+            border-color: #ff6b8b; color: #ff6b8b;
+        }
+        .filter-tag.highlight {
+            border-color: #65c985; color: #65c985;
+        }
+        .filter-tag.highlight.active {
+            background-color: #e6f5f0; border-color: #65c985;
+            color: #65c985;
+        }
+
+        /* 排序栏 */
+        .sort-bar {
+            display: flex; justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .sort-title {
+            font-weight: 600; color: #5a3372;
+        }
+        .sort-options {
+            display: flex; gap: 15px;
+        }
+        .sort-option {
+            color: #666; cursor: pointer;
+        }
+        .sort-option.active {
+            color: #9d65c9; font-weight: 500;
+        }
+
+        /* 导师列表区 */
+        .tutor-list {
+            display: grid; grid-template-columns: 1fr; gap: 15px;
+            margin-bottom: 30px;
+        }
+        .tutor-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 3px 10px rgba(221, 194, 230, 0.2);
+            display: flex; gap: 15px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .tutor-card:hover { transform: translateY(-2px); }
+        .tutor-avatar {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background-color: #f0e6f5;
+            overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            color: #9d65c9; font-size: 24px;
+        }
+        .tutor-info {
+            flex: 1;
+            display: flex; flex-direction: column;
+        }
+        .tutor-header {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 8px;
+        }
+        .tutor-name {
+            font-size: 16px; font-weight: 600; color: #333;
+        }
+        .tutor-tag {
+            padding: 2px 6px; border-radius: 4px;
+            font-size: 10px; font-weight: 500;
+        }
+        .tutor-tag.normal {
+            background-color: #f0e6f5; color: #9d65c9;
+        }
+        .tutor-tag.certified {
+            background-color: #e6f5f0; color: #65c985;
+        }
+        .tutor-domain {
+            font-size: 13px; color: #666;
+            margin-bottom: 10px;
+        }
+        .tutor-metrics {
+            display: flex; gap: 12px;
+            margin-bottom: 12px;
+            font-size: 12px;
+        }
+        .metric-item {
+            display: flex; align-items: center; gap: 3px;
+            color: #888;
+        }
+        .metric-item i { color: #c1a3d1; }
+        .metric-item.highlight { color: #65c985; }
+        .metric-item.highlight i { color: #65c985; }
+        .tutor-services {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            margin-top: auto;
+        }
+        .service-tag {
+            padding: 4px 10px; border-radius: 16px;
+            font-size: 11px;
+            background-color: #f8f5f9; color: #7a5490;
+            border: 1px solid #f0e6f5;
+        }
+
+        /* 导师详情弹窗（默认隐藏） */
+        .tutor-modal {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex; align-items: flex-end;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .tutor-modal.show {
+            opacity: 1; pointer-events: all;
+        }
+        .modal-content {
+            background-color: #fff;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 25px 20px 20px;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .close-modal {
+            position: absolute; top: 15px; right: 15px;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background-color: #f0e6f5;
+            display: flex; align-items: center; justify-content: center;
+            color: #9d65c9;
+            cursor: pointer;
+        }
+        .modal-header {
+            display: flex; gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0e6f5;
+        }
+        .modal-avatar {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            background-color: #f0e6f5;
+            display: flex; align-items: center; justify-content: center;
+            color: #9d65c9; font-size: 28px;
+        }
+        .modal-header-info {
+            flex: 1;
+        }
+        .modal-name {
+            font-size: 18px; font-weight: 600; color: #333;
+            margin-bottom: 5px;
+        }
+        .modal-domain {
+            font-size: 14px; color: #666;
+            margin-bottom: 8px;
+        }
+        .modal-metrics {
+            display: flex; gap: 15px;
+            font-size: 13px;
+        }
+        .modal-metric {
+            display: flex; align-items: center; gap: 3px;
+        }
+        .modal-metric.highlight { color: #65c985; }
+
+        /* 导师Profile */
+        .modal-section {
+            margin-bottom: 25px;
+        }
+        .section-subtitle {
+            font-size: 16px; font-weight: 600; color: #5a3372;
+            margin-bottom: 12px;
+            display: flex; align-items: center;
+        }
+        .section-subtitle::after {
+            content: ""; width: 4px; height: 16px;
+            background-color: #c888d8; margin-right: 8px;
+        }
+        .profile-content {
+            font-size: 14px; color: #666;
+            line-height: 1.6;
+            background-color: #f9f7f9;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .profile-content p {
+            margin-bottom: 10px;
+        }
+        .profile-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 服务列表 */
+        .service-list {
+            display: grid; grid-template-columns: 1fr; gap: 12px;
+        }
+        .service-card {
+            border: 1px solid #f0e6f5;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex; justify-content: space-between;
+            align-items: center;
+        }
+        .service-info {
+            flex: 1;
+        }
+        .service-name {
+            font-size: 14px; font-weight: 500; color: #333;
+            margin-bottom: 3px;
+        }
+        .service-desc {
+            font-size: 12px; color: #888;
+        }
+        .service-action {
+            display: flex; align-items: center; gap: 10px;
+        }
+        .service-price {
+            font-size: 14px; font-weight: 600; color: #ff6b8b;
+        }
+        .buy-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            background-color: #9d65c9;
+            color: white;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* 数据面板 */
+        .data-panel {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .data-card {
+            background-color: #f9f7f9;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        .data-label {
+            font-size: 12px; color: #7a5490;
+            margin-bottom: 5px;
+        }
+        .data-value {
+            font-size: 18px; font-weight: 600; color: #9d65c9;
+        }
+        .data-value.highlight {
+            color: #65c985;
+        }
+
+        /* 学员评价 */
+        .review-list {
+            display: grid; grid-template-columns: 1fr; gap: 15px;
+        }
+        .review-card {
+            background-color: #f9f7f9;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .review-header {
+            display: flex; justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .reviewer {
+            font-size: 14px; font-weight: 500; color: #333;
+        }
+        .review-rating {
+            color: #ffc107; font-size: 12px;
+        }
+        .review-content {
+            font-size: 13px; color: #666;
+            margin-bottom: 10px;
+        }
+        .review-attach {
+            width: 100%; height: 80px;
+            background-color: #f0e6f5;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: #9d65c9; font-size: 12px;
+        }
+
+        /* 底部操作栏 */
+        .modal-footer {
+            position: sticky; bottom: 0; left: 0; right: 0;
+            background-color: #fff;
+            padding: 15px 0 5px;
+            border-top: 1px solid #f0e6f5;
+            margin-top: 10px;
+            display: flex; gap: 10px;
+        }
+        .footer-btn {
+            flex: 1;
+            height: 42px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+        }
+        .footer-btn.msg {
+            background-color: #f0e6f5;
+            color: #9d65c9;
+        }
+        .footer-btn.follow {
+            background-color: #9d65c9;
+            color: white;
+        }
+
+        /* 底部提示 */
+        .bottom-tip {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 40px; background-color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: #888;
+            border-top: 1px solid #f0e6f5;
+            z-index: 90;
+        }
+        .bottom-tip span { color: #9d65c9; margin: 0 3px; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-top">
+        <div class="back-btn">←</div>
+        <div class="title">导师平台</div>
+        <div class="home-btn">🏠</div>
+    </div>
+
+    <!-- 页面容器 -->
+    <div class="container">
+        <!-- 搜索栏 -->
+        <div class="search-bar">
+            <i>🔍</i>
+            <input type="text" placeholder="搜索导师姓名/擅长领域，如「考研英语」「CPA」">
+        </div>
+
+        <!-- 筛选区 -->
+        <div class="filter-area">
+            <!-- 认证类型筛选 -->
+            <div class="filter-group">
+                <div class="group-title">导师类型</div>
+                <div class="filter-tags">
+                    <div class="filter-tag active">全部</div>
+                    <div class="filter-tag">普通导师</div>
+                    <div class="filter-tag highlight active">认证导师</div>
+                </div>
+            </div>
+            <!-- 擅长领域筛选 -->
+            <div class="filter-group">
+                <div class="group-title">擅长领域</div>
+                <div class="filter-tags">
+                    <div class="filter-tag active">全部</div>
+                    <div class="filter-tag">考研</div>
+                    <div class="filter-tag">会计考证</div>
+                    <div class="filter-tag">语言学习</div>
+                    <div class="filter-tag">编程开发</div>
+                    <div class="filter-tag">公考</div>
+                </div>
+            </div>
+            <!-- 数据筛选 -->
+            <div class="filter-group">
+                <div class="group-title">服务数据</div>
+                <div class="filter-tags">
+                    <div class="filter-tag active">全部</div>
+                    <div class="filter-tag">好评率>95%</div>
+                    <div class="filter-tag">指导学员>50人</div>
+                    <div class="filter-tag">上岸率>80%</div>
+                </div>
+            </div>
+            <!-- 价格筛选 -->
+            <div class="filter-group">
+                <div class="group-title">服务价格</div>
+                <div class="filter-tags">
+                    <div class="filter-tag active">全部</div>
+                    <div class="filter-tag">＜50钻石</div>
+                    <div class="filter-tag">50-100钻石</div>
+                    <div class="filter-tag">100-200钻石</div>
+                    <div class="filter-tag">＞200钻石</div>
+                    <div class="filter-tag reset">重置筛选</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 排序栏 -->
+        <div class="sort-bar">
+            <div class="sort-title">找到 18 位导师</div>
+            <div class="sort-options">
+                <div class="sort-option active">好评优先</div>
+                <div class="sort-option">人气优先</div>
+                <div class="sort-option">价格优先</div>
+            </div>
+        </div>
+
+        <!-- 导师列表区 -->
+        <div class="tutor-list">
+            <!-- 导师1（认证导师） -->
+            <div class="tutor-card" data-tutor="1">
+                <div class="tutor-avatar">👩‍🏫</div>
+                <div class="tutor-info">
+                    <div class="tutor-header">
+                        <div class="tutor-name">王英语老师</div>
+                        <div class="tutor-tag certified">认证导师</div>
+                    </div>
+                    <div class="tutor-domain">擅长：考研英语、四六级提分 | 原新东方讲师</div>
+                    <div class="tutor-metrics">
+                        <div class="metric-item highlight"><i>⭐</i> 98%好评</div>
+                        <div class="metric-item"><i>👥</i> 126人指导</div>
+                        <div class="metric-item highlight"><i>🎯</i> 89%上岸</div>
+                    </div>
+                    <div class="tutor-services">
+                        <div class="service-tag">时间表点评 68钻</div>
+                        <div class="service-tag">1v1规划 198钻</div>
+                        <div class="service-tag">作文批改 45钻</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 导师2（普通导师） -->
+            <div class="tutor-card" data-tutor="2">
+                <div class="tutor-avatar">👩‍💼</div>
+                <div class="tutor-info">
+                    <div class="tutor-header">
+                        <div class="tutor-name">李会计学姐</div>
+                        <div class="tutor-tag normal">普通导师</div>
+                    </div>
+                    <div class="tutor-domain">擅长：CPA全科、初级会计 | 四大会计师</div>
+                    <div class="tutor-metrics">
+                        <div class="metric-item"><i>⭐</i> 96%好评</div>
+                        <div class="metric-item"><i>👥</i> 87人指导</div>
+                        <div class="metric-item"><i>🎯</i> 82%上岸</div>
+                    </div>
+                    <div class="tutor-services">
+                        <div class="service-tag">时间表点评 58钻</div>
+                        <div class="service-tag">考点梳理 158钻</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 导师3（认证导师） -->
+            <div class="tutor-card" data-tutor="3">
+                <div class="tutor-avatar">👩‍💻</div>
+                <div class="tutor-info">
+                    <div class="tutor-header">
+                        <div class="tutor-name">张编程导师</div>
+                        <div class="tutor-tag certified">认证导师</div>
+                    </div>
+                    <div class="tutor-domain">擅长：Python开发、Web前端 | 大厂工程师</div>
+                    <div class="tutor-metrics">
+                        <div class="metric-item highlight"><i>⭐</i> 97%好评</div>
+                        <div class="metric-item"><i>👥</i> 93人指导</div>
+                        <div class="metric-item highlight"><i>🎯</i> 85%上岸</div>
+                    </div>
+                    <div class="tutor-services">
+                        <div class="service-tag">项目指导 238钻</div>
+                        <div class="service-tag">时间表点评 78钻</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导师详情弹窗（王英语老师） -->
+    <div class="tutor-modal" id="tutorModal">
+        <div class="modal-content">
+            <div class="close-modal">×</div>
+            <div class="modal-header">
+                <div class="modal-avatar">👩‍🏫</div>
+                <div class="modal-header-info">
+                    <div class="modal-name">王英语老师</div>
+                    <div class="tutor-tag certified">认证导师</div>
+                    <div class="modal-domain">擅长：考研英语、四六级提分 | 原新东方讲师</div>
+                    <div class="modal-metrics">
+                        <div class="modal-metric highlight">⭐ 98%好评</div>
+                        <div class="modal-metric">👥 126人指导</div>
+                        <div class="modal-metric highlight">🎯 89%上岸</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 导师Profile -->
+            <div class="modal-section">
+                <div class="section-subtitle">导师Profile</div>
+                <div class="profile-content">
+                    <p>✅ 教育背景：北京外国语大学英语语言文学硕士</p>
+                    <p>✅ 上岸经历：考研英语一92分，雅思8.5分</p>
+                    <p>✅ 工作经历：新东方考研英语讲师8年，累计授课10000+小时</p>
+                    <p>✅ 指导理念：拒绝盲目刷题，用时间管理+技巧拆解提分，尤其擅长基础薄弱学员</p>
+                </div>
+            </div>
+
+            <!-- 服务列表 -->
+            <div class="modal-section">
+                <div class="section-subtitle">提供服务</div>
+                <div class="service-list">
+                    <div class="service-card">
+                        <div class="service-info">
+                            <div class="service-name">时间表点评</div>
+                            <div class="service-desc">12小时内反馈，指出时间分配问题+优化建议</div>
+                        </div>
+                        <div class="service-action">
+                            <div class="service-price">68钻石</div>
+                            <button class="buy-btn">购买</button>
+                        </div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-info">
+                            <div class="service-name">1v1学习规划</div>
+                            <div class="service-desc">30分钟语音沟通+定制3个月学习计划+1次后续调整</div>
+                        </div>
+                        <div class="service-action">
+                            <div class="service-price">198钻石</div>
+                            <button class="buy-btn">购买</button>
+                        </div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-info">
+                            <div class="service-name">作文批改</div>
+                            <div class="service-desc">逐句批改+语法纠错+思路优化+范文参考</div>
+                        </div>
+                        <div class="service-action">
+                            <div class="service-price">45钻石/篇</div>
+                            <button class="buy-btn">购买</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 数据面板 -->
+            <div class="modal-section">
+                <div class="section-subtitle">指导数据</div>
+                <div class="data-panel">
+                    <div class="data-card">
+                        <div class="data-label">近30天指导</div>
+                        <div class="data-value">18人</div>
+                    </div>
+                    <div class="data-card">
+                        <div class="data-label">累计好评</div>
+                        <div class="data-value highlight">123条</div>
+                    </div>
+                    <div class="data-card">
+                        <div class="data-label">学员上岸率</div>
+                        <div class="data-value highlight">89%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 学员评价 -->
+            <div class="modal-section">
+                <div class="section-subtitle">学员真实评价</div>
+                <div class="review-list">
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer">小夏（24考研上岸）</div>
+                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                        <div class="review-content">
+                            王老师点评时间表太专业了！之前我每天花3小时背单词效率极低，老师建议拆分到碎片时间，省出的时间用来做阅读，英语从58提到76分！
+                        </div>
+                        <div class="review-attach">📅 附：优化后的英语学习时间表（预览）</div>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer">小美（四六级上岸）</div>
+                            <div class="review-rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                        <div class="review-content">
+                            作文批改超级细致，连标点错误都标出来了，还给了适合我的模板，二战六级作文直接从120提到180！
+                        </div>
+                        <div class="review-attach">📝 附：老师修改的作文截图（预览）</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部操作栏 -->
+            <div class="modal-footer">
+                <button class="footer-btn msg">发私信</button>
+                <button class="footer-btn follow">关注导师</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="bottom-tip">
+        上传你的上岸时间表，赢<span>品牌高奢真皮包</span> | 导师均经实名认证，服务全程可追溯
+    </div>
+
+    <script>
+        // 静态页面交互模拟
+        // 筛选标签切换
+        const filterTags = document.querySelectorAll('.filter-tag:not(.reset)');
+        filterTags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                // 同组标签互斥（除了“全部”可与其他共存）
+                const parentGroup = tag.closest('.filter-tags');
+                const isAllTag = tag.textContent === '全部';
+                
+                if (isAllTag) {
+                    // 点击“全部”，取消同组其他选中态
+                    parentGroup.querySelectorAll('.filter-tag.active').forEach(t => t.classList.remove('active'));
+                    tag.classList.add('active');
+                } else {
+                    // 点击非“全部”，取消“全部”选中态
+                    parentGroup.querySelector('.filter-tag:contains("全部")')?.classList.remove('active');
+                    tag.classList.toggle('active');
+                    // 若同组无选中标签，自动选中“全部”
+                    if (!parentGroup.querySelector('.filter-tag.active')) {
+                        parentGroup.querySelector('.filter-tag:contains("全部")')?.classList.add('active');
+                    }
+                }
+            });
+        });
+
+        // 重置筛选
+        document.querySelector('.filter-tag.reset').addEventListener('click', () => {
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.classList.remove('active');
+                if (tag.textContent === '全部') tag.classList.add('active');
+            });
+        });
+
+        // 排序切换
+        const sortOptions = document.querySelectorAll('.sort-option');
+        sortOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                sortOptions.forEach(o => o.classList.remove('active'));
+                option.classList.add('active');
+            });
+        });
+
+        // 导师卡片点击打开详情
+        const tutorCards = document.querySelectorAll('.tutor-card');
+        const tutorModal = document.getElementById('tutorModal');
+        const closeModal = document.querySelector('.close-modal');
+
+        tutorCards.forEach(card => {
+            card.addEventListener('click', () => {
+                tutorModal.classList.add('show');
+                // 实际开发中可根据data-tutor加载不同导师数据
+            });
+        });
+
+        // 关闭详情弹窗
+        closeModal.addEventListener('click', () => {
+            tutorModal.classList.remove('show');
+        });
+
+        // 点击弹窗外部关闭
+        tutorModal.addEventListener('click', (e) => {
+            if (e.target === tutorModal) {
+                tutorModal.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

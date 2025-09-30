@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消息中心 | 女性成长时间管理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        body { background-color: #f9f7f9; color: #333; line-height: 1.5; }
+        
+        /* 顶部导航栏 */
+        .nav-top {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 56px; background-color: #fff;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.3);
+            display: flex; align-items: center; padding: 0 20px;
+            z-index: 100;
+        }
+        .nav-top .back-btn { font-size: 20px; color: #9d65c9; margin-right: 15px; }
+        .nav-top .title { font-size: 18px; font-weight: 600; color: #5a3372; flex: 1; text-align: center; }
+        .nav-top .setting-btn { font-size: 20px; color: #9d65c9; }
+
+        /* 页面容器 */
+        .container {
+            padding: 56px 0 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* 标签页切换 */
+        .tab-container {
+            display: flex;
+            background-color: #fff;
+            border-bottom: 1px solid #f0e6f5;
+            position: fixed;
+            top: 56px;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            z-index: 90;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 14px 0;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 500;
+            color: #666;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            position: relative;
+        }
+        .tab-btn.active {
+            color: #9d65c9;
+        }
+        .tab-btn.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background-color: #9d65c9;
+            border-radius: 3px;
+        }
+        .tab-btn .badge {
+            position: absolute;
+            top: 8px;
+            right: 30%;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #ff6b8b;
+            color: white;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 消息列表容器 */
+        .msg-container {
+            padding: 15px 20px;
+            min-height: calc(100vh - 120px);
+            display: none;
+        }
+        .msg-container.active {
+            display: block;
+        }
+
+        /* 搜索栏（仅私信页有） */
+        .search-bar {
+            height: 40px; background-color: #f9f7f9;
+            border-radius: 20px; padding: 0 15px;
+            display: flex; align-items: center;
+            margin-bottom: 15px;
+        }
+        .search-bar i { color: #c1a3d1; margin-right: 8px; }
+        .search-bar input {
+            border: none; outline: none; flex: 1;
+            background-color: transparent;
+            font-size: 14px; color: #666;
+        }
+        .search-bar input::placeholder { color: #d1c0d9; }
+
+        /* 消息项通用样式 */
+        .msg-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .msg-item {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 1px 4px rgba(221, 194, 230, 0.15);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .msg-item:hover {
+            background-color: #f9f7f9;
+        }
+        .msg-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #f0e6f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9d65c9;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        .msg-avatar.tutor {
+            background-color: #e6f5f0;
+            color: #65c985;
+        }
+        .msg-avatar.system {
+            background-color: #f5e6f0;
+            color: #c9659d;
+        }
+        .msg-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .msg-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .msg-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .msg-time {
+            font-size: 12px;
+            color: #a88cb8;
+        }
+        .msg-text {
+            font-size: 13px;
+            color: #888;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .msg-text.highlight {
+            color: #9d65c9;
+            font-weight: 500;
+        }
+        .msg-badge {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ff6b8b;
+            display: inline-block;
+        }
+        .msg-tag {
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 4px;
+            background-color: #e6f5f0;
+            color: #65c985;
+            margin-left: 5px;
+        }
+
+        /* 空状态样式 */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 200px);
+            color: #a88cb8;
+            text-align: center;
+        }
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        .empty-text {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .empty-desc {
+            font-size: 12px;
+            max-width: 200px;
+            opacity: 0.8;
+        }
+
+        /* 导师反馈详情弹窗（默认隐藏） */
+        .detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: flex-end;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .detail-modal.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-content {
+            background-color: #fff;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0e6f5;
+        }
+        .modal-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e6f5f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #65c985;
+            font-size: 18px;
+        }
+        .modal-info {
+            flex: 1;
+        }
+        .modal-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+        .modal-meta {
+            font-size: 12px;
+            color: #a88cb8;
+        }
+        .close-modal {
+            font-size: 20px;
+            color: #a88cb8;
+            cursor: pointer;
+        }
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        .feedback-item {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            background-color: #f9f7f9;
+            border-radius: 10px;
+        }
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .feedback-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #5a3372;
+        }
+        .feedback-time {
+            font-size: 11px;
+            color: #a88cb8;
+        }
+        .feedback-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .feedback-highlight {
+            color: #9d65c9;
+            font-weight: 500;
+        }
+        .feedback-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .feedback-btn {
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+        }
+        .feedback-btn.primary {
+            background-color: #f0e6f5;
+            color: #9d65c9;
+        }
+        .feedback-btn.secondary {
+            background-color: #f9f7f9;
+            color: #888;
+            border: 1px solid #e0d0e8;
+        }
+
+        /* 底部提示 */
+        .bottom-tip {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 40px; background-color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: #888;
+            border-top: 1px solid #f0e6f5;
+            z-index: 80;
+        }
+        .bottom-tip span { color: #9d65c9; margin: 0 3px; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-top">
+        <div class="back-btn">←</div>
+        <div class="title">消息中心</div>
+        <div class="setting-btn">⚙️</div>
+    </div>
+
+    <!-- 标签页切换 -->
+    <div class="tab-container">
+        <button class="tab-btn active" data-tab="tutor">
+            导师反馈
+            <span class="badge">2</span>
+        </button>
+        <button class="tab-btn" data-tab="private">
+            私信
+            <span class="badge">1</span>
+        </button>
+        <button class="tab-btn" data-tab="system">系统通知</button>
+    </div>
+
+    <!-- 导师反馈页 -->
+    <div class="msg-container active" id="tutorMsg">
+        <div class="msg-list">
+            <!-- 未读消息：王英语老师 -->
+            <div class="msg-item" data-msg="1">
+                <div class="msg-avatar tutor">👩‍🏫</div>
+                <div class="msg-content">
+                    <div class="msg-header">
+                        <div class="msg-name">王英语老师 <span class="msg-tag">认证导师</span></div>
+                        <div class="msg-time">09:42</div>
+                    </div>
+                    <div class="msg-text highlight">
+                        <span class="msg-badge"></span>
+                        你的英语时间表有3处可优化，重点调整阅读时长...
+                    </div>
+                </div>
+            </div>
+
+            <!-- 未读消息：李会计学姐 -->
+            <div class="msg-item" data-msg="2">
+                <div class="msg-avatar tutor">👩‍💼</div>
+                <div class="msg-content">
+                    <div class="msg-header">
+                        <div class="msg-name">李会计学姐 <span class="msg-tag">普通导师</span></div>
+                        <div class="msg-time">昨天 18:30</div>
+                    </div>
+                    <div class="msg-text highlight">
+                        <span class="msg-badge"></span>
+                        CPA税法高频考点整理好了，结合你的时间表...
+                    </div>
+                </div>
+            </div>
+
+            <!-- 已读消息：张编程导师 -->
+            <div class="msg-item" data-msg="3">
+                <div class="msg-avatar tutor">👩‍💻</div>
+                <div class="msg-content">
+                    <div class="msg-header">
+                        <div class="msg-name">张编程导师 <span class="msg-tag">认证导师</span></div>
+                        <div class="msg-time">3天前</div>
+                    </div>
+                    <div class="msg-text">
+                        你的Python学习计划很合理，坚持每日代码练习即可~
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 私信页 -->
+    <div class="msg-container" id="privateMsg">
+        <div class="search-bar">
+            <i>🔍</i>
+            <input type="text" placeholder="搜索联系人">
+        </div>
+        <div class="msg-list">
+            <!-- 未读消息：考研的小琳 -->
+            <div class="msg-item">
+                <div class="msg-avatar">👩‍🎓</div>
+                <div class="msg-content">
+                    <div class="msg-header">
+                        <div class="msg-name">考研的小琳</div>
+                        <div class="msg-time">10:15</div>
+                    </div>
+                    <div class="msg-text highlight">
+                        <span class="msg-badge"></span>
+                        你用的艾宾浩斯复习法真的好用！求打卡模板~
+                    </div>
+                </div>
+            </div>
+
+            <!-- 已读消息：学Python的阿美 -->
+            <div class="msg-item">
+                <div class="msg-avatar">👩‍💻</div>
+                <div class="msg-content">
+                    <div class="msg-header">
+                        <div class="msg-name">学Python的阿美</div>
+                        <div class="msg-time">昨天 20:12</div>
+                    </div>
+                    <div class="msg-text">
+                        分享给你一个Python刷题网站，亲测有效！
+                    </div>
+                </div>
+            </div>
+
+            <!-- 已读消息：考公的小楠 -->
+            <div class="msg-item">
+                <div class="msg-avatar">📝</div>
+                <div class="msg-content">
+                    <div class="msg-header">
+                        <div class="msg-name">考公的小楠</div>
+                        <div class="msg-time">4天前</div>
+                    </div>
+                    <div class="msg-text">
+                        常识模块的复习时间表整理好啦，发你看看~
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 系统通知页 -->
+    <div class="msg-container" id="systemMsg">
+        <div class="msg-list">
+            <!-- 徽章通知 -->
+            <div class="msg-item">
+                <div class="msg-avatar system">🏆</div>
+                <div class="msg-content">
+                    <div class="msg-header">
+                        <div class="msg-name">徽章通知</div>
+                        <div class="msg-time">今天 08:00</div>
+                    </div>
+                    <div class="msg-text">
+                        你连续7天打卡复习法，获得「坚持之星」徽章！
+                    </div>
+                </div>
+            </div>
+
+            <!-- 钻石通知 -->
+            <div class="msg-item">
+                <div class="msg-avatar system">💎</div>
+                <div class="msg-content">
+                    <div class="msg-header">
+                        <div class="msg-name">钻石通知</div>
+                        <div class="msg-time">昨天 14:30</div>
+                    </div>
+                    <div class="msg-text">
+                        分享上岸案例获得10钻石奖励，已到账~
+                    </div>
+                </div>
+            </div>
+
+            <!-- 活动通知 -->
+            <div class="msg-item">
+                <div class="msg-avatar system">📢</div>
+                <div class="msg-content">
+                    <div class="msg-header">
+                        <div class="msg-name">活动通知</div>
+                        <div class="msg-time">3天前</div>
+                    </div>
+                    <div class="msg-text">
+                        「上传时间表赢真皮包」活动剩最后5天，快去参与！
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导师反馈详情弹窗 -->
+    <div class="detail-modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-avatar">👩‍🏫</div>
+                <div class="modal-info">
+                    <div class="modal-name">王英语老师</div>
+                    <div class="modal-meta">认证导师 · 考研英语 | 09:42</div>
+                </div>
+                <div class="close-modal">×</div>
+            </div>
+            <div class="modal-body">
+                <div class="feedback-item">
+                    <div class="feedback-header">
+                        <div class="feedback-title">针对你7月15日的英语学习时间表</div>
+                        <div class="feedback-time">今天 09:42</div>
+                    </div>
+                    <div class="feedback-content">
+                        你好！查看了你的英语时间表，发现几个可以优化的点：<br>
+                        1. <span class="feedback-highlight">阅读时长过长</span>：每天2.5h远超建议的1.5h，效率会下降，建议拆分1h精读+0.5h泛读；<br>
+                        2. <span class="feedback-highlight">复习缺失</span>：近3天未安排单词复习，推荐用艾宾浩斯法嵌入碎片时间；<br>
+                        3. <span class="feedback-highlight">时段适配</span>：你早上记忆力最佳，可将单词复习调整至7:00-7:30。
+                    </div>
+                    <div class="feedback-actions">
+                        <button class="feedback-btn primary">查看时间表</button>
+                        <button class="feedback-btn secondary">回复导师</button>
+                    </div>
+                </div>
+                <div class="feedback-item">
+                    <div class="feedback-header">
+                        <div class="feedback-title">针对你7月14日的英语学习时间表</div>
+                        <div class="feedback-time">昨天 16:20</div>
+                    </div>
+                    <div class="feedback-content">
+                        作文模板已发送至你的私信，记得结合每日练习套用，重点关注三段式结构~
+                    </div>
+                    <div class="feedback-actions">
+                        <button class="feedback-btn secondary">查看私信</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="bottom-tip">
+        导师反馈优先推送 | 未读消息保留7天，可在设置中调整提醒方式
+    </div>
+
+    <script>
+        // 标签页切换
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const msgContainers = document.querySelectorAll('.msg-container');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabType = btn.dataset.tab;
+                
+                // 切换标签状态
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // 切换消息容器
+                msgContainers.forEach(container => {
+                    container.classList.remove('active');
+                });
+                document.getElementById(`${tabType}Msg`).classList.add('active');
+            });
+        });
+
+        // 导师反馈消息点击打开详情
+        const tutorMsgItems = document.querySelectorAll('#tutorMsg .msg-item');
+        const detailModal = document.getElementById('detailModal');
+        const closeModal = document.querySelector('.close-modal');
+
+        tutorMsgItems.forEach(item => {
+            item.addEventListener('click', () => {
+                detailModal.classList.add('show');
+                // 实际开发中可根据data-msg加载对应导师的反馈历史
+            });
+        });
+
+        // 关闭详情弹窗
+        closeModal.addEventListener('click', () => {
+            detailModal.classList.remove('show');
+        });
+
+        // 点击弹窗外部关闭
+        detailModal.addEventListener('click', (e) => {
+            if (e.target === detailModal) {
+                detailModal.classList.remove('show');
+            }
+        });
+
+        // 反馈详情页按钮点击
+        const feedbackBtns = document.querySelectorAll('.feedback-btn');
+        feedbackBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const text = btn.textContent.trim();
+                detailModal.classList.remove('show');
+                
+                if (text === '查看时间表') {
+                    alert('跳转至7月15日英语学习时间表详情页');
+                } else if (text === '回复导师') {
+                    alert('跳转至与王英语老师的私信界面');
+                } else if (text === '查看私信') {
+                    // 切换到私信标签页
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    document.querySelector('.tab-btn[data-tab="private"]').classList.add('active');
+                    msgContainers.forEach(container => container.classList.remove('active'));
+                    document.getElementById('privateMsg').classList.add('active');
+                }
+            });
+        });
+
+        // 设置按钮点击
+        const settingBtn = document.querySelector('.setting-btn');
+        settingBtn.addEventListener('click', () => {
+            alert('打开消息设置页面（可设置提醒方式、消息清理等）');
+        });
+    </script>
+</body>
+</html>

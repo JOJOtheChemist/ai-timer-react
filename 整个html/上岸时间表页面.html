@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上岸时间表 | 女性成长时间管理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        body { background-color: #f9f7f9; color: #333; }
+        
+        /* 顶部导航栏 */
+        .nav-top {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 56px; background-color: #fff;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.3);
+            display: flex; align-items: center; padding: 0 20px;
+            z-index: 100;
+        }
+        .nav-top .back-btn { font-size: 20px; color: #9d65c9; margin-right: 15px; }
+        .nav-top .title { font-size: 18px; font-weight: 600; color: #5a3372; flex: 1; text-align: center; }
+        .nav-top .home-btn { font-size: 20px; color: #9d65c9; }
+
+        /* 搜索栏 */
+        .search-bar {
+            margin: 66px 20px 15px;
+            height: 40px; background-color: #fff;
+            border-radius: 20px; padding: 0 15px;
+            display: flex; align-items: center;
+            box-shadow: 0 1px 3px rgba(221, 194, 230, 0.2);
+        }
+        .search-bar i { color: #c1a3d1; margin-right: 8px; }
+        .search-bar input {
+            border: none; outline: none; flex: 1;
+            font-size: 14px; color: #666;
+        }
+        .search-bar input::placeholder { color: #d1c0d9; }
+
+        /* 推荐区标题 */
+        .section-title {
+            padding: 0 20px; margin: 10px 0;
+            font-size: 16px; font-weight: 600; color: #5a3372;
+            display: flex; align-items: center;
+        }
+        .section-title::after {
+            content: ""; width: 4px; height: 16px;
+            background-color: #c888d8; margin-right: 8px;
+        }
+
+        /* 热门推荐案例 */
+        .hot-cases {
+            padding: 0 20px; margin-bottom: 20px;
+            display: flex; gap: 12px; overflow-x: auto;
+            scrollbar-width: none; /* 隐藏滚动条 */
+        }
+        .hot-cases::-webkit-scrollbar { display: none; }
+        .case-card-hot {
+            min-width: 240px; background-color: #fff;
+            border-radius: 12px; overflow: hidden;
+            box-shadow: 0 3px 10px rgba(221, 194, 230, 0.2);
+        }
+        .case-card-hot .case-img {
+            height: 120px; background-color: #f0e6f5;
+            display: flex; align-items: center; justify-content: center;
+            color: #9d65c9; font-size: 40px;
+        }
+        .case-card-hot .case-info {
+            padding: 12px 15px;
+        }
+        .case-card-hot .case-title {
+            font-size: 15px; font-weight: 600; color: #333;
+            margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .case-card-hot .case-tags {
+            display: flex; gap: 6px; margin-bottom: 10px;
+        }
+        .case-card-hot .tag {
+            font-size: 11px; padding: 2px 8px; border-radius: 10px;
+            background-color: #f0e6f5; color: #9d65c9;
+        }
+        .case-card-hot .case-meta {
+            display: flex; justify-content: space-between;
+            font-size: 12px; color: #888;
+        }
+        .case-card-hot .hot-tag {
+            position: absolute; top: 10px; right: 10px;
+            background-color: #ff6b8b; color: white;
+            font-size: 10px; padding: 2px 6px; border-radius: 4px;
+        }
+
+        /* 筛选栏 */
+        .filter-area {
+            padding: 15px 20px; background-color: #fff;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+        }
+        .filter-group {
+            margin-bottom: 12px;
+        }
+        .filter-group .group-title {
+            font-size: 14px; font-weight: 500; color: #5a3372;
+            margin-bottom: 8px;
+        }
+        .filter-tags {
+            display: flex; flex-wrap: wrap; gap: 8px;
+        }
+        .filter-tag {
+            padding: 6px 14px; border-radius: 20px;
+            font-size: 13px; cursor: pointer;
+            border: 1px solid #e0d0e8; color: #666;
+            transition: all 0.2s;
+        }
+        .filter-tag.active {
+            background-color: #f0e6f5; border-color: #9d65c9;
+            color: #9d65c9; font-weight: 500;
+        }
+        .filter-tag.reset {
+            border-color: #ff6b8b; color: #ff6b8b;
+        }
+
+        /* 案例列表 */
+        .case-list {
+            padding: 0 20px; margin-bottom: 80px;
+            display: grid; grid-template-columns: 1fr; gap: 15px;
+        }
+        .case-card {
+            background-color: #fff; border-radius: 12px;
+            overflow: hidden; box-shadow: 0 3px 10px rgba(221, 194, 230, 0.2);
+            display: flex;
+        }
+        .case-card .card-img {
+            width: 100px; height: 100px; background-color: #f0e6f5;
+            display: flex; align-items: center; justify-content: center;
+            color: #9d65c9; font-size: 30px;
+        }
+        .case-card .card-content {
+            flex: 1; padding: 15px;
+            display: flex; flex-direction: column;
+        }
+        .case-card .card-title {
+            font-size: 15px; font-weight: 600; color: #333;
+            margin-bottom: 8px;
+        }
+        .case-card .card-tags {
+            display: flex; gap: 6px; margin-bottom: 10px;
+        }
+        .case-card .card-tag {
+            font-size: 11px; padding: 2px 8px; border-radius: 10px;
+            background-color: #f0e6f5; color: #9d65c9;
+        }
+        .card-tag.tutor {
+            background-color: #e6f5f0; color: #65c985;
+        }
+        .case-card .card-meta {
+            font-size: 12px; color: #888;
+            margin-bottom: auto;
+        }
+        .case-card .card-actions {
+            display: flex; justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .case-card .price {
+            font-size: 14px; font-weight: 600; color: #ff6b8b;
+        }
+        .case-card .view-btn {
+            padding: 6px 16px; border-radius: 20px;
+            background-color: #9d65c9; color: white;
+            font-size: 13px; border: none; cursor: pointer;
+        }
+
+        /* 底部提示 */
+        .bottom-tip {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 40px; background-color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: #888;
+            border-top: 1px solid #f0e6f5;
+        }
+        .bottom-tip span { color: #9d65c9; margin: 0 3px; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-top">
+        <div class="back-btn">←</div>
+        <div class="title">上岸时间表</div>
+        <div class="home-btn">🏠</div>
+    </div>
+
+    <!-- 搜索栏 -->
+    <div class="search-bar">
+        <i>🔍</i>
+        <input type="text" placeholder="搜索目标/时长/经历，如「高考逆袭」「0基础」">
+    </div>
+
+    <!-- 热门推荐区 -->
+    <div class="section-title">热门推荐</div>
+    <div class="hot-cases">
+        <!-- 热门案例1 -->
+        <div class="case-card-hot" style="position: relative;">
+            <div class="hot-tag">热门</div>
+            <div class="case-img">📚</div>
+            <div class="case-info">
+                <div class="case-title">976小时高考逆袭200分上一本</div>
+                <div class="case-tags">
+                    <span class="tag">高考</span>
+                    <span class="tag">失恋逆袭</span>
+                    <span class="tag">日均13h</span>
+                </div>
+                <div class="case-meta">
+                    <span>上岸者：小夏</span>
+                    <span>1286人查看</span>
+                </div>
+            </div>
+        </div>
+        <!-- 热门案例2 -->
+        <div class="case-card-hot">
+            <div class="case-img">💼</div>
+            <div class="case-info">
+                <div class="case-title">4440小时会计学上岸CPA全科</div>
+                <div class="case-tags">
+                    <span class="tag">考证</span>
+                    <span class="tag">在职备考</span>
+                    <span class="tag">3年规划</span>
+                </div>
+                <div class="case-meta">
+                    <span>上岸者：李会计</span>
+                    <span>952人查看</span>
+                </div>
+            </div>
+        </div>
+        <!-- 热门案例3 -->
+        <div class="case-card-hot">
+            <div class="case-img">💻</div>
+            <div class="case-info">
+                <div class="case-title">1800小时0基础逆袭Python开发</div>
+                <div class="case-tags">
+                    <span class="tag">技能</span>
+                    <span class="tag">0基础</span>
+                    <span class="tag">转行</span>
+                </div>
+                <div class="case-meta">
+                    <span>上岸者：张码农</span>
+                    <span>734人查看</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 筛选区 -->
+    <div class="filter-area">
+        <!-- 目标筛选 -->
+        <div class="filter-group">
+            <div class="group-title">目标分类</div>
+            <div class="filter-tags">
+                <div class="filter-tag active">全部</div>
+                <div class="filter-tag">高考</div>
+                <div class="filter-tag">考研</div>
+                <div class="filter-tag">考证</div>
+                <div class="filter-tag">技能学习</div>
+                <div class="filter-tag">职场晋升</div>
+            </div>
+        </div>
+        <!-- 时长筛选 -->
+        <div class="filter-group">
+            <div class="group-title">投入时长</div>
+            <div class="filter-tags">
+                <div class="filter-tag">全部</div>
+                <div class="filter-tag">＜1000小时</div>
+                <div class="filter-tag active">1000-3000小时</div>
+                <div class="filter-tag">3000-5000小时</div>
+                <div class="filter-tag">＞5000小时</div>
+            </div>
+        </div>
+        <!-- 经历筛选 -->
+        <div class="filter-group">
+            <div class="group-title">特殊经历</div>
+            <div class="filter-tags">
+                <div class="filter-tag">全部</div>
+                <div class="filter-tag">失恋逆袭</div>
+                <div class="filter-tag">在职备考</div>
+                <div class="filter-tag">早睡早起</div>
+                <div class="filter-tag">跨专业</div>
+                <div class="filter-tag">宝妈备考</div>
+            </div>
+        </div>
+        <!-- 基础筛选 -->
+        <div class="filter-group">
+            <div class="group-title">初始基础</div>
+            <div class="filter-tags">
+                <div class="filter-tag active">全部</div>
+                <div class="filter-tag">0基础</div>
+                <div class="filter-tag">有基础</div>
+                <div class="filter-tag">进阶提升</div>
+                <div class="filter-tag reset">重置筛选</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 案例列表区 -->
+    <div class="section-title">筛选结果 (12)</div>
+    <div class="case-list">
+        <!-- 案例1 -->
+        <div class="case-card">
+            <div class="card-img">📚</div>
+            <div class="card-content">
+                <div class="card-title">2100小时考研英语从40分到82分</div>
+                <div class="card-tags">
+                    <span class="card-tag">考研</span>
+                    <span class="card-tag">0基础</span>
+                    <span class="card-tag tutor">认证导师</span>
+                </div>
+                <div class="card-meta">上岸者：王老师 | 时长：2100h | 免费预览3天</div>
+                <div class="card-actions">
+                    <div class="price">88钻石查看</div>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+        </div>
+        <!-- 案例2 -->
+        <div class="case-card">
+            <div class="card-img">🎨</div>
+            <div class="card-content">
+                <div class="card-title">1500小时0基础学UI设计入职大厂</div>
+                <div class="card-tags">
+                    <span class="card-tag">技能学习</span>
+                    <span class="card-tag">转行</span>
+                    <span class="card-tag">日均6h</span>
+                </div>
+                <div class="card-meta">上岸者：小美学姐 | 时长：1500h | 免费预览3天</div>
+                <div class="card-actions">
+                    <div class="price">68钻石查看</div>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+        </div>
+        <!-- 案例3 -->
+        <div class="case-card">
+            <div class="card-img">🏦</div>
+            <div class="card-content">
+                <div class="card-title">2800小时在职备考银行秋招上岸</div>
+                <div class="card-tags">
+                    <span class="card-tag">职场晋升</span>
+                    <span class="card-tag">在职备考</span>
+                    <span class="card-tag tutor">认证导师</span>
+                </div>
+                <div class="card-meta">上岸者：陈经理 | 时长：2800h | 免费预览3天</div>
+                <div class="card-actions">
+                    <div class="price">98钻石查看</div>
+                    <button class="view-btn">查看详情</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="bottom-tip">
+        上传你的上岸时间表，赢<span>品牌高奢真皮包</span> | 案例均经真人认证，真实可复用
+    </div>
+</body>
+</html>

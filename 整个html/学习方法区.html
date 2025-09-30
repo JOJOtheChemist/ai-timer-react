@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习方法 | 女性成长时间管理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        body { background-color: #f9f7f9; color: #333; line-height: 1.5; }
+        
+        /* 顶部导航栏 */
+        .nav-top {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 56px; background-color: #fff;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.3);
+            display: flex; align-items: center; padding: 0 20px;
+            z-index: 100;
+        }
+        .nav-top .back-btn { font-size: 20px; color: #9d65c9; margin-right: 15px; }
+        .nav-top .title { font-size: 18px; font-weight: 600; color: #5a3372; flex: 1; text-align: center; }
+        .nav-top .search-btn { font-size: 20px; color: #9d65c9; }
+
+        /* 页面容器 */
+        .container {
+            padding: 66px 20px 80px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* AI推荐区 */
+        .ai-recommend {
+            background: linear-gradient(135deg, #f0e6f5 0%, #e0d0e8 100%);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 3px 8px rgba(221, 194, 230, 0.2);
+        }
+        .ai-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9d65c9;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .ai-content {
+            flex: 1;
+        }
+        .ai-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #5a3372;
+            margin-bottom: 3px;
+        }
+        .ai-desc {
+            font-size: 13px;
+            color: #7a5490;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .ai-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .ai-btn {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+        .ai-btn.primary {
+            background-color: #9d65c9;
+            color: white;
+        }
+        .ai-btn.secondary {
+            background-color: #fff;
+            color: #9d65c9;
+        }
+
+        /* 分类筛选栏 */
+        .filter-tab {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 5px;
+        }
+        .filter-tab::-webkit-scrollbar { display: none; }
+        .filter-type {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            background-color: #fff;
+            border: 1px solid #e0d0e8;
+            color: #666;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-type.active {
+            background-color: #f0e6f5;
+            border-color: #9d65c9;
+            color: #9d65c9;
+            font-weight: 500;
+        }
+        .filter-type.highlight {
+            border-color: #65c985;
+            color: #65c985;
+        }
+        .filter-type.highlight.active {
+            background-color: #e6f5f0;
+            border-color: #65c985;
+            color: #65c985;
+        }
+
+        /* 方法列表区 */
+        .method-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .method-card {
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(221, 194, 230, 0.2);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        .method-card:hover { transform: translateY(-2px); }
+        .method-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #f0e6f5;
+        }
+        .method-info {
+            flex: 1;
+        }
+        .method-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .method-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #888;
+        }
+        .method-meta .tutor-tag {
+            color: #65c985;
+            font-weight: 500;
+        }
+        .method-tag {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            background-color: #f0e6f5;
+            color: #9d65c9;
+        }
+        .method-tag.tutor {
+            background-color: #e6f5f0;
+            color: #65c985;
+        }
+
+        .method-body {
+            padding: 15px 20px;
+        }
+        .method-desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .method-steps {
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        .step-item {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+            position: relative;
+        }
+        .step-item::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #9d65c9;
+            position: absolute;
+            left: -15px;
+            top: 7px;
+        }
+        .method-scene {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .method-scene i {
+            color: #9d65c9;
+        }
+
+        .method-footer {
+            padding: 12px 20px;
+            background-color: #f9f7f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .method-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #888;
+        }
+        .stats-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .stats-item i {
+            color: #c1a3d1;
+        }
+        .checkin-btn {
+            padding: 6px 16px;
+            border-radius: 20px;
+            background-color: #9d65c9;
+            color: white;
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+        }
+        .checkin-btn.tutor {
+            background-color: #65c985;
+        }
+
+        /* 打卡弹窗（默认隐藏） */
+        .checkin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .checkin-modal.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-content {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 25px 20px;
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .modal-header .icon {
+            font-size: 40px;
+            color: #9d65c9;
+            margin-bottom: 10px;
+        }
+        .modal-header .title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        .checkin-type {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .checkin-option {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid #e0d0e8;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .checkin-option.active {
+            border-color: #9d65c9;
+            background-color: #f0e6f5;
+            color: #9d65c9;
+            font-weight: 500;
+        }
+        .checkin-content {
+            margin-bottom: 25px;
+        }
+        .checkin-count {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .checkin-item {
+            font-size: 30px;
+            color: #e0d0e8;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .checkin-item.active {
+            color: #9d65c9;
+        }
+        .checkin-note {
+            width: 100%;
+            height: 80px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #e0d0e8;
+            resize: none;
+            font-size: 13px;
+            color: #333;
+            outline: none;
+        }
+        .checkin-note:focus {
+            border-color: #9d65c9;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 10px 0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+        .modal-btn.cancel {
+            background-color: #f9f7f9;
+            color: #888;
+        }
+        .modal-btn.confirm {
+            background-color: #9d65c9;
+            color: white;
+        }
+
+        /* 底部提示 */
+        .bottom-tip {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 40px; background-color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: #888;
+            border-top: 1px solid #f0e6f5;
+            z-index: 90;
+        }
+        .bottom-tip span { color: #9d65c9; margin: 0 3px; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-top">
+        <div class="back-btn">←</div>
+        <div class="title">学习方法库</div>
+        <div class="search-btn">🔍</div>
+    </div>
+
+    <!-- 页面容器 -->
+    <div class="container">
+        <!-- AI推荐区 -->
+        <div class="ai-recommend">
+            <div class="ai-icon">🤖</div>
+            <div class="ai-content">
+                <div class="ai-title">为你推荐 · 基于你的时间表分析</div>
+                <div class="ai-desc">发现你复习频率低，推荐「艾宾浩斯复习四步法」，已帮助326人提升记忆效率</div>
+                <div class="ai-actions">
+                    <button class="ai-btn primary">立即使用</button>
+                    <button class="ai-btn secondary">换一个</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分类筛选栏 -->
+        <div class="filter-tab">
+            <button class="filter-type active">全部方法</button>
+            <button class="filter-type">通用方法</button>
+            <button class="filter-type highlight">导师独创</button>
+            <button class="filter-type">考研专属</button>
+            <button class="filter-type">考证必备</button>
+            <button class="filter-type">语言学习</button>
+        </div>
+
+        <!-- 方法列表区 -->
+        <div class="method-list">
+            <!-- 通用方法：艾宾浩斯复习四步法 -->
+            <div class="method-card" data-method="1">
+                <div class="method-header">
+                    <div class="method-info">
+                        <div class="method-name">艾宾浩斯复习四步法</div>
+                        <div class="method-meta">
+                            <span>适用：全学科</span>
+                            <span>1286人打卡</span>
+                        </div>
+                    </div>
+                    <div class="method-tag">通用方法</div>
+                </div>
+                <div class="method-body">
+                    <div class="method-desc">基于艾宾浩斯遗忘曲线设计，通过4次关键节点复习，将短期记忆转化为长期记忆，尤其适合单词、公式等知识点记忆。</div>
+                    <div class="method-steps">
+                        <div class="step-item">1. 新学后10分钟：快速复盘核心内容（如默写单词词义）</div>
+                        <div class="step-item">2. 新学后12小时：精读笔记+错题整理（建议睡前完成）</div>
+                        <div class="step-item">3. 新学后24小时：独立回忆+框架默写</div>
+                        <div class="step-item">4. 新学后7天：综合刷题+弱点补强</div>
+                    </div>
+                    <div class="method-scene"><i>📍</i> 推荐场景：背单词、记专业课笔记、考证考点记忆</div>
+                </div>
+                <div class="method-footer">
+                    <div class="method-stats">
+                        <div class="stats-item"><i>⭐</i> 4.9分</div>
+                        <div class="stats-item"><i>💬</i> 328条评价</div>
+                    </div>
+                    <button class="checkin-btn" data-type="common">立即打卡</button>
+                </div>
+            </div>
+
+            <!-- 导师独创方法：王英语老师的精读法 -->
+            <div class="method-card" data-method="2">
+                <div class="method-header">
+                    <div class="method-info">
+                        <div class="method-name">考研英语精读五步法</div>
+                        <div class="method-meta">
+                            <span class="tutor-tag">王英语老师（认证导师）</span>
+                            <span>863人打卡</span>
+                        </div>
+                    </div>
+                    <div class="method-tag tutor">导师独创</div>
+                </div>
+                <div class="method-body">
+                    <div class="method-desc">针对考研英语阅读提分设计，从“词-句-篇-题-复盘”全维度拆解，帮助基础薄弱者从阅读20分提升至35+。</div>
+                    <div class="method-steps">
+                        <div class="step-item">1. 词汇：标注陌生词，结合语境记词义（不查词典先猜）</div>
+                        <div class="step-item">2. 长难句：拆分语法结构，标注主干和修饰成分</div>
+                        <div class="step-item">3. 篇章：梳理段落逻辑，画思维导图（3分钟内完成）</div>
+                        <div class="step-item">4. 做题：重新答题，标注答案定位句</div>
+                        <div class="step-item">5. 复盘：总结错误类型（如细节题/推理题）及规避方法</div>
+                    </div>
+                    <div class="method-scene"><i>📍</i> 推荐场景：考研英语真题精读、四六级阅读强化</div>
+                </div>
+                <div class="method-footer">
+                    <div class="method-stats">
+                        <div class="stats-item"><i>⭐</i> 4.8分</div>
+                        <div class="stats-item"><i>💬</i> 215条评价</div>
+                    </div>
+                    <button class="checkin-btn tutor" data-type="tutor">立即打卡</button>
+                </div>
+            </div>
+
+            <!-- 通用方法：四遍画正字复习法 -->
+            <div class="method-card" data-method="3">
+                <div class="method-header">
+                    <div class="method-info">
+                        <div class="method-name">四遍画正字复习法</div>
+                        <div class="method-meta">
+                            <span>适用：文科背诵</span>
+                            <span>752人打卡</span>
+                        </div>
+                    </div>
+                    <div class="method-tag">通用方法</div>
+                </div>
+                <div class="method-body">
+                    <div class="method-desc">极简可视化复习法，通过画“正”字记录复习次数，确保每个知识点至少复习4遍，避免漏复习或重复复习。</div>
+                    <div class="method-steps">
+                        <div class="step-item">1. 第1遍：通读教材，在笔记旁画“一”（理解为主）</div>
+                        <div class="step-item">2. 第2遍：精读+标注重点，画“丨”（记忆关键词）</div>
+                        <div class="step-item">3. 第3遍：合书回忆，画“丿”（查漏补缺）</div>
+                        <div class="step-item">4. 第4遍：模拟默写，画“㇏”（完整输出）</div>
+                    </div>
+                    <div class="method-scene"><i>📍</i> 推荐场景：政治大题背诵、专业课论述题、教资考点记忆</div>
+                </div>
+                <div class="method-footer">
+                    <div class="method-stats">
+                        <div class="stats-item"><i>⭐</i> 4.7分</div>
+                        <div class="stats-item"><i>💬</i> 189条评价</div>
+                    </div>
+                    <button class="checkin-btn" data-type="common">立即打卡</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 打卡弹窗 -->
+    <div class="checkin-modal" id="checkinModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon" id="modalIcon">📚</div>
+                <div class="title" id="modalTitle">艾宾浩斯复习四步法 · 打卡</div>
+            </div>
+            <div class="checkin-type">
+                <div class="checkin-option active">正字打卡</div>
+                <div class="checkin-option">计数打卡</div>
+            </div>
+            <div class="checkin-content">
+                <div class="checkin-count" id="checkinCount">
+                    <div class="checkin-item active">一</div>
+                    <div class="checkin-item">丨</div>
+                    <div class="checkin-item">丿</div>
+                    <div class="checkin-item">㇏</div>
+                </div>
+                <textarea class="checkin-note" placeholder="记录今日复习心得（可选）"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel">取消</button>
+                <button class="modal-btn confirm">完成打卡</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="bottom-tip">
+        坚持打卡可获<span>徽章奖励</span> | 导师独创方法可同步至时间表，AI实时优化学习计划
+    </div>
+
+    <script>
+        // 分类标签切换
+        const filterTypes = document.querySelectorAll('.filter-type');
+        filterTypes.forEach(type => {
+            type.addEventListener('click', () => {
+                filterTypes.forEach(t => t.classList.remove('active'));
+                type.classList.add('active');
+                // 实际开发中可在此处切换不同分类的方法列表
+            });
+        });
+
+        // 打卡按钮点击
+        const checkinBtns = document.querySelectorAll('.checkin-btn');
+        const checkinModal = document.getElementById('checkinModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalIcon = document.getElementById('modalIcon');
+        const cancelBtn = document.querySelector('.modal-btn.cancel');
+        const confirmBtn = document.querySelector('.modal-btn.confirm');
+
+        checkinBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const card = btn.closest('.method-card');
+                const methodName = card.querySelector('.method-name').textContent;
+                const methodType = btn.dataset.type;
+
+                // 更新弹窗内容
+                modalTitle.textContent = `${methodName} · 打卡`;
+                modalIcon.textContent = methodType === 'tutor' ? '👩‍🏫' : '📚';
+                
+                // 显示弹窗
+                checkinModal.classList.add('show');
+            });
+        });
+
+        // 关闭弹窗
+        cancelBtn.addEventListener('click', () => {
+            checkinModal.classList.remove('show');
+        });
+
+        // 打卡类型切换（正字/计数）
+        const checkinOptions = document.querySelectorAll('.checkin-option');
+        const checkinCount = document.getElementById('checkinCount');
+
+        checkinOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                checkinOptions.forEach(o => o.classList.remove('active'));
+                option.classList.add('active');
+
+                // 切换打卡样式
+                if (option.textContent === '正字打卡') {
+                    checkinCount.innerHTML = `
+                        <div class="checkin-item active">一</div>
+                        <div class="checkin-item">丨</div>
+                        <div class="checkin-item">丿</div>
+                        <div class="checkin-item">㇏</div>
+                    `;
+                } else {
+                    checkinCount.innerHTML = `
+                        <div class="checkin-item active">1</div>
+                        <div class="checkin-item">2</div>
+                        <div class="checkin-item">3</div>
+                        <div class="checkin-item">4</div>
+                    `;
+                }
+
+                // 重新绑定打卡项点击事件
+                bindCheckinItemClick();
+            });
+        });
+
+        // 打卡项点击（选择复习次数）
+        function bindCheckinItemClick() {
+            const checkinItems = document.querySelectorAll('.checkin-item');
+            checkinItems.forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    checkinItems.forEach((i, idx) => {
+                        if (idx <= index) i.classList.add('active');
+                        else i.classList.remove('active');
+                    });
+                });
+            });
+        }
+        // 初始绑定
+        bindCheckinItemClick();
+
+        // 完成打卡
+        confirmBtn.addEventListener('click', () => {
+            const activeItems = document.querySelectorAll('.checkin-item.active');
+            const checkinTimes = activeItems.length;
+            const note = document.querySelector('.checkin-note').value.trim();
+
+            checkinModal.classList.remove('show');
+            alert(`打卡成功！已完成${checkinTimes}遍复习${note ? '，心得已保存' : ''}，同步至你的个人动态~`);
+            
+            // 实际开发中可在此处更新打卡数据、同步至个人页面、触发AI推荐更新
+        });
+
+        // 点击弹窗外部关闭
+        checkinModal.addEventListener('click', (e) => {
+            if (e.target === checkinModal) {
+                checkinModal.classList.remove('show');
+            }
+        });
+
+        // AI推荐按钮点击
+        const aiBtns = document.querySelectorAll('.ai-btn');
+        aiBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.textContent === '立即使用') {
+                    // 跳转到对应方法详情（此处模拟）
+                    document.querySelector('.method-card[data-method="1"]').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // 切换推荐（此处模拟）
+                    document.querySelector('.ai-desc').textContent = '发现你英语阅读耗时过长，推荐「考研英语精读五步法」，王英语老师独创，863人打卡提分';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

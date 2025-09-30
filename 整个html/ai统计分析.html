@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间统计与分析 | 智能时间管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#6366f1',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                        info: '#06b6d4',
+                        study: '#3b82f6',
+                        life: '#10b981',
+                        work: '#6366f1',
+                        play: '#f59e0b',
+                        ai: '#8b5cf6',
+                        neutral: '#64748b'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .heatmap-cell {
+                transition: all 0.2s ease;
+            }
+            .heatmap-cell:hover {
+                transform: scale(1.3);
+                z-index: 10;
+            }
+            .badge-hover {
+                transition: transform 0.3s ease;
+            }
+            .badge-hover:hover {
+                transform: translateY(-5px);
+            }
+            .timeline-dot::before {
+                content: '';
+                position: absolute;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background-color: currentColor;
+                left: -6px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-inter text-gray-800 min-h-screen">
+    <!-- 顶部导航栏 -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <button class="mr-4 text-gray-500 hover:text-primary">
+                        <i class="fa fa-arrow-left text-lg"></i>
+                    </button>
+                    <h1 class="text-xl font-semibold text-gray-800">时间统计与分析</h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="text-gray-500 hover:text-primary">
+                        <i class="fa fa-download text-lg"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-primary">
+                        <i class="fa fa-share-alt text-lg"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-primary">
+                        <i class="fa fa-ellipsis-v text-lg"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 时间范围选择器 -->
+            <div class="border-t border-gray-100 py-2">
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                    <button class="time-range-btn bg-primary text-white px-4 py-1.5 rounded-full text-sm whitespace-nowrap">
+                        本周
+                    </button>
+                    <button class="time-range-btn bg-gray-100 text-gray-600 px-4 py-1.5 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
+                        本月
+                    </button>
+                    <button class="time-range-btn bg-gray-100 text-gray-600 px-4 py-1.5 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
+                        本季度
+                    </button>
+                    <button class="time-range-btn bg-gray-100 text-gray-600 px-4 py-1.5 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
+                        今年
+                    </button>
+                    <button class="time-range-btn bg-gray-100 text-gray-600 px-4 py-1.5 rounded-full text-sm whitespace-nowrap hover:bg-gray-200">
+                        自定义
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-5">
+        <!-- 关键指标卡片 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow-sm p-4">
+                <div class="text-sm text-gray-500 mb-1">总专注时长</div>
+                <div class="text-2xl font-bold text-primary mb-2">38.5h</div>
+                <div class="text-xs flex items-center text-success">
+                    <i class="fa fa-arrow-up mr-1"></i> 较上周增长12%
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4">
+                <div class="text-sm text-gray-500 mb-1">高频任务完成率</div>
+                <div class="text-2xl font-bold text-success mb-2">78%</div>
+                <div class="text-xs flex items-center text-success">
+                    <i class="fa fa-arrow-up mr-1"></i> 较上周增长5%
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4">
+                <div class="text-sm text-gray-500 mb-1">平均专注时长</div>
+                <div class="text-2xl font-bold text-info mb-2">1.2h</div>
+                <div class="text-xs flex items-center text-danger">
+                    <i class="fa fa-arrow-down mr-1"></i> 较上周下降8%
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4">
+                <div class="text-sm text-gray-500 mb-1">行为规律指数</div>
+                <div class="text-2xl font-bold text-secondary mb-2">65</div>
+                <div class="text-xs flex items-center text-success">
+                    <i class="fa fa-arrow-up mr-1"></i> 较上周增长3%
+                </div>
+            </div>
+        </div>
+
+        <!-- 行为规律矩阵 (48x7) -->
+        <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">每日行为规律矩阵</h2>
+                <div class="flex gap-2">
+                    <button class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full">
+                        专注度
+                    </button>
+                    <button class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
+                        任务量
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-sm text-gray-500 mb-3">
+                <p>通过48个时间格子(每30分钟)×7天的矩阵，分析您的时间分配规律</p>
+            </div>
+            
+            <!-- 时间标签 (小时) -->
+            <div class="flex mb-2">
+                <div class="w-8"></div>
+                <div class="flex-1 grid grid-cols-48 gap-[2px]">
+                    <!-- 每4列显示一个小时标签 -->
+                    <div class="col-span-4 text-center text-xs text-gray-400">0:00</div>
+                    <div class="col-span-4 text-center text-xs text-gray-400">2:00</div>
+                    <div class="col-span-4 text-center text-xs text-gray-400">4:00</div>
+                    <div class="col-span-4 text-center text-xs text-gray-400">6:00</div>
+                    <div class="col-span-4 text-center text-xs text-gray-400">8:00</div>
+                    <div class="col-span-4 text-center text-xs text-gray-400">10:00</div>
+                    <div class="col-span-4 text-center text-xs text-gray-400">12:00</div>
+                    <div class="col-span-4 text-center text-xs text-gray-400">14:00</div>
+                    <div class="col-span-4 text-center text-xs text-gray-400">16:00</div>
+                    <div class="col-span-4 text-center text-xs text-gray-400">18:00</div>
+                    <div class="col-span-4 text-center text-xs text-gray-400">20:00</div>
+                    <div class="col-span-4 text-center text-xs text-gray-400">22:00</div>
+                </div>
+            </div>
+            
+            <!-- 矩阵内容 -->
+            <div class="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+                <!-- 周一 -->
+                <div class="flex items-center">
+                    <div class="w-8 text-xs text-gray-500">周一</div>
+                    <div class="flex-1 grid grid-cols-48 gap-[2px] h-8">
+                        <!-- 生成48个格子，使用不同的背景色表示专注度 -->
+                        <!-- 这里是示例数据，实际应用中会根据真实数据生成 -->
+                        <script>
+                            // 仅用于生成示例格子，实际项目中会删除
+                            document.write(Array(48).fill().map((_, i) => {
+                                // 模拟睡眠时段(23:00-6:00)
+                                if (i >= 46 || i < 12) {
+                                    return `<div class="heatmap-cell bg-gray-100 rounded-sm"></div>`;
+                                }
+                                
+                                // 生成随机值模拟专注度
+                                const value = Math.random();
+                                if (value < 0.2) return `<div class="heatmap-cell bg-primary/10 rounded-sm"></div>`;
+                                if (value < 0.4) return `<div class="heatmap-cell bg-primary/30 rounded-sm"></div>`;
+                                if (value < 0.6) return `<div class="heatmap-cell bg-primary/50 rounded-sm"></div>`;
+                                if (value < 0.8) return `<div class="heatmap-cell bg-primary/70 rounded-sm"></div>`;
+                                return `<div class="heatmap-cell bg-primary/90 rounded-sm"></div>`;
+                            }).join(''));
+                        </script>
+                    </div>
+                </div>
+                
+                <!-- 周二到周日 (结构相同，数据不同) -->
+                <div class="flex items-center">
+                    <div class="w-8 text-xs text-gray-500">周二</div>
+                    <div class="flex-1 grid grid-cols-48 gap-[2px] h-8">
+                        <script>
+                            document.write(Array(48).fill().map((_, i) => {
+                                if (i >= 44 || i < 10) {
+                                    return `<div class="heatmap-cell bg-gray-100 rounded-sm"></div>`;
+                                }
+                                
+                                const value = Math.random();
+                                if (value < 0.2) return `<div class="heatmap-cell bg-primary/10 rounded-sm"></div>`;
+                                if (value < 0.4) return `<div class="heatmap-cell bg-primary/30 rounded-sm"></div>`;
+                                if (value < 0.6) return `<div class="heatmap-cell bg-primary/50 rounded-sm"></div>`;
+                                if (value < 0.8) return `<div class="heatmap-cell bg-primary/70 rounded-sm"></div>`;
+                                return `<div class="heatmap-cell bg-primary/90 rounded-sm"></div>`;
+                            }).join(''));
+                        </script>
+                    </div>
+                </div>
+                
+                <div class="flex items-center">
+                    <div class="w-8 text-xs text-gray-500">周三</div>
+                    <div class="flex-1 grid grid-cols-48 gap-[2px] h-8">
+                        <!-- 类似结构 -->
+                        <script>
+                            document.write(Array(48).fill().map((_, i) => {
+                                if (i >= 42 || i < 11) {
+                                    return `<div class="heatmap-cell bg-gray-100 rounded-sm"></div>`;
+                                }
+                                
+                                const value = Math.random();
+                                if (value < 0.2) return `<div class="heatmap-cell bg-primary/10 rounded-sm"></div>`;
+                                if (value < 0.4) return `<div class="heatmap-cell bg-primary/30 rounded-sm"></div>`;
+                                if (value < 0.6) return `<div class="heatmap-cell bg-primary/50 rounded-sm"></div>`;
+                                if (value < 0.8) return `<div class="heatmap-cell bg-primary/70 rounded-sm"></div>`;
+                                return `<div class="heatmap-cell bg-primary/90 rounded-sm"></div>`;
+                            }).join(''));
+                        </script>
+                    </div>
+                </div>
+                
+                <div class="flex items-center">
+                    <div class="w-8 text-xs text-gray-500">周四</div>
+                    <div class="flex-1 grid grid-cols-48 gap-[2px] h-8">
+                        <!-- 类似结构 -->
+                        <script>
+                            document.write(Array(48).fill().map((_, i) => {
+                                if (i >= 46 || i < 12) {
+                                    return `<div class="heatmap-cell bg-gray-100 rounded-sm"></div>`;
+                                }
+                                
+                                const value = Math.random();
+                                if (value < 0.2) return `<div class="heatmap-cell bg-primary/10 rounded-sm"></div>`;
+                                if (value < 0.4) return `<div class="heatmap-cell bg-primary/30 rounded-sm"></div>`;
+                                if (value < 0.6) return `<div class="heatmap-cell bg-primary/50 rounded-sm"></div>`;
+                                if (value < 0.8) return `<div class="heatmap-cell bg-primary/70 rounded-sm"></div>`;
+                                return `<div class="heatmap-cell bg-primary/90 rounded-sm"></div>`;
+                            }).join(''));
+                        </script>
+                    </div>
+                </div>
+                
+                <div class="flex items-center">
+                    <div class="w-8 text-xs text-gray-500">周五</div>
+                    <div class="flex-1 grid grid-cols-48 gap-[2px] h-8">
+                        <!-- 类似结构 -->
+                        <script>
+                            document.write(Array(48).fill().map((_, i) => {
+                                if (i >= 48 || i < 14) { // 周五睡得晚，起得晚
+                                    return `<div class="heatmap-cell bg-gray-100 rounded-sm"></div>`;
+                                }
+                                
+                                const value = Math.random();
+                                if (value < 0.2) return `<div class="heatmap-cell bg-primary/10 rounded-sm"></div>`;
+                                if (value < 0.4) return `<div class="heatmap-cell bg-primary/30 rounded-sm"></div>`;
+                                if (value < 0.6) return `<div class="heatmap-cell bg-primary/50 rounded-sm"></div>`;
+                                if (value < 0.8) return `<div class="heatmap-cell bg-primary/70 rounded-sm"></div>`;
+                                return `<div class="heatmap-cell bg-primary/90 rounded-sm"></div>`;
+                            }).join(''));
+                        </script>
+                    </div>
+                </div>
+                
+                <div class="flex items-center">
+                    <div class="w-8 text-xs text-gray-500">周六</div>
+                    <div class="flex-1 grid grid-cols-48 gap-[2px] h-8">
+                        <!-- 类似结构 -->
+                        <script>
+                            document.write(Array(48).fill().map((_, i) => {
+                                if (i >= 50 || i < 16) { // 周六更晚
+                                    return `<div class="heatmap-cell bg-gray-100 rounded-sm"></div>`;
+                                }
+                                
+                                const value = Math.random();
+                                if (value < 0.4) return `<div class="heatmap-cell bg-primary/10 rounded-sm"></div>`;
+                                if (value < 0.6) return `<div class="heatmap-cell bg-primary/30 rounded-sm"></div>`;
+                                if (value < 0.8) return `<div class="heatmap-cell bg-primary/50 rounded-sm"></div>`;
+                                if (value < 0.9) return `<div class="heatmap-cell bg-primary/70 rounded-sm"></div>`;
+                                return `<div class="heatmap-cell bg-primary/90 rounded-sm"></div>`;
+                            }).join(''));
+                        </script>
+                    </div>
+                </div>
+                
+                <div class="flex items-center">
+                    <div class="w-8 text-xs text-gray-500">周日</div>
+                    <div class="flex-1 grid grid-cols-48 gap-[2px] h-8">
+                        <!-- 类似结构 -->
+                        <script>
+                            document.write(Array(48).fill().map((_, i) => {
+                                if (i >= 45 || i < 13) {
+                                    return `<div class="heatmap-cell bg-gray-100 rounded-sm"></div>`;
+                                }
+                                
+                                const value = Math.random();
+                                if (value < 0.2) return `<div class="heatmap-cell bg-primary/10 rounded-sm"></div>`;
+                                if (value < 0.4) return `<div class="heatmap-cell bg-primary/30 rounded-sm"></div>`;
+                                if (value < 0.6) return `<div class="heatmap-cell bg-primary/50 rounded-sm"></div>`;
+                                if (value < 0.8) return `<div class="heatmap-cell bg-primary/70 rounded-sm"></div>`;
+                                return `<div class="heatmap-cell bg-primary/90 rounded-sm"></div>`;
+                            }).join(''));
+                        </script>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 图例 -->
+            <div class="flex items-center justify-between mt-4 px-8">
+                <div class="text-xs text-gray-500">低专注度</div>
+                <div class="flex gap-1">
+                    <div class="w-4 h-4 bg-primary/10 rounded-sm"></div>
+                    <div class="w-4 h-4 bg-primary/30 rounded-sm"></div>
+                    <div class="w-4 h-4 bg-primary/50 rounded-sm"></div>
+                    <div class="w-4 h-4 bg-primary/70 rounded-sm"></div>
+                    <div class="w-4 h-4 bg-primary/90 rounded-sm"></div>
+                </div>
+                <div class="text-xs text-gray-500">高专注度</div>
+            </div>
+        </div>
+
+        <!-- 双列布局：热力图 + 曲线图 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- 任务时间分布热力图 (类似GitHub) -->
+            <div class="bg-white rounded-xl shadow-sm p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">任务时间分布热力图</h2>
+                    <div class="flex gap-2">
+                        <button class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full">
+                            按任务类型
+                        </button>
+                        <button class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
+                            按专注度
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="text-sm text-gray-500 mb-4">
+                    <p>类似GitHub贡献热力图，展示不同任务的时间分布规律</p>
+                </div>
+                
+                <!-- 月份标签 -->
+                <div class="grid grid-cols-12 gap-1 mb-2">
+                    <div class="text-center text-xs text-gray-400">1月</div>
+                    <div class="text-center text-xs text-gray-400">2月</div>
+                    <div class="text-center text-xs text-gray-400">3月</div>
+                    <div class="text-center text-xs text-gray-400">4月</div>
+                    <div class="text-center text-xs text-gray-400">5月</div>
+                    <div class="text-center text-xs text-gray-400">6月</div>
+                    <div class="text-center text-xs text-gray-400">7月</div>
+                    <div class="text-center text-xs text-gray-400">8月</div>
+                    <div class="text-center text-xs text-gray-400">9月</div>
+                    <div class="text-center text-xs text-gray-400">10月</div>
+                    <div class="text-center text-xs text-gray-400">11月</div>
+                    <div class="text-center text-xs text-gray-400">12月</div>
+                </div>
+                
+                <!-- 热力图主体 (7行52列) -->
+                <div class="space-y-1">
+                    <!-- 每周一行，共7行 -->
+                    <script>
+                        // 生成7行52列的热力图示例
+                        for (let row = 0; row < 7; row++) {
+                            document.write(`<div class="grid grid-cols-52 gap-[2px]">`);
+                            for (let col = 0; col < 52; col++) {
+                                // 随机生成不同任务类型的颜色
+                                const types = [
+                                    'bg-study/', 
+                                    'bg-life/', 
+                                    'bg-work/', 
+                                    'bg-play/'
+                                ];
+                                const type = types[Math.floor(Math.random() * types.length)];
+                                
+                                // 随机生成强度
+                                const intensity = Math.random();
+                                let opacity = '10%';
+                                if (intensity > 0.2) opacity = '30%';
+                                if (intensity > 0.4) opacity = '50%';
+                                if (intensity > 0.6) opacity = '70%';
+                                if (intensity > 0.8) opacity = '90%';
+                                
+                                // 部分格子留空
+                                if (Math.random() < 0.3) {
+                                    document.write(`<div class="heatmap-cell w-3 h-3 bg-gray-100 rounded-sm"></div>`);
+                                } else {
+                                    document.write(`<div class="heatmap-cell w-3 h-3 ${type}${opacity} rounded-sm"></div>`);
+                                }
+                            }
+                            document.write(`</div>`);
+                        }
+                    </script>
+                </div>
+                
+                <!-- 热力图图例 -->
+                <div class="flex items-center justify-between mt-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 bg-study/50 rounded-sm"></div>
+                        <span class="text-xs text-gray-500">学习</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 bg-life/50 rounded-sm"></div>
+                        <span class="text-xs text-gray-500">生活</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 bg-work/50 rounded-sm"></div>
+                        <span class="text-xs text-gray-500">工作</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 bg-play/50 rounded-sm"></div>
+                        <span class="text-xs text-gray-500">娱乐</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 注意力迁移曲线图 -->
+            <div class="bg-white rounded-xl shadow-sm p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">注意力迁移曲线</h2>
+                    <div class="flex gap-2">
+                        <button class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full">
+                            本周
+                        </button>
+                        <button class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
+                            对比上周
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="text-sm text-gray-500 mb-4">
+                    <p>展示一天中注意力变化趋势，标记关键任务节点</p>
+                </div>
+                
+                <!-- 曲线图容器 -->
+                <div class="h-[300px]">
+                    <canvas id="attentionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 注意力迁移分析 -->
+        <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+            <h2 class="text-lg font-semibold mb-4">注意力迁移分析</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="bg-gray-50 rounded-lg p-3">
+                    <div class="text-sm font-medium mb-2">任务切换频率</div>
+                    <div class="text-2xl font-bold text-primary mb-1">12次/天</div>
+                    <div class="text-xs text-gray-500">平均每次切换耗时: 8分钟</div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-3">
+                    <div class="text-sm font-medium mb-2">专注区间分布</div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="w-24">
+                            <div class="text-xs text-gray-500">上午</div>
+                            <div class="text-lg font-bold text-success">42%</div>
+                        </div>
+                        <div class="w-24">
+                            <div class="text-xs text-gray-500">下午</div>
+                            <div class="text-lg font-bold text-warning">35%</div>
+                        </div>
+                        <div class="w-24">
+                            <div class="text-xs text-gray-500">晚上</div>
+                            <div class="text-lg font-bold text-primary">23%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-3">
+                    <div class="text-sm font-medium mb-2">任务衔接效率</div>
+                    <div class="text-2xl font-bold text-success mb-1">78%</div>
+                    <div class="text-xs text-gray-500">较上周提升: 5%</div>
+                </div>
+            </div>
+            
+            <!-- 任务转换桑基图 -->
+            <div class="h-[200px] bg-gray-50 rounded-lg p-3 mb-3">
+                <div class="text-center text-gray-400 text-sm py-10">
+                    任务转换桑基图将在此显示，直观展示任务间的转换关系
+                </div>
+            </div>
+            
+            <!-- 分析结论 -->
+            <div class="text-sm text-gray-600 space-y-2">
+                <p>• 您的注意力在上午9:00-11:00达到峰值，适合安排高难度学习任务</p>
+                <p>• 从"学习"任务转换到"休息"任务的效率最高，平均仅需3分钟</p>
+                <p>• 建议减少下午3:00-4:00的任务切换，此时间段注意力恢复较慢</p>
+            </div>
+        </div>
+
+        <!-- 徽章墙和分析 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <!-- 徽章墙 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 lg:col-span-1">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">成就徽章</h2>
+                    <button class="text-sm text-primary">查看全部</button>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-3">
+                    <!-- 已获得徽章 -->
+                    <div class="badge-hover flex flex-col items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="w-12 h-12 rounded-full bg-success/20 flex items-center justify-center mb-2">
+                            <i class="fa fa-sun-o text-success text-xl"></i>
+                        </div>
+                        <div class="text-xs text-center font-medium">早起达人</div>
+                        <div class="text-[10px] text-gray-500">连续7天</div>
+                    </div>
+                    
+                    <div class="badge-hover flex flex-col items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mb-2">
+                            <i class="fa fa-book text-primary text-xl"></i>
+                        </div>
+                        <div class="text-xs text-center font-medium">学习达人</div>
+                        <div class="text-[10px] text-gray-500">累计100小时</div>
+                    </div>
+                    
+                    <div class="badge-hover flex flex-col items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="w-12 h-12 rounded-full bg-info/20 flex items-center justify-center mb-2">
+                            <i class="fa fa-bolt text-info text-xl"></i>
+                        </div>
+                        <div class="text-xs text-center font-medium">专注大师</div>
+                        <div class="text-[10px] text-gray-500">单次3小时</div>
+                    </div>
+                    
+                    <div class="badge-hover flex flex-col items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="w-12 h-12 rounded-full bg-warning/20 flex items-center justify-center mb-2">
+                            <i class="fa fa-fire text-warning text-xl"></i>
+                        </div>
+                        <div class="text-xs text-center font-medium">坚持到底</div>
+                        <div class="text-[10px] text-gray-500">连续打卡30天</div>
+                    </div>
+                    
+                    <div class="badge-hover flex flex-col items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center mb-2">
+                            <i class="fa fa-line-chart text-secondary text-xl"></i>
+                        </div>
+                        <div class="text-xs text-center font-medium">效率提升</div>
+                        <div class="text-[10px] text-gray-500">提升20%以上</div>
+                    </div>
+                    
+                    <!-- 未获得徽章 -->
+                    <div class="flex flex-col items-center p-3 bg-gray-50 rounded-lg opacity-50">
+                        <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center mb-2">
+                            <i class="fa fa-trophy text-gray-400 text-xl"></i>
+                        </div>
+                        <div class="text-xs text-center font-medium">全能王</div>
+                        <div class="text-[10px] text-gray-500">完成所有类型</div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <button class="text-sm text-primary">
+                        查看下一个可获得徽章 <i class="fa fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- AI分析和导师分析 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 lg:col-span-2">
+                <div class="flex border-b border-gray-100 mb-4">
+                    <button class="ai-analysis-tab py-2 px-4 font-medium text-primary border-b-2 border-primary">
+                        AI分析报告
+                    </button>
+                    <button class="tutor-analysis-tab py-2 px-4 font-medium text-gray-500 hover:text-gray-700">
+                        导师分析建议
+                    </button>
+                </div>
+                
+                <!-- AI分析内容 -->
+                <div class="ai-analysis-content">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-ai/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fa fa-robot text-ai"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium mb-1">基于您过去7天的行为模式分析</div>
+                            <div class="text-sm text-gray-600 space-y-2">
+                                <p>• 您的学习效率在上午9:00-11:00达到峰值，建议将数学等需要高度专注的任务安排在此时间段</p>
+                                <p>• 发现拖延症倾向：每周三下午的任务完成率比平均水平低35%，建议拆分任务为更小单元</p>
+                                <p>• 连续专注超过90分钟后，效率会下降40%，建议采用番茄工作法（25分钟专注+5分钟休息）</p>
+                                <p>• 睡眠质量与次日学习效率呈正相关（相关系数0.72），建议保持规律作息</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-ai/5 rounded-lg p-3 mb-3">
+                        <div class="text-sm font-medium text-ai mb-2">个性化改进建议</div>
+                        <div class="text-sm text-gray-600 space-y-1.5">
+                            <p>1. 尝试在周三下午安排15分钟的冥想放松，可提升后续任务完成率约20%</p>
+                            <p>2. 基于您的生物节律，建议在睡前30分钟进行阅读而非使用电子设备，可提高睡眠质量</p>
+                            <p>3. 可考虑在周五晚上预留2小时进行下周计划，这将使您的周一效率提升约15%</p>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full py-2 border border-primary text-primary rounded-lg text-sm hover:bg-primary/5 transition-colors">
+                        生成详细分析报告
+                    </button>
+                </div>
+                
+                <!-- 导师分析内容 (默认隐藏) -->
+                <div class="tutor-analysis-content hidden">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                            <img src="https://picsum.photos/200/200?random=1" alt="导师头像" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <div class="text-sm font-medium">张教授</div>
+                                <div class="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">考研辅导专家</div>
+                            </div>
+                            <div class="text-sm text-gray-600 space-y-2">
+                                <p>• 从您的学习数据来看，英语阅读训练的投入时间充足，但复习频率不足，建议采用间隔重复法巩固记忆</p>
+                                <p>• 数学公式背诵的效率有待提高，我整理了一套记忆技巧，已发送至您的消息箱</p>
+                                <p>• 观察到您周末学习时间较少，建议适当分配一些时间进行本周内容的总结与回顾</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-primary/5 rounded-lg p-3 mb-3">
+                        <div class="text-sm font-medium text-primary mb-2">下一步学习建议</div>
+                        <div class="text-sm text-gray-600 space-y-1.5">
+                            <p>1. 下周可重点突破高数中的微分方程部分，这是您当前薄弱环节</p>
+                            <p>2. 建议参加本周六的线上答疑课，针对您常错的题型进行专项讲解</p>
+                            <p>3. 我已为您安排了一套模拟测试，可在"导师推荐"栏目中找到</p>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full py-2 border border-primary text-primary rounded-lg text-sm hover:bg-primary/5 transition-colors">
+                        预约1对1视频分析
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部区域：AI回忆、时间轴、成功日记 -->
+        <div class="bg-white rounded-xl shadow-sm p-4 mb-20">
+            <div class="flex border-b border-gray-100 mb-4">
+                <button class="memory-tab py-2 px-4 font-medium text-primary border-b-2 border-primary">
+                    AI记忆回放
+                </button>
+                <button class="timeline-tab py-2 px-4 font-medium text-gray-500 hover:text-gray-700">
+                    时间轴整理
+                </button>
+                <button class="diary-tab py-2 px-4 font-medium text-gray-500 hover:text-gray-700">
+                    成功日记
+                </button>
+            </div>
+            
+            <!-- AI记忆回放 -->
+            <div class="memory-content">
+                <div class="text-sm text-gray-500 mb-4">
+                    <p>AI为您总结本周最有价值的学习时刻和成就</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex gap-3">
+                        <div class="w-12 text-center text-xs text-gray-500">周一</div>
+                        <div class="flex-1 bg-gray-50 rounded-lg p-3">
+                            <div class="text-sm font-medium mb-1">突破数学难题</div>
+                            <div class="text-sm text-gray-600">
+                                您在微积分习题中成功解决了困扰3天的难题，展现了良好的毅力。此问题的解决使您对相关知识点的掌握提升了40%。
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <div class="w-12 text-center text-xs text-gray-500">周三</div>
+                        <div class="flex-1 bg-gray-50 rounded-lg p-3">
+                            <div class="text-sm font-medium mb-1">高效学习时段</div>
+                            <div class="text-sm text-gray-600">
+                                创造了本周最长专注记录：连续2小时15分钟的英语阅读训练，专注度维持在90%以上，效率显著高于平均水平。
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <div class="w-12 text-center text-xs text-gray-500">周五</div>
+                        <div class="flex-1 bg-gray-50 rounded-lg p-3">
+                            <div class="text-sm font-medium mb-1">学习方法优化</div>
+                            <div class="text-sm text-gray-600">
+                                您开始使用思维导图整理专业课知识点，这种方法使信息记忆保持率提升了25%，建议继续坚持并应用到其他科目。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="mt-4 w-full py-2 border border-gray-200 text-gray-600 rounded-lg text-sm hover:bg-gray-50 transition-colors">
+                    生成完整周回顾视频
+                </button>
+            </div>
+            
+            <!-- 时间轴整理 (默认隐藏) -->
+            <div class="timeline-content hidden">
+                <div class="text-sm text-gray-500 mb-4">
+                    <p>本周重要时间节点整理</p>
+                </div>
+                
+                <div class="relative pl-6 border-l border-gray-200 space-y-6">
+                    <div class="relative timeline-dot text-primary">
+                        <div class="text-sm font-medium">9月15日 09:30</div>
+                        <div class="text-sm text-gray-600 mt-1">完成高数第三章复习，准确率85%</div>
+                    </div>
+                    
+                    <div class="relative timeline-dot text-success">
+                        <div class="text-sm font-medium">9月16日 14:00</div>
+                        <div class="text-sm text-gray-600 mt-1">完成英语阅读训练，首次达到目标时间</div>
+                    </div>
+                    
+                    <div class="relative timeline-dot text-warning">
+                        <div class="text-sm font-medium">9月18日 20:00</div>
+                        <div class="text-sm text-gray-600 mt-1">未完成数学公式背诵任务，推迟至次日</div>
+                    </div>
+                    
+                    <div class="relative timeline-dot text-info">
+                        <div class="text-sm font-medium">9月19日 16:30</div>
+                        <div class="text-sm text-gray-600 mt-1">参加线上学习交流会，获取3个实用学习技巧</div>
+                    </div>
+                </div>
+                
+                <button class="mt-4 w-full py-2 border border-gray-200 text-gray-600 rounded-lg text-sm hover:bg-gray-50 transition-colors">
+                    导出完整时间轴
+                </button>
+            </div>
+            
+            <!-- 成功日记 (默认隐藏) -->
+            <div class="diary-content hidden">
+                <div class="text-sm text-gray-500 mb-4">
+                    <p>记录本周的每一个小成就</p>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <div class="text-sm font-medium">连续7天早起</div>
+                            <div class="text-xs text-gray-500">+5积分</div>
+                        </div>
+                        <div class="text-sm text-gray-600 text-sm">
+                            坚持每天6:30前起床，比上周提前了30分钟，为早晨学习创造了更多时间
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <div class="text-sm font-medium">超额完成学习计划</div>
+                            <div class="text-xs text-gray-500">+8积分</div>
+                        </div>
+                        <div class="text-sm text-gray-600 text-sm">
+                            本周计划学习30小时，实际完成38.5小时，超额完成28%
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <div class="text-sm font-medium">掌握新的学习方法</div>
+                            <div class="text-xs text-gray-500">+10积分</div>
+                        </div>
+                        <div class="text-sm text-gray-600 text-sm">
+                            成功应用间隔重复法记忆英语单词，记忆保持率从60%提升至85%
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="mt-4 w-full py-2 border border-primary text-primary rounded-lg text-sm hover:bg-primary/5 transition-colors">
+                    记录今日成就
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部导航栏 -->
+    <footer class="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40 max-w-5xl mx-auto">
+        <div class="flex items-center justify-around h-16">
+            <a href="#" class="flex flex-col items-center justify-center text-primary">
+                <i class="fa fa-calendar text-xl mb-1"></i>
+                <span class="text-xs">时间表</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-500">
+                <i class="fa fa-users text-xl mb-1"></i>
+                <span class="text-xs">社区</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-500">
+                <i class="fa fa-bar-chart text-xl mb-1"></i>
+                <span class="text-xs">统计</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-500">
+                <i class="fa fa-comment text-xl mb-1"></i>
+                <span class="text-xs">消息</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-500">
+                <i class="fa fa-user text-xl mb-1"></i>
+                <span class="text-xs">我</span>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        // 初始化注意力迁移曲线图
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('attentionChart').getContext('2d');
+            
+            // 时间标签（每小时）
+            const labels = Array.from({length: 24}, (_, i) => `${i}:00`);
+            
+            // 生成模拟的注意力数据
+            const generateAttentionData = () => {
+                return labels.map((_, i) => {
+                    // 模拟睡眠时段（低注意力）
+                    if (i >= 23 || i < 6) return Math.random() * 10;
+                    
+                    // 模拟早晨上升
+                    if (i < 9) return 20 + (i - 6) * 15 + (Math.random() * 10 - 5);
+                    
+                    // 上午高峰
+                    if (i < 12) return 60 + Math.random() * 20;
+                    
+                    // 午间低谷
+                    if (i < 14) return 40 + Math.random() * 10;
+                    
+                    // 下午回升
+                    if (i < 17) return 50 + Math.random() * 15;
+                    
+                    // 傍晚高峰
+                    if (i < 20) return 55 + Math.random() * 10;
+                    
+                    // 晚上下降
+                    return 40 - (i - 20) * 5 + (Math.random() * 10 - 5);
+                });
+            };
+            
+            // 生成上周数据（略低于本周）
+            const lastWeekData = generateAttentionData().map(v => v * 0.85);
+            
+            // 任务标记点（随机选择几个时间点）
+            const taskMarkers = [
+                { time: 9, value: 75, task: '数学复习', icon: 'fa-book', color: '#3b82f6' },
+                { time: 13, value: 45, task: '午餐休息', icon: 'fa-cutlery', color: '#10b981' },
+                { time: 16, value: 60, task: '英语阅读', icon: 'fa-language', color: '#6366f1' },
+                { time: 19, value: 58, task: '运动健身', icon: 'fa-heartbeat', color: '#ef4444' }
+            ];
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '本周注意力',
+                            data: generateAttentionData(),
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0
+                        },
+                        {
+                            label: '上周注意力',
+                            data: lastWeekData,
+                            borderColor: '#94a3b8',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            opacity: 0.6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: '注意力指数',
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 8,
+                                padding: 15,
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+            
+            // 在图表上绘制任务标记
+            // 实际项目中应使用Chart.js插件或自定义绘制
+            setTimeout(() => {
+                const chart = Chart.getChart(ctx);
+                const meta = chart.getDatasetMeta(0);
+                const xAxis = chart.scales.x;
+                const yAxis = chart.scales.y;
+                
+                taskMarkers.forEach(marker => {
+                    const x = xAxis.getPixelForTick(marker.time);
+                    const y = yAxis.getPixelForValue(marker.value);
+                    
+                    // 创建自定义标记元素
+                    const markerEl = document.createElement('div');
+                    markerEl.innerHTML = `<i class="fa ${marker.icon} text-xl" style="color: ${marker.color};"></i>`;
+                    markerEl.style.position = 'absolute';
+                    markerEl.style.left = `${x - 10}px`;
+                    markerEl.style.top = `${y - 20}px`;
+                    markerEl.style.transform = 'translate(-50%, -100%)';
+                    markerEl.style.zIndex = '10';
+                    markerEl.title = `${marker.task} (${marker.time}:00)`;
+                    markerEl.classList.add('cursor-pointer');
+                    
+                    document.getElementById('attentionChart').parentElement.appendChild(markerEl);
+                });
+            }, 1000);
+        });
+
+        // 时间范围切换
+        document.querySelectorAll('.time-range-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.time-range-btn').forEach(b => {
+                    b.classList.remove('bg-primary', 'text-white');
+                    b.classList.add('bg-gray-100', 'text-gray-600');
+                });
+                this.classList.add('bg-primary', 'text-white');
+                this.classList.remove('bg-gray-100', 'text-gray-600');
+                
+                // 实际应用中这里会根据选择的时间范围更新所有图表数据
+            });
+        });
+
+        // AI分析和导师分析切换
+        document.querySelector('.tutor-analysis-tab').addEventListener('click', function() {
+            document.querySelector('.ai-analysis-tab').classList.remove('text-primary', 'border-primary');
+            document.querySelector('.ai-analysis-tab').classList.add('text-gray-500');
+            document.querySelector('.tutor-analysis-tab').classList.add('text-primary', 'border-primary');
+            document.querySelector('.tutor-analysis-tab').classList.remove('text-gray-500');
+            
+            document.querySelector('.ai-analysis-content').classList.add('hidden');
+            document.querySelector('.tutor-analysis-content').classList.remove('hidden');
+        });
+        
+        document.querySelector('.ai-analysis-tab').addEventListener('click', function() {
+            document.querySelector('.tutor-analysis-tab').classList.remove('text-primary', 'border-primary');
+            document.querySelector('.tutor-analysis-tab').classList.add('text-gray-500');
+            document.querySelector('.ai-analysis-tab').classList.add('text-primary', 'border-primary');
+            document.querySelector('.ai-analysis-tab').classList.remove('text-gray-500');
+            
+            document.querySelector('.tutor-analysis-content').classList.add('hidden');
+            document.querySelector('.ai-analysis-content').classList.remove('hidden');
+        });
+
+        // 底部标签切换（AI回忆、时间轴、成功日记）
+        document.querySelector('.timeline-tab').addEventListener('click', function() {
+            document.querySelector('.memory-tab').classList.remove('text-primary', 'border-primary');
+            document.querySelector('.memory-tab').classList.add('text-gray-500');
+            document.querySelector('.timeline-tab').classList.add('text-primary', 'border-primary');
+            document.querySelector('.timeline-tab').classList.remove('text-gray-500');
+            document.querySelector('.diary-tab').classList.remove('text-primary', 'border-primary');
+            document.querySelector('.diary-tab').classList.add('text-gray-500');
+            
+            document.querySelector('.memory-content').classList.add('hidden');
+            document.querySelector('.timeline-content').classList.remove('hidden');
+            document.querySelector('.diary-content').classList.add('hidden');
+        });
+        
+        document.querySelector('.diary-tab').addEventListener('click', function() {
+            document.querySelector('.memory-tab').classList.remove('text-primary', 'border-primary');
+            document.querySelector('.memory-tab').classList.add('text-gray-500');
+            document.querySelector('.timeline-tab').classList.remove('text-primary', 'border-primary');
+            document.querySelector('.timeline-tab').classList.add('text-gray-500');
+            document.querySelector('.diary-tab').classList.add('text-primary', 'border-primary');
+            document.querySelector('.diary-tab').classList.remove('text-gray-500');
+            
+            document.querySelector('.memory-content').classList.add('hidden');
+            document.querySelector('.timeline-content').classList.add('hidden');
+            document.querySelector('.diary-content').classList.remove('hidden');
+        });
+        
+        document.querySelector('.memory-tab').addEventListener('click', function() {
+            document.querySelector('.memory-tab').classList.add('text-primary', 'border-primary');
+            document.querySelector('.memory-tab').classList.remove('text-gray-500');
+            document.querySelector('.timeline-tab').classList.remove('text-primary', 'border-primary');
+            document.querySelector('.timeline-tab').classList.add('text-gray-500');
+            document.querySelector('.diary-tab').classList.remove('text-primary', 'border-primary');
+            document.querySelector('.diary-tab').classList.add('text-gray-500');
+            
+            document.querySelector('.memory-content').classList.remove('hidden');
+            document.querySelector('.timeline-content').classList.add('hidden');
+            document.querySelector('.diary-content').classList.add('hidden');
+        });
+    </script>
+</body>
+</html>

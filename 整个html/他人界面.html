@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考研的小艾 | 个人主页</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        body { background-color: #f9f7f9; color: #333; line-height: 1.5; }
+        
+        /* 顶部导航栏 */
+        .page-header {
+            height: 56px; background-color: #fff;
+            display: flex; align-items: center; padding: 0 20px;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.1);
+            position: sticky; top: 0; z-index: 90;
+        }
+        .back-btn { font-size: 20px; color: #5a3372; cursor: pointer; }
+        .page-title { font-size: 18px; font-weight: 600; color: #5a3372; flex: 1; text-align: center; }
+        .more-btn { font-size: 20px; color: #5a3372; cursor: pointer; }
+
+        /* 页面容器 */
+        .container {
+            padding: 0 20px 80px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* 个人信息卡（访客视角） */
+        .profile-card {
+            background: linear-gradient(135deg, #f0e6f5 0%, #e0d0e8 100%);
+            border-radius: 18px;
+            padding: 20px;
+            margin: 15px 0 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(221, 194, 230, 0.2);
+        }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9d65c9;
+            font-size: 36px;
+            margin-bottom: 12px;
+            border: 3px solid #fff;
+        }
+        .profile-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #5a3372;
+            margin-bottom: 5px;
+        }
+        .profile-meta {
+            font-size: 13px;
+            color: #7a5490;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        /* 核心数据统计区（访客可见版） */
+        .core-stats {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%;
+            padding: 5px 0 10px;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            min-width: 70px;
+        }
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #5a3372;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #7a5490;
+        }
+        /* 访客操作区 */
+        .visitor-action {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .follow-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            background-color: #9d65c9;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(157, 101, 201, 0.2);
+        }
+        .follow-btn.following {
+            background-color: #f0e6f5;
+            color: #9d65c9;
+        }
+        .message-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            background-color: #fff;
+            color: #9d65c9;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #9d65c9;
+            cursor: pointer;
+        }
+
+        /* 学习成果展示区 */
+        .achievement-section {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #5a3372;
+        }
+        .section-more {
+            font-size: 12px;
+            color: #9d65c9;
+            cursor: pointer;
+        }
+
+        /* 徽章墙（访客可见版） */
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        .badge-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .badge-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #f0e6f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9d65c9;
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        .badge-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* 动态展示区 */
+        .post-section {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+        }
+        .post-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0e6f5;
+        }
+        .post-item:last-child { border-bottom: none; }
+        .post-date {
+            font-size: 12px;
+            color: #a88cb8;
+            margin-bottom: 8px;
+        }
+        .post-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .post-media {
+            width: 100%;
+            height: 180px;
+            border-radius: 8px;
+            background-color: #f0e6f5;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .post-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .post-actions {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: #888;
+        }
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .post-action.liked {
+            color: #ff6b8b;
+        }
+
+        /* 底部导航栏（访客视角无个人操作入口） */
+        .nav-bottom {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 60px; background-color: #fff;
+            box-shadow: 0 -2px 8px rgba(221, 194, 230, 0.15);
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            z-index: 100;
+        }
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .nav-item.active {
+            color: #9d65c9;
+        }
+        .nav-icon {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        /* 徽章详情弹窗 */
+        .badge-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: flex-end;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .badge-modal.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-content {
+            background-color: #fff;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0e6f5;
+        }
+        .modal-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #5a3372;
+        }
+        .close-modal {
+            font-size: 20px;
+            color: #a88cb8;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面内标题栏（访客视角：返回+标题+更多） -->
+    <div class="page-header">
+        <div class="back-btn">←</div>
+        <div class="page-title">考研的小艾</div>
+        <div class="more-btn">⋮</div>
+    </div>
+
+    <!-- 页面容器 -->
+    <div class="container">
+        <!-- 1. 个人信息卡（访客视角） -->
+        <div class="profile-card">
+            <div class="profile-avatar">👩</div>
+            <div class="profile-name">考研的小艾</div>
+            <div class="profile-meta">
+                <span>Goal：24考研上岸会计学</span>
+                <span>Major：财务管理</span>
+                <span>已加入 6 个月</span>
+            </div>
+            <!-- 核心数据统计区（访客可见：公开数据） -->
+            <div class="core-stats">
+                <div class="stat-item">
+                    <div class="stat-value">1286h</div>
+                    <div class="stat-label">总学习时长</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">获得徽章</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">关注导师</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">粉丝</div>
+                </div>
+            </div>
+            <!-- 访客操作区（核心互动入口） -->
+            <div class="visitor-action">
+                <button class="follow-btn following">已关注</button>
+                <button class="message-btn">发消息</button>
+            </div>
+        </div>
+
+        <!-- 2. 徽章墙（访客可见：仅展示已获得） -->
+        <div class="achievement-section">
+            <div class="section-header">
+                <div class="section-title">获得的徽章</div>
+                <div class="section-more">查看全部</div>
+            </div>
+            <div class="badge-grid">
+                <div class="badge-item" data-badge="1">
+                    <div class="badge-icon">🔥</div>
+                    <div class="badge-name">坚持之星</div>
+                </div>
+                <div class="badge-item" data-badge="2">
+                    <div class="badge-icon">📚</div>
+                    <div class="badge-name">复习王者</div>
+                </div>
+                <div class="badge-item" data-badge="3">
+                    <div class="badge-icon">🎯</div>
+                    <div class="badge-name">目标达成</div>
+                </div>
+                <div class="badge-item" data-badge="4">
+                    <div class="badge-icon">👥</div>
+                    <div class="badge-name">分享达人</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 动态展示区（访客核心关注内容） -->
+        <div class="post-section">
+            <div class="section-header">
+                <div class="section-title">学习动态</div>
+                <div class="section-more">全部动态</div>
+            </div>
+            
+            <!-- 动态1：学习打卡 -->
+            <div class="post-item">
+                <div class="post-date">2024-09-17 08:30</div>
+                <div class="post-content">
+                    今日完成《财务管理》第5章复习+20道真题，正确率75%💪 分享一个记公式的小技巧：用思维导图梳理关联公式，比死记硬背有效多了！
+                </div>
+                <div class="post-media">
+                    <img src="https://picsum.photos/400/200?random=1" alt="财务管理笔记照片">
+                </div>
+                <div class="post-actions">
+                    <div class="post-action liked">
+                        <span>❤️</span>
+                        <span>24</span>
+                    </div>
+                    <div class="post-action">
+                        <span>💬</span>
+                        <span>8</span>
+                    </div>
+                    <div class="post-action">
+                        <span>🔄</span>
+                        <span>3</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 动态2：经验分享 -->
+            <div class="post-item">
+                <div class="post-date">2024-09-15 19:45</div>
+                <div class="post-content">
+                    整理了近3年会计学考研真题高频考点，发现"长期股权投资"几乎每年都考！附上周学习计划完成情况，下周要主攻薄弱章节了📚
+                </div>
+                <div class="post-actions">
+                    <div class="post-action">
+                        <span>❤️</span>
+                        <span>42</span>
+                    </div>
+                    <div class="post-action">
+                        <span>💬</span>
+                        <span>15</span>
+                    </div>
+                    <div class="post-action">
+                        <span>🔄</span>
+                        <span>7</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部导航栏（访客视角：无个人中心入口） -->
+    <div class="nav-bottom">
+        <div class="nav-item">
+            <div class="nav-icon">📅</div>
+            <div class="nav-text">时间表</div>
+        </div>
+        <div class="nav-item active">
+            <div class="nav-icon">👥</div>
+            <div class="nav-text">广场</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">💬</div>
+            <div class="nav-text">消息</div>
+        </div>
+    </div>
+
+    <!-- 徽章详情弹窗 -->
+    <div class="badge-modal" id="badgeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">徽章详情</div>
+                <div class="close-modal">×</div>
+            </div>
+            <div id="badgeDetail">
+                <!-- 徽章详情内容将通过JS动态填充 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 徽章数据
+        const badgeData = {
+            1: { name: "坚持之星", desc: "连续7天完成学习计划打卡", getDate: "2024-07-10", icon: "🔥" },
+            2: { name: "复习王者", desc: "连续14天完成复习任务，复习频率达到80%以上", getDate: "2024-07-05", icon: "📚" },
+            3: { name: "目标达成", desc: "单周学习时长超过计划时长的120%", getDate: "2024-06-28", icon: "🎯" },
+            4: { name: "分享达人", desc: "累计发布5条学习动态，获得20次以上点赞", getDate: "2024-06-15", icon: "👥" }
+        };
+
+        // 徽章点击交互
+        const badgeItems = document.querySelectorAll('.badge-item');
+        const badgeModal = document.getElementById('badgeModal');
+        const badgeDetail = document.getElementById('badgeDetail');
+        const closeModal = document.querySelector('.close-modal');
+
+        badgeItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const badgeId = item.dataset.badge;
+                const badge = badgeData[badgeId];
+                
+                // 填充徽章详情
+                badgeDetail.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 10px 0;">
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background-color: #f0e6f5; display: flex; align-items: center; justify-content: center; color: #9d65c9; font-size: 36px; margin-bottom: 15px;">
+                            ${badge.icon}
+                        </div>
+                        <h3 style="font-size: 18px; color: #5a3372; margin-bottom: 8px;">${badge.name}</h3>
+                        <p style="font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 15px; max-width: 300px;">${badge.desc}</p>
+                        <p style="font-size: 13px; color: #a88cb8;">获得时间: ${badge.getDate}</p>
+                    </div>
+                `;
+                
+                badgeModal.classList.add('show');
+            });
+        });
+
+        // 关闭徽章弹窗
+        closeModal.addEventListener('click', () => {
+            badgeModal.classList.remove('show');
+        });
+        badgeModal.addEventListener('click', (e) => {
+            if (e.target === badgeModal) badgeModal.classList.remove('show');
+        });
+
+        // 关注按钮交互
+        const followBtn = document.querySelector('.follow-btn');
+        followBtn.addEventListener('click', () => {
+            if (followBtn.classList.contains('following')) {
+                followBtn.classList.remove('following');
+                followBtn.textContent = '关注';
+                alert('已取消关注');
+            } else {
+                followBtn.classList.add('following');
+                followBtn.textContent = '已关注';
+                alert('关注成功');
+            }
+        });
+
+        // 发消息按钮
+        document.querySelector('.message-btn').addEventListener('click', () => {
+            alert('打开与「考研的小艾」的聊天窗口');
+        });
+
+        // 动态互动交互
+        document.querySelectorAll('.post-action').forEach(action => {
+            if (action.querySelector('span').textContent === '❤️') {
+                action.addEventListener('click', () => {
+                    action.classList.toggle('liked');
+                    const countEl = action.querySelectorAll('span')[1];
+                    let count = parseInt(countEl.textContent);
+                    countEl.textContent = action.classList.contains('liked') ? count + 1 : count - 1;
+                });
+            } else if (action.querySelector('span').textContent === '💬') {
+                action.addEventListener('click', () => {
+                    alert('查看评论区');
+                });
+            } else if (action.querySelector('span').textContent === '🔄') {
+                action.addEventListener('click', () => {
+                    alert('转发这条动态');
+                });
+            }
+        });
+
+        // 页面导航交互
+        document.querySelector('.back-btn').addEventListener('click', () => {
+            alert('返回上一页');
+        });
+
+        document.querySelector('.more-btn').addEventListener('click', () => {
+            alert('显示更多操作选项（举报、分享主页等）');
+        });
+
+        document.querySelectorAll('.section-more').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const title = btn.previousElementSibling.textContent;
+                alert(`查看全部${title}`);
+            });
+        });
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                const text = item.querySelector('.nav-text').textContent;
+                alert(`跳转至「${text}」页面`);
+            });
+        });
+    </script>
+</body>
+</html>

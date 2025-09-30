@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>激励中心 | 女性成长时间管理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        body { background-color: #f9f7f9; color: #333; line-height: 1.5; }
+        
+        /* 顶部导航栏 */
+        .nav-top {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 56px; background-color: #fff;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.3);
+            display: flex; align-items: center; padding: 0 20px;
+            z-index: 100;
+        }
+        .nav-top .back-btn { font-size: 20px; color: #9d65c9; margin-right: 15px; }
+        .nav-top .title { font-size: 18px; font-weight: 600; color: #5a3372; flex: 1; text-align: center; }
+        .nav-top .home-btn { font-size: 20px; color: #9d65c9; }
+
+        /* 页面容器 */
+        .container {
+            padding: 66px 20px 80px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* 子页面切换标签 */
+        .tab-container {
+            display: flex;
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 0;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 500;
+            color: #666;
+            background-color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background-color: #f0e6f5;
+            color: #9d65c9;
+        }
+
+        /* 排行榜页面样式 */
+        .ranking-page {
+            display: block;
+        }
+        .ranking-page.hidden {
+            display: none;
+        }
+
+        /* 榜单切换栏 */
+        .ranking-tab {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 5px;
+        }
+        .ranking-tab::-webkit-scrollbar { display: none; }
+        .ranking-type {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            background-color: #fff;
+            border: 1px solid #e0d0e8;
+            color: #666;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .ranking-type.active {
+            background-color: #f0e6f5;
+            border-color: #9d65c9;
+            color: #9d65c9;
+            font-weight: 500;
+        }
+
+        /* 榜单头部（前三名） */
+        .top3-ranking {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+        .top-ranker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30%;
+        }
+        .top-ranker:nth-child(2) { /* 第二名宽度稍宽 */
+            width: 35%;
+            margin-top: -15px; /* 突出显示 */
+        }
+        .rank-medal {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .medal-1 { background-color: #ffd700; box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4); }
+        .medal-2 { background-color: #c0c0c0; box-shadow: 0 2px 8px rgba(192, 192, 192, 0.4); }
+        .medal-3 { background-color: #cd7f32; box-shadow: 0 2px 8px rgba(205, 127, 50, 0.4); }
+        .top-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #f0e6f5;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9d65c9;
+            font-size: 20px;
+            border: 2px solid #f0e6f5;
+        }
+        .top-ranker:nth-child(1) .top-avatar { border-color: #ffd700; }
+        .top-ranker:nth-child(2) .top-avatar { border-color: #c0c0c0; }
+        .top-ranker:nth-child(3) .top-avatar { border-color: #cd7f32; }
+        .top-name {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+        .top-score {
+            font-size: 14px;
+            font-weight: 600;
+            color: #9d65c9;
+        }
+
+        /* 榜单列表（4名及以后） */
+        .ranking-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .ranker-item {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 6px rgba(221, 194, 230, 0.1);
+        }
+        .rank-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #888;
+            background-color: #f9f7f9;
+        }
+        .rank-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f0e6f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9d65c9;
+            font-size: 16px;
+        }
+        .rank-info {
+            flex: 1;
+        }
+        .rank-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        .rank-desc {
+            font-size: 12px;
+            color: #888;
+        }
+        .rank-score {
+            font-size: 14px;
+            font-weight: 600;
+            color: #9d65c9;
+        }
+
+        /* 我的排名 */
+        .my-rank {
+            background-color: #f0e6f5;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .my-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9d65c9;
+            font-size: 18px;
+            border: 2px solid #9d65c9;
+        }
+        .my-info {
+            flex: 1;
+        }
+        .my-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .my-rank-desc {
+            font-size: 13px;
+            color: #7a5490;
+        }
+        .my-score {
+            font-size: 15px;
+            font-weight: 600;
+            color: #9d65c9;
+        }
+
+        /* 广告征集页面样式 */
+        .ad-page {
+            display: none;
+        }
+        .ad-page.active {
+            display: block;
+        }
+
+        /* 广告头部banner */
+        .ad-banner {
+            background: linear-gradient(135deg, #f0e6f5 0%, #e0d0e8 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(221, 194, 230, 0.2);
+        }
+        .ad-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #5a3372;
+            margin-bottom: 10px;
+        }
+        .ad-subtitle {
+            font-size: 14px;
+            color: #7a5490;
+            margin-bottom: 15px;
+        }
+        .ad-btn {
+            padding: 10px 25px;
+            border-radius: 25px;
+            background-color: #9d65c9;
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(157, 101, 201, 0.3);
+        }
+
+        /* 奖品展示区 */
+        .prize-section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 16px; font-weight: 600; color: #5a3372;
+            margin: 0 0 12px;
+            display: flex; align-items: center;
+        }
+        .section-title::after {
+            content: ""; width: 4px; height: 16px;
+            background-color: #c888d8; margin-right: 8px;
+        }
+        .prize-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .prize-card {
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(221, 194, 230, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .prize-card:hover { transform: translateY(-3px); }
+        .prize-img {
+            height: 160px;
+            background-color: #f0e6f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9d65c9;
+            font-size: 40px;
+            position: relative;
+        }
+        .prize-tag {
+            position: absolute;
+            top: 10px; right: 10px;
+            background-color: #ff6b8b;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .prize-info {
+            padding: 12px 15px;
+        }
+        .prize-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .prize-desc {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* 规则说明区 */
+        .rule-section {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+        }
+        .rule-list {
+            padding-left: 20px;
+        }
+        .rule-item {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .rule-item:last-child {
+            margin-bottom: 0;
+        }
+        .rule-item .highlight {
+            font-weight: 600;
+            color: #9d65c9;
+        }
+
+        /* 已入选名单 */
+        .winner-section {
+            margin-bottom: 20px;
+        }
+        .winner-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px 0;
+        }
+        .winner-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f0e6f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9d65c9;
+            font-size: 14px;
+            position: relative;
+        }
+        .winner-avatar::after {
+            content: "🎁";
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            font-size: 12px;
+        }
+
+        /* 底部提示 */
+        .bottom-tip {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 40px; background-color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: #888;
+            border-top: 1px solid #f0e6f5;
+            z-index: 90;
+        }
+        .bottom-tip span { color: #9d65c9; margin: 0 3px; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-top">
+        <div class="back-btn">←</div>
+        <div class="title">激励中心</div>
+        <div class="home-btn">🏠</div>
+    </div>
+
+    <!-- 页面容器 -->
+    <div class="container">
+        <!-- 子页面切换标签 -->
+        <div class="tab-container">
+            <button class="tab-btn active" id="rankingTab">排行榜</button>
+            <button class="tab-btn" id="adTab">广告征集</button>
+        </div>
+
+        <!-- 排行榜页面 -->
+        <div class="ranking-page" id="rankingContent">
+            <!-- 榜单类型切换 -->
+            <div class="ranking-tab">
+                <button class="ranking-type active">周记录时长榜</button>
+                <button class="ranking-type">月记录时长榜</button>
+                <button class="ranking-type">学习方法打卡榜</button>
+                <button class="ranking-type">上岸案例贡献榜</button>
+            </div>
+
+            <!-- 我的排名 -->
+            <div class="my-rank">
+                <div class="my-avatar">👩</div>
+                <div class="my-info">
+                    <div class="my-name">你的昵称</div>
+                    <div class="my-rank-desc">当前周榜排名：第156名</div>
+                </div>
+                <div class="my-score">128h</div>
+            </div>
+
+            <!-- 前三名展示 -->
+            <div class="top3-ranking">
+                <!-- 第二名（突出显示） -->
+                <div class="top-ranker">
+                    <div class="rank-medal medal-2">2</div>
+                    <div class="top-avatar">👩‍🎓</div>
+                    <div class="top-name">考研的小琳</div>
+                    <div class="top-score">210h</div>
+                </div>
+                <!-- 第一名 -->
+                <div class="top-ranker">
+                    <div class="rank-medal medal-1">1</div>
+                    <div class="top-avatar">👩‍💼</div>
+                    <div class="top-name">CPA备考中</div>
+                    <div class="top-score">235h</div>
+                </div>
+                <!-- 第三名 -->
+                <div class="top-ranker">
+                    <div class="rank-medal medal-3">3</div>
+                    <div class="top-avatar">👩‍💻</div>
+                    <div class="top-name">学Python的阿美</div>
+                    <div class="top-score">198h</div>
+                </div>
+            </div>
+
+            <!-- 榜单列表 -->
+            <div class="ranking-list">
+                <div class="ranker-item">
+                    <div class="rank-number">4</div>
+                    <div class="rank-avatar">📚</div>
+                    <div class="rank-info">
+                        <div class="rank-name">法语入门</div>
+                        <div class="rank-desc">目标：3个月达A2</div>
+                    </div>
+                    <div class="rank-score">186h</div>
+                </div>
+                <div class="ranker-item">
+                    <div class="rank-number">5</div>
+                    <div class="rank-avatar">🎨</div>
+                    <div class="rank-info">
+                        <div class="rank-name">设计考研菌</div>
+                        <div class="rank-desc">目标：上岸美院</div>
+                    </div>
+                    <div class="rank-score">172h</div>
+                </div>
+                <div class="ranker-item">
+                    <div class="rank-number">6</div>
+                    <div class="rank-avatar">📝</div>
+                    <div class="rank-info">
+                        <div class="rank-name">考公的小楠</div>
+                        <div class="rank-desc">目标：国考上岸</div>
+                    </div>
+                    <div class="rank-score">165h</div>
+                </div>
+                <div class="ranker-item">
+                    <div class="rank-number">7</div>
+                    <div class="rank-avatar">💡</div>
+                    <div class="rank-info">
+                        <div class="rank-name">在职学英语</div>
+                        <div class="rank-desc">目标：雅思7.0</div>
+                    </div>
+                    <div class="rank-score">158h</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 广告征集页面 -->
+        <div class="ad-page" id="adContent">
+            <!-- 广告头部banner -->
+            <div class="ad-banner">
+                <div class="ad-title">上传上岸时间表，赢高奢真皮包</div>
+                <div class="ad-subtitle">真实案例可获品牌定制首饰/包包，女性专属福利！</div>
+                <button class="ad-btn">立即上传时间表</button>
+            </div>
+
+            <!-- 奖品展示区 -->
+            <div class="prize-section">
+                <div class="section-title">专属奖品池</div>
+                <div class="prize-list">
+                    <div class="prize-card">
+                        <div class="prize-img">👜<span class="prize-tag">热门</span></div>
+                        <div class="prize-info">
+                            <div class="prize-name">品牌定制胸衣包</div>
+                            <div class="prize-desc">头层牛皮，百搭通勤款</div>
+                        </div>
+                    </div>
+                    <div class="prize-card">
+                        <div class="prize-img">💍</div>
+                        <div class="prize-info">
+                            <div class="prize-name">珍珠镶嵌首饰套装</div>
+                            <div class="prize-desc">银镀金材质，精致百搭</div>
+                        </div>
+                    </div>
+                    <div class="prize-card">
+                        <div class="prize-img">👒</div>
+                        <div class="prize-info">
+                            <div class="prize-name">真皮复古头饰</div>
+                            <div class="prize-desc">手工缝制，质感高级</div>
+                        </div>
+                    </div>
+                    <div class="prize-card">
+                        <div class="prize-img">👛</div>
+                        <div class="prize-info">
+                            <div class="prize-name">迷你真皮零钱包</div>
+                            <div class="prize-desc">便携设计，多色可选</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 规则说明区 -->
+            <div class="rule-section">
+                <div class="section-title">参与规则</div>
+                <ul class="rule-list">
+                    <li class="rule-item">1. 需上传<span class="highlight">完整上岸时间表</span>（含每日任务+时长记录，持续时间≥30天）及<span class="highlight">上岸证明</span>（录取通知书/证书/入职offer等）；</li>
+                    <li class="rule-item">2. 数据需真实有效，平台将进行人工审核，虚假数据将取消资格；</li>
+                    <li class="rule-item">3. 入选案例将展示在“上岸时间表”板块，标注上传者昵称（可匿名）；</li>
+                    <li class="rule-item">4. 每月评选10名优质案例获得者，随机发放奖品，快递包邮；</li>
+                    <li class="rule-item">5. 上传即视为同意平台将数据用于案例展示及优化AI测算模型。</li>
+                </ul>
+            </div>
+
+            <!-- 已入选名单 -->
+            <div class="winner-section">
+                <div class="section-title">本月已入选用户</div>
+                <div class="winner-list">
+                    <div class="winner-avatar">琳</div>
+                    <div class="winner-avatar">美</div>
+                    <div class="winner-avatar">楠</div>
+                    <div class="winner-avatar">婷</div>
+                    <div class="winner-avatar">琪</div>
+                    <div class="winner-avatar">...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="bottom-tip">
+        记录时间=积累成长=赢取好礼 | <span>每周一0点更新排行榜</span>
+    </div>
+
+    <script>
+        // 子页面切换逻辑
+        const rankingTab = document.getElementById('rankingTab');
+        const adTab = document.getElementById('adTab');
+        const rankingContent = document.getElementById('rankingContent');
+        const adContent = document.getElementById('adContent');
+
+        rankingTab.addEventListener('click', () => {
+            // 切换标签状态
+            rankingTab.classList.add('active');
+            adTab.classList.remove('active');
+            // 切换页面内容
+            rankingContent.classList.remove('hidden');
+            adContent.classList.remove('active');
+        });
+
+        adTab.addEventListener('click', () => {
+            // 切换标签状态
+            adTab.classList.add('active');
+            rankingTab.classList.remove('active');
+            // 切换页面内容
+            adContent.classList.add('active');
+            rankingContent.classList.add('hidden');
+        });
+
+        // 排行榜类型切换
+        const rankingTypes = document.querySelectorAll('.ranking-type');
+        rankingTypes.forEach(type => {
+            type.addEventListener('click', () => {
+                rankingTypes.forEach(t => t.classList.remove('active'));
+                type.classList.add('active');
+                // 实际开发中可在此处切换不同榜单数据
+            });
+        });
+
+        // 广告征集上传按钮点击
+        const adBtn = document.querySelector('.ad-btn');
+        adBtn.addEventListener('click', () => {
+            // 实际开发中可跳转至"我的时间表"选择页面
+            alert('即将跳转至"我的时间表"选择上传内容');
+        });
+
+        // 奖品卡片点击放大预览
+        const prizeCards = document.querySelectorAll('.prize-card');
+        prizeCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const prizeName = card.querySelector('.prize-name').textContent;
+                alert(`查看${prizeName}详情（实际开发中为图片放大预览）`);
+            });
+        });
+    </script>
+</body>
+</html>

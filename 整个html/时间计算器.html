@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间计算器 | 女性成长时间管理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        body { background-color: #f9f7f9; color: #333; line-height: 1.5; }
+        
+        /* 顶部导航栏 */
+        .nav-top {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 56px; background-color: #fff;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.3);
+            display: flex; align-items: center; padding: 0 20px;
+            z-index: 100;
+        }
+        .nav-top .back-btn { font-size: 20px; color: #9d65c9; margin-right: 15px; }
+        .nav-top .title { font-size: 18px; font-weight: 600; color: #5a3372; flex: 1; text-align: center; }
+        .nav-top .home-btn { font-size: 20px; color: #9d65c9; }
+
+        /* 页面容器 */
+        .container {
+            padding: 66px 20px 80px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* 说明栏 */
+        .intro-bar {
+            background-color: #f0e6f5;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #7a5490;
+            display: flex;
+            align-items: flex-start;
+        }
+        .intro-bar i {
+            margin-right: 8px;
+            color: #9d65c9;
+            font-size: 16px;
+            margin-top: 1px;
+        }
+        .intro-bar span.highlight {
+            font-weight: 600;
+            color: #9d65c9;
+        }
+
+        /* 目标选择区 */
+        .section-title {
+            font-size: 16px; font-weight: 600; color: #5a3372;
+            margin: 20px 0 12px;
+            display: flex; align-items: center;
+        }
+        .section-title::after {
+            content: ""; width: 4px; height: 16px;
+            background-color: #c888d8; margin-right: 8px;
+        }
+
+        .target-categories {
+            margin-bottom: 15px;
+        }
+        .category-tab {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .category-tab::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            background-color: #fff;
+            border: 1px solid #e0d0e8;
+            color: #666;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background-color: #f0e6f5;
+            border-color: #9d65c9;
+            color: #9d65c9;
+            font-weight: 500;
+        }
+
+        .target-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .target-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #e0d0e8;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .target-card.active {
+            border-color: #9d65c9;
+            background-color: #f0e6f5;
+        }
+        .target-card .target-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .target-card .base-time {
+            font-size: 12px;
+            color: #7a5490;
+        }
+        .target-card .source {
+            font-size: 10px;
+            color: #a88cb8;
+            margin-top: 2px;
+        }
+
+        /* 个性化测算区 */
+        .calculator-form {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #5a3372;
+            margin-bottom: 8px;
+        }
+        .form-input {
+            width: 100%;
+            height: 42px;
+            padding: 0 15px;
+            border-radius: 8px;
+            border: 1px solid #e0d0e8;
+            font-size: 14px;
+            color: #333;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus {
+            border-color: #9d65c9;
+        }
+        .input-note {
+            font-size: 12px;
+            color: #a88cb8;
+            margin-top: 4px;
+        }
+
+        .select-group {
+            width: 100%;
+            height: 42px;
+            padding: 0 15px;
+            border-radius: 8px;
+            border: 1px solid #e0d0e8;
+            font-size: 14px;
+            color: #333;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239d65c9' viewBox='0 0 16 16'%3E%3Cpath d='M8 11l4-4H4l4 4z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+
+        .situation-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .situation-tag {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            border: 1px solid #e0d0e8;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .situation-tag.active {
+            background-color: #f0e6f5;
+            border-color: #9d65c9;
+            color: #9d65c9;
+        }
+        .situation-tag .coefficient {
+            font-size: 10px;
+            background-color: #9d65c9;
+            color: white;
+            padding: 1px 4px;
+            border-radius: 4px;
+            margin-left: 4px;
+        }
+
+        /* 计算按钮 */
+        .calc-btn {
+            width: 100%;
+            height: 48px;
+            background-color: #9d65c9;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 0 25px;
+            box-shadow: 0 4px 12px rgba(157, 101, 201, 0.3);
+            transition: background-color 0.2s;
+        }
+        .calc-btn:hover {
+            background-color: #8b5bb8;
+        }
+
+        /* 结果展示区 */
+        .result-area {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+            margin-bottom: 25px;
+            display: none; /* 初始隐藏，测算后显示 */
+        }
+        .result-area.show {
+            display: block;
+        }
+        .result-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #5a3372;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .result-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .result-card {
+            background-color: #f0e6f5;
+            border-radius: 10px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+        .result-card .result-label {
+            font-size: 12px;
+            color: #7a5490;
+            margin-bottom: 4px;
+        }
+        .result-card .result-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #9d65c9;
+        }
+        .result-desc {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            padding: 8px 0;
+            border-top: 1px dashed #e0d0e8;
+        }
+
+        /* 推荐区 */
+        .recommend-area {
+            margin-bottom: 20px;
+        }
+        .recommend-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .recommend-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 6px rgba(221, 194, 230, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .recommend-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: #f0e6f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9d65c9;
+            font-size: 20px;
+        }
+        .recommend-info {
+            flex: 1;
+        }
+        .recommend-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 2px;
+        }
+        .recommend-desc {
+            font-size: 12px;
+            color: #a88cb8;
+        }
+
+        /* 底部提示 */
+        .bottom-tip {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 40px; background-color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: #888;
+            border-top: 1px solid #f0e6f5;
+        }
+        .bottom-tip span { color: #9d65c9; margin: 0 3px; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-top">
+        <div class="back-btn">←</div>
+        <div class="title">时间计算器</div>
+        <div class="home-btn">🏠</div>
+    </div>
+
+    <!-- 页面容器 -->
+    <div class="container">
+        <!-- 说明栏 -->
+        <div class="intro-bar">
+            <i>💡</i>
+            <div>
+                基于<span class="highlight">1000+真实上岸案例</span>测算基准时长，结合你的个人情况智能调整，结果更贴合实际！
+            </div>
+        </div>
+
+        <!-- 目标选择区 -->
+        <div class="section-title">选择你的目标</div>
+        <div class="target-categories">
+            <!-- 分类标签 -->
+            <div class="category-tab">
+                <button class="tab-btn active">语言学习</button>
+                <button class="tab-btn">技能考证</button>
+                <button class="tab-btn">升学考试</button>
+                <button class="tab-btn">职场提升</button>
+            </div>
+
+            <!-- 目标列表（默认显示语言学习） -->
+            <div class="target-list">
+                <div class="target-card active">
+                    <div class="target-name">法语（A1-A2）</div>
+                    <div class="base-time">基准时长：200小时</div>
+                    <div class="source">126个案例均值</div>
+                </div>
+                <div class="target-card">
+                    <div class="target-name">英语（四级→六级）</div>
+                    <div class="base-time">基准时长：180小时</div>
+                    <div class="source">218个案例均值</div>
+                </div>
+                <div class="target-card">
+                    <div class="target-name">日语（N5-N3）</div>
+                    <div class="base-time">基准时长：350小时</div>
+                    <div class="source">97个案例均值</div>
+                </div>
+                <div class="target-card">
+                    <div class="target-name">韩语（TOPIK1-2）</div>
+                    <div class="base-time">基准时长：220小时</div>
+                    <div class="source">89个案例均值</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 个性化测算区 -->
+        <div class="section-title">你的个人情况</div>
+        <div class="calculator-form">
+            <!-- 每日可投入时长 -->
+            <div class="form-group">
+                <label class="form-label">每日可投入时长（小时）</label>
+                <input type="number" class="form-input" placeholder="例如：2" min="0.5" max="16" step="0.5">
+                <div class="input-note">建议填写真实可坚持的时长，避免过度规划</div>
+            </div>
+
+            <!-- 每周投入天数 -->
+            <div class="form-group">
+                <label class="form-label">每周投入天数</label>
+                <select class="select-group">
+                    <option value="7">7天（全勤）</option>
+                    <option value="6" selected>6天（休息1天）</option>
+                    <option value="5">5天（工作日学习）</option>
+                    <option value="4">4天（灵活安排）</option>
+                </select>
+            </div>
+
+            <!-- 当前基础 -->
+            <div class="form-group">
+                <label class="form-label">当前基础</label>
+                <select class="select-group">
+                    <option value="1.2" selected>0基础（需额外20%时长）</option>
+                    <option value="1.0">有基础（无需额外时长）</option>
+                    <option value="0.8">进阶提升（减少20%时长）</option>
+                </select>
+            </div>
+
+            <!-- 特殊情况（时间膨胀） -->
+            <div class="form-group">
+                <label class="form-label">特殊情况（可多选，影响时长）</label>
+                <div class="situation-tags">
+                    <div class="situation-tag">贫穷（需兼职）<span class="coefficient">+30%</span></div>
+                    <div class="situation-tag active">失恋（情绪调节）<span class="coefficient">+20%</span></div>
+                    <div class="situation-tag">在职备考<span class="coefficient">+40%</span></div>
+                    <div class="situation-tag">宝妈带娃<span class="coefficient">+50%</span></div>
+                    <div class="situation-tag">熬夜拖延<span class="coefficient">+25%</span></div>
+                    <div class="situation-tag">跨专业学习<span class="coefficient">+35%</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 计算按钮 -->
+        <button class="calc-btn">开始测算</button>
+
+        <!-- 结果展示区 -->
+        <div class="result-area show">
+            <div class="result-title">你的个性化时间规划</div>
+            <div class="result-cards">
+                <div class="result-card">
+                    <div class="result-label">理论总时长</div>
+                    <div class="result-value">288h</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">预计周期</div>
+                    <div class="result-value">48天</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">每日建议</div>
+                    <div class="result-value">2h</div>
+                </div>
+            </div>
+            <div class="result-desc">
+                测算依据：法语A1-A2基准200h + 0基础(+20%) + 失恋(+20%)，按每日2h、每周6天计算
+            </div>
+        </div>
+
+        <!-- 推荐区 -->
+        <div class="section-title">为你推荐</div>
+        <div class="recommend-area">
+            <div class="recommend-list">
+                <div class="recommend-card">
+                    <div class="recommend-icon">📚</div>
+                    <div class="recommend-info">
+                        <div class="recommend-title">280小时法语A2上岸时间表</div>
+                        <div class="recommend-desc">失恋期备考成功案例，可直接复用</div>
+                    </div>
+                </div>
+                <div class="recommend-card">
+                    <div class="recommend-icon">🔄</div>
+                    <div class="recommend-info">
+                        <div class="recommend-title">法语高效复习四步法</div>
+                        <div class="recommend-desc">100+人打卡验证，提升30%效率</div>
+                    </div>
+                </div>
+                <div class="recommend-card">
+                    <div class="recommend-icon">👩‍🏫</div>
+                    <div class="recommend-info">
+                        <div class="recommend-title">法语认证导师1v1规划</div>
+                        <div class="recommend-desc">针对0基础学员，定制专属计划</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="bottom-tip">
+        上传你的上岸时间表，赢<span>品牌高奢真皮包</span> | 测算结果仅供参考，可灵活调整
+    </div>
+
+    <script>
+        // 静态页面交互模拟（实际开发需完善）
+        // 分类标签切换
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // 此处可切换不同分类的目标列表
+            });
+        });
+
+        // 目标选择
+        const targetCards = document.querySelectorAll('.target-card');
+        targetCards.forEach(card => {
+            card.addEventListener('click', () => {
+                targetCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+            });
+        });
+
+        // 特殊情况标签选择
+        const situationTags = document.querySelectorAll('.situation-tag');
+        situationTags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                tag.classList.toggle('active');
+            });
+        });
+
+        // 计算按钮点击（模拟显示结果）
+        const calcBtn = document.querySelector('.calc-btn');
+        const resultArea = document.querySelector('.result-area');
+        calcBtn.addEventListener('click', () => {
+            resultArea.classList.add('show');
+            // 实际开发需在此处编写测算逻辑
+        });
+    </script>
+</body>
+</html>

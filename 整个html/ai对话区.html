@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI助手 | 时间管理分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        body { background-color: #f9f7f9; color: #333; line-height: 1.5; }
+        
+        /* 顶部导航栏 */
+        .nav-top {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 56px; background-color: #fff;
+            box-shadow: 0 2px 8px rgba(221, 194, 230, 0.3);
+            display: flex; align-items: center; padding: 0 20px;
+            z-index: 100;
+        }
+        .nav-top .back-btn { font-size: 20px; color: #9d65c9; margin-right: 15px; }
+        .nav-top .title { font-size: 18px; font-weight: 600; color: #5a3372; flex: 1; text-align: center; }
+        .nav-top .min-btn { font-size: 20px; color: #9d65c9; }
+
+        /* 页面容器 */
+        .container {
+            padding: 56px 0 70px;
+            height: 100vh;
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* AI对话区 */
+        .chat-area {
+            flex: 1;
+            padding: 15px 20px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #c1a3d1 #f9f7f9;
+        }
+        .chat-area::-webkit-scrollbar { width: 6px; }
+        .chat-area::-webkit-scrollbar-thumb { background-color: #c1a3d1; border-radius: 3px; }
+
+        /* 对话消息样式 */
+        .msg-wrapper { margin-bottom: 18px; max-width: 85%; }
+        .msg-wrapper.user { margin-left: auto; }
+
+        .msg-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 3px rgba(221, 194, 230, 0.2);
+        }
+        .msg-wrapper.ai .msg-avatar { background-color: #f0e6f5; color: #9d65c9; font-size: 18px; }
+        .msg-wrapper.user .msg-avatar { background-color: #9d65c9; color: white; font-size: 16px; }
+
+        .msg-bubble {
+            padding: 12px 15px;
+            border-radius: 12px;
+            position: relative;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        .msg-wrapper.ai .msg-bubble {
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 2px 6px rgba(221, 194, 230, 0.1);
+            border-top-left-radius: 4px;
+        }
+        .msg-wrapper.user .msg-bubble {
+            background-color: #9d65c9;
+            color: white;
+            box-shadow: 0 2px 6px rgba(157, 101, 201, 0.2);
+            border-top-right-radius: 4px;
+        }
+
+        .msg-time {
+            font-size: 11px;
+            color: #a88cb8;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        /* AI分析结果标签 */
+        .analysis-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background-color: #f0e6f5;
+            color: #9d65c9;
+            font-size: 11px;
+            font-weight: 500;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        /* 推荐内容区 */
+        .recommend-section {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #e0d0e8;
+        }
+        .recommend-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #7a5490;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .recommend-title i { margin-right: 6px; }
+
+        .recommend-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .recommend-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 1px 4px rgba(221, 194, 230, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .recommend-card:hover { transform: translateY(-2px); }
+
+        .recommend-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        .icon-method { background-color: #65c985; }
+        .icon-case { background-color: #9d65c9; }
+        .icon-tutor { background-color: #ff6b8b; }
+
+        .recommend-info {
+            flex: 1;
+        }
+        .recommend-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 2px;
+        }
+        .recommend-desc {
+            font-size: 12px;
+            color: #888;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .recommend-tag {
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            background-color: #f0e6f5;
+            color: #9d65c9;
+        }
+
+        /* 功能工具条 */
+        .tool-bar {
+            padding: 0 20px 10px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .tool-bar::-webkit-scrollbar { display: none; }
+        .tool-btn {
+            padding: 6px 12px;
+            border-radius: 20px;
+            background-color: #fff;
+            border: 1px solid #e0d0e8;
+            color: #7a5490;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .tool-btn:hover {
+            background-color: #f0e6f5;
+            border-color: #9d65c9;
+            color: #9d65c9;
+        }
+
+        /* 输入区 */
+        .input-area {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background-color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 -2px 8px rgba(221, 194, 230, 0.15);
+            max-width: 500px;
+            margin: 0 auto;
+            z-index: 100;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: 100%;
+        }
+        .input-tools {
+            display: flex;
+            gap: 10px;
+            color: #9d65c9;
+            font-size: 20px;
+        }
+        .input-box {
+            flex: 1;
+            height: 42px;
+            padding: 0 15px;
+            border-radius: 21px;
+            border: 1px solid #e0d0e8;
+            outline: none;
+            font-size: 14px;
+            color: #333;
+            transition: border-color 0.2s;
+        }
+        .input-box:focus {
+            border-color: #9d65c9;
+        }
+        .send-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: #9d65c9;
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 跳转提示弹窗（默认隐藏） */
+        .jump-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .jump-modal.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-content {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+        }
+        .modal-icon {
+            font-size: 40px;
+            color: #9d65c9;
+            margin-bottom: 15px;
+        }
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .modal-desc {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 8px 0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+        .modal-btn.cancel {
+            background-color: #f9f7f9;
+            color: #888;
+        }
+        .modal-btn.confirm {
+            background-color: #9d65c9;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-top">
+        <div class="back-btn">←</div>
+        <div class="title">AI时间助手</div>
+        <div class="min-btn">—</div>
+    </div>
+
+    <!-- 页面容器 -->
+    <div class="container">
+        <!-- AI对话区 -->
+        <div class="chat-area">
+            <!-- 系统欢迎消息 -->
+            <div class="msg-wrapper ai">
+                <div class="msg-avatar">🤖</div>
+                <div class="msg-bubble">
+                    你好！我已分析完你近7天的时间表，发现了一些可以优化的地方，帮你整理了关键问题和推荐内容~
+                </div>
+                <div class="msg-time">09:25</div>
+            </div>
+
+            <!-- AI分析结果消息 -->
+            <div class="msg-wrapper ai">
+                <div class="msg-avatar">🤖</div>
+                <div class="msg-bubble">
+                    <div>你的时间表关键问题：</div>
+                    <div style="margin: 8px 0;">
+                        <span class="analysis-tag">复习不足</span>
+                        <span class="analysis-tag">时间碎片化</span>
+                        <span class="analysis-tag">英语投入失衡</span>
+                    </div>
+                    <div>具体分析：近7天仅复习2次，且集中在深夜效率低；英语阅读每天投入2.5h，远超合理占比（建议1.5h），挤压了专业课时间。
+                    </div>
+
+                    <!-- 推荐学习方法 -->
+                    <div class="recommend-section">
+                        <div class="recommend-title"><i>🔄</i> 为你推荐学习方法</div>
+                        <div class="recommend-list">
+                            <div class="recommend-card" data-type="method">
+                                <div class="recommend-icon icon-method">📚</div>
+                                <div class="recommend-info">
+                                    <div class="recommend-name">艾宾浩斯复习四步法</div>
+                                    <div class="recommend-desc">针对复习不足问题，按周期自动提醒复盘，已帮助300+人提升记忆效率</div>
+                                </div>
+                                <div class="recommend-tag">去打卡</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 推荐相似案例 -->
+                    <div class="recommend-section">
+                        <div class="recommend-title"><i>📅</i> 相似上岸案例参考</div>
+                        <div class="recommend-list">
+                            <div class="recommend-card" data-type="case">
+                                <div class="recommend-icon icon-case">🎯</div>
+                                <div class="recommend-info">
+                                    <div class="recommend-name">2100小时考研英语提分案例</div>
+                                    <div class="recommend-desc">同款“复习薄弱+英语失衡”问题，调整时间分配后英语从58分提至76分</div>
+                                </div>
+                                <div class="recommend-tag">看详情</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 推荐匹配导师 -->
+                    <div class="recommend-section">
+                        <div class="recommend-title"><i>👩‍🏫</i> 匹配擅长领域导师</div>
+                        <div class="recommend-list">
+                            <div class="recommend-card" data-type="tutor">
+                                <div class="recommend-icon icon-tutor">⭐</div>
+                                <div class="recommend-info">
+                                    <div class="recommend-name">王英语老师（认证导师）</div>
+                                    <div class="recommend-desc">擅长考研英语时间规划，98%好评，已指导126人上岸</div>
+                                </div>
+                                <div class="recommend-tag">找TA指导</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="msg-time">09:26</div>
+            </div>
+
+            <!-- 用户消息 -->
+            <div class="msg-wrapper user">
+                <div class="msg-avatar">👩</div>
+                <div class="msg-bubble">
+                    那这个艾宾浩斯复习法具体怎么用呀？和我的时间表怎么结合呢？
+                </div>
+                <div class="msg-time">09:28</div>
+            </div>
+
+            <!-- AI回复消息 -->
+            <div class="msg-wrapper ai">
+                <div class="msg-avatar">🤖</div>
+                <div class="msg-bubble">
+                    很棒的问题！艾宾浩斯复习法可直接嵌入你的时间表：
+                    1. 早上7:00-7:30：复习前一天的英语单词和专业课笔记（对应新学内容12h后复盘）；
+                    2. 晚上20:00-20:20：复习当天所有内容（对应新学内容4-6h后复盘）；
+                    3. 每周六上午：复习本周重点（周复盘）。
+                    
+                    <div class="recommend-section" style="margin-top: 8px;">
+                        <div class="recommend-list">
+                            <div class="recommend-card" data-type="method">
+                                <div class="recommend-icon icon-method">📚</div>
+                                <div class="recommend-info">
+                                    <div class="recommend-name">艾宾浩斯复习法详情</div>
+                                    <div class="recommend-desc">点击查看完整周期表+打卡模板，可直接同步到你的时间表</div>
+                                </div>
+                                <div class="recommend-tag">立即同步</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="msg-time">09:29</div>
+            </div>
+        </div>
+
+        <!-- 功能工具条 -->
+        <div class="tool-bar">
+            <button class="tool-btn"><i>📊</i> 复盘总结</button>
+            <button class="tool-btn"><i>👩‍🏫</i> 找导师</button>
+            <button class="tool-btn"><i>📅</i> 生成计划</button>
+            <button class="tool-btn"><i>🔍</i> 查案例</button>
+            <button class="tool-btn"><i>💡</i> 学习方法</button>
+            <button class="tool-btn"><i>📝</i> 历史记录</button>
+        </div>
+
+        <!-- 输入区 -->
+        <div class="input-area">
+            <div class="input-container">
+                <div class="input-tools">
+                    <i>🎤</i>
+                    <i>📷</i>
+                    <i>📎</i>
+                </div>
+                <input type="text" class="input-box" placeholder="和AI聊聊你的时间表或需求...">
+                <button class="send-btn">→</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 跳转提示弹窗 -->
+    <div class="jump-modal" id="jumpModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon">📚</div>
+            <div class="modal-title" id="modalTitle">前往学习方法页</div>
+            <div class="modal-desc" id="modalDesc">查看艾宾浩斯复习法的完整教程和打卡模板</div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel">取消</button>
+                <button class="modal-btn confirm">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 推荐卡片点击触发跳转提示
+        const recommendCards = document.querySelectorAll('.recommend-card');
+        const jumpModal = document.getElementById('jumpModal');
+        const modalIcon = document.getElementById('modalIcon');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const cancelBtn = document.querySelector('.modal-btn.cancel');
+        const confirmBtn = document.querySelector('.modal-btn.confirm');
+
+        // 不同类型推荐的弹窗内容配置
+        const modalConfig = {
+            method: {
+                icon: '📚',
+                title: '前往学习方法页',
+                desc: '查看完整的学习方法教程、打卡模板及用户评价'
+            },
+            case: {
+                icon: '🎯',
+                title: '前往上岸时间表页',
+                desc: '查看相似案例的完整时间记录和上岸经验分享'
+            },
+            tutor: {
+                icon: '👩‍🏫',
+                title: '前往导师详情页',
+                desc: '查看导师资质、服务内容及学员真实评价'
+            }
+        };
+
+        recommendCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const type = card.dataset.type;
+                const config = modalConfig[type];
+                const cardName = card.querySelector('.recommend-name').textContent;
+                
+                // 更新弹窗内容
+                modalIcon.textContent = config.icon;
+                modalTitle.textContent = config.title;
+                modalDesc.textContent = `「${cardName}」${config.desc}`;
+                
+                // 显示弹窗
+                jumpModal.classList.add('show');
+            });
+        });
+
+        // 关闭弹窗
+        cancelBtn.addEventListener('click', () => {
+            jumpModal.classList.remove('show');
+        });
+
+        // 确认跳转（模拟）
+        confirmBtn.addEventListener('click', () => {
+            const type = document.querySelector('.recommend-card.active')?.dataset.type || 'method';
+            jumpModal.classList.remove('show');
+            alert(`已跳转至对应页面（实际开发中触发页面路由跳转）`);
+        });
+
+        // 点击弹窗外部关闭
+        jumpModal.addEventListener('click', (e) => {
+            if (e.target === jumpModal) {
+                jumpModal.classList.remove('show');
+            }
+        });
+
+        // 功能工具条点击
+        const toolBtns = document.querySelectorAll('.tool-btn');
+        toolBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const text = btn.textContent.trim();
+                alert(`触发「${text}」功能（实际开发中调用对应工具）`);
+            });
+        });
+
+        // 发送消息模拟
+        const sendBtn = document.querySelector('.send-btn');
+        const inputBox = document.querySelector('.input-box');
+
+        sendBtn.addEventListener('click', sendMessage);
+        inputBox.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function sendMessage() {
+            const text = inputBox.value.trim();
+            if (!text) return;
+
+            // 清空输入框
+            inputBox.value = '';
+
+            // 模拟用户消息添加（实际开发中需动态创建DOM）
+            const chatArea = document.querySelector('.chat-area');
+            const userMsg = `
+                <div class="msg-wrapper user">
+                    <div class="msg-avatar">👩</div>
+                    <div class="msg-bubble">${text}</div>
+                    <div class="msg-time">${new Date().getHours()}:${new Date().getMinutes().toString().padStart(2, '0')}</div>
+                </div>
+            `;
+            chatArea.insertAdjacentHTML('beforeend', userMsg);
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            // 模拟AI回复延迟
+            setTimeout(() => {
+                const aiReply = `
+                    <div class="msg-wrapper ai">
+                        <div class="msg-avatar">🤖</div>
+                        <div class="msg-bubble">已收到你的问题："${text}"，正在为你分析并整理答案...</div>
+                        <div class="msg-time">${new Date().getHours()}:${new Date().getMinutes().toString().padStart(2, '0')}</div>
+                    </div>
+                `;
+                chatArea.insertAdjacentHTML('beforeend', aiReply);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }, 1000);
+        }
+
+        // 最小化按钮
+        const minBtn = document.querySelector('.min-btn');
+        minBtn.addEventListener('click', () => {
+            alert('AI对话区已最小化（实际开发中切换至主页面底部缩略态）');
+        });
+    </script>
+</body>
+</html>

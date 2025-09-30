@@ -8,7 +8,7 @@ const BottomNavBar = () => {
 
   const navItems = [
     { id: 'home', label: '首页', icon: 'fa-home', path: '/main-schedule', color: '#6366f1' },
-    { id: 'shop', label: '商城', icon: 'fa-store', path: '/shop', color: '#f59e0b' },
+    { id: 'ai-chat', label: 'AI对话', icon: 'fa-comments', path: '/ai-chat', color: '#9d65c9' },
     { id: 'moments', label: '动态', icon: 'fa-heart', path: '/moments', color: '#ef4444' },
     { id: 'messages', label: '消息', icon: 'fa-comment', path: '/messages', color: '#10b981' },
     { id: 'personal', label: '个人', icon: 'fa-user', path: '/personal', color: '#8b5cf6' }

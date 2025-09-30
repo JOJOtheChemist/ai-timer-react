@@ -1,100 +1,585 @@
-/* StudyMethodPage.css - 学习方法区页面样式 */
-
+/* 学习方法页面样式 */
 .study-method-page {
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  background-color: #f9f7f9;
+  color: #333;
+  line-height: 1.5;
   min-height: 100vh;
-  background-color: #f9fafb;
-  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 
 .study-method-content {
-  padding: 1rem;
-  padding-bottom: 6rem; /* 为底部导航留出空间 */
+  padding: 120px 20px 120px; /* 为UserTopNav和BottomNavBar留出空间 */
+  max-width: 500px;
+  margin: 0 auto;
 }
 
-.study-method-card {
-  background: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
+/* AI推荐区 */
+.ai-recommend {
+  background: linear-gradient(135deg, #f0e6f5 0%, #e0d0e8 100%);
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 3px 8px rgba(221, 194, 230, 0.2);
+}
+
+.ai-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.ai-content {
+  flex: 1;
+}
+
+.ai-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5a3372;
+  margin-bottom: 3px;
+}
+
+.ai-desc {
+  font-size: 13px;
+  color: #7a5490;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+.ai-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.ai-btn {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.ai-btn.primary {
+  background-color: #9d65c9;
+  color: white;
+}
+
+.ai-btn.primary:hover {
+  background-color: #8a4db8;
+}
+
+.ai-btn.secondary {
+  background-color: #fff;
+  color: #9d65c9;
+}
+
+.ai-btn.secondary:hover {
+  background-color: #f0e6f5;
+}
+
+/* 分类筛选栏 */
+.filter-tab {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 5px;
+}
+
+.filter-tab::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-type {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  background-color: #fff;
+  border: 1px solid #e0d0e8;
+  color: #666;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-type:hover {
+  border-color: #9d65c9;
+  color: #9d65c9;
+}
+
+.filter-type.active {
+  background-color: #f0e6f5;
+  border-color: #9d65c9;
+  color: #9d65c9;
+  font-weight: 500;
+}
+
+.filter-type.highlight {
+  border-color: #65c985;
+  color: #65c985;
+}
+
+.filter-type.highlight.active {
+  background-color: #e6f5f0;
+  border-color: #65c985;
+  color: #65c985;
+}
+
+/* 方法列表区 */
+.method-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.method-card {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(221, 194, 230, 0.2);
   transition: transform 0.2s ease;
+  cursor: pointer;
 }
 
-.study-method-card:hover {
+.method-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.study-method-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #374151;
-  margin-bottom: 1rem;
+.method-header {
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #f0e6f5;
 }
 
-.study-method-description {
-  color: #6b7280;
+.method-info {
+  flex: 1;
+}
+
+.method-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.method-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #888;
+  flex-wrap: wrap;
+}
+
+.method-meta .tutor-tag {
+  color: #65c985;
+  font-weight: 500;
+}
+
+.method-tag {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  background-color: #f0e6f5;
+  color: #9d65c9;
+  flex-shrink: 0;
+}
+
+.method-tag.tutor {
+  background-color: #e6f5f0;
+  color: #65c985;
+}
+
+.method-body {
+  padding: 15px 20px;
+}
+
+.method-desc {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 12px;
   line-height: 1.6;
 }
 
-.study-method-icon-container {
-  display: inline-flex;
+.method-steps {
+  margin-bottom: 15px;
+  padding-left: 20px;
+}
+
+.step-item {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.step-item::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #9d65c9;
+  position: absolute;
+  left: -15px;
+  top: 7px;
+}
+
+.method-scene {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.method-scene i {
+  color: #9d65c9;
+  font-style: normal;
+}
+
+.method-footer {
+  padding: 12px 20px;
+  background-color: #f9f7f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.method-stats {
+  display: flex;
+  gap: 15px;
+  font-size: 12px;
+  color: #888;
+}
+
+.stats-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.stats-item i {
+  color: #c1a3d1;
+  font-style: normal;
+}
+
+.checkin-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  background-color: #9d65c9;
+  color: white;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.checkin-btn:hover {
+  background-color: #8a4db8;
+}
+
+.checkin-btn.tutor {
+  background-color: #65c985;
+}
+
+.checkin-btn.tutor:hover {
+  background-color: #4db570;
+}
+
+/* 打卡弹窗 */
+.checkin-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 6rem;
-  height: 6rem;
-  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-  border-radius: 50%;
-  margin-bottom: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
-.study-method-icon {
-  font-size: 3rem;
-  color: #2563eb;
+.checkin-modal.show {
+  opacity: 1;
+  pointer-events: all;
 }
 
-.coming-soon-text {
-  color: #9ca3af;
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
+.modal-content {
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 25px 20px;
+  width: 90%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-header .icon {
+  font-size: 40px;
+  color: #9d65c9;
+  margin-bottom: 10px;
+}
+
+.modal-header .title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.checkin-type {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.checkin-option {
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: 1px solid #e0d0e8;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkin-option:hover {
+  border-color: #9d65c9;
+  color: #9d65c9;
+}
+
+.checkin-option.active {
+  border-color: #9d65c9;
+  background-color: #f0e6f5;
+  color: #9d65c9;
+  font-weight: 500;
+}
+
+.checkin-content {
+  margin-bottom: 25px;
+}
+
+.checkin-count {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.checkin-item {
+  font-size: 30px;
+  color: #e0d0e8;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  user-select: none;
+}
+
+.checkin-item:hover {
+  color: #c1a3d1;
+}
+
+.checkin-item.active {
+  color: #9d65c9;
+}
+
+.checkin-note {
+  width: 100%;
+  height: 80px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #e0d0e8;
+  resize: none;
+  font-size: 13px;
+  color: #333;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.checkin-note:focus {
+  border-color: #9d65c9;
+}
+
+.checkin-note::placeholder {
+  color: #999;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.modal-btn.cancel {
+  background-color: #f9f7f9;
+  color: #888;
+}
+
+.modal-btn.cancel:hover {
+  background-color: #f0f0f0;
+}
+
+.modal-btn.confirm {
+  background-color: #9d65c9;
+  color: white;
+}
+
+.modal-btn.confirm:hover {
+  background-color: #8a4db8;
+}
+
+/* 底部提示 */
+.bottom-tip {
+  position: fixed;
+  bottom: 60px; /* 在BottomNavBar之上 */
+  left: 0;
+  right: 0;
+  height: 40px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #888;
+  border-top: 1px solid #f0e6f5;
+  z-index: 90;
+}
+
+.bottom-tip span {
+  color: #9d65c9;
+  margin: 0 3px;
+  font-weight: 500;
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .study-method-content {
-    padding: 0.75rem;
-    padding-bottom: 6rem;
+    padding: 120px 15px 120px;
   }
   
-  .study-method-card {
-    padding: 1rem;
+  .ai-recommend {
+    padding: 12px 15px;
+    gap: 12px;
   }
   
-  .study-method-title {
-    font-size: 1.25rem;
+  .ai-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
   }
   
-  .study-method-icon-container {
-    width: 5rem;
-    height: 5rem;
+  .method-header {
+    padding: 12px 15px;
   }
   
-  .study-method-icon {
-    font-size: 2.5rem;
+  .method-body {
+    padding: 12px 15px;
+  }
+  
+  .method-footer {
+    padding: 10px 15px;
+  }
+  
+  .modal-content {
+    padding: 20px 15px;
+    width: 95%;
+  }
+  
+  .checkin-count {
+    gap: 8px;
+  }
+  
+  .checkin-item {
+    font-size: 26px;
   }
 }
 
-/* 动画效果 */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* 加载状态 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #9d65c9;
 }
 
-.study-method-card {
-  animation: fadeIn 0.5s ease-out;
+.loading::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f0e6f5;
+  border-top: 2px solid #9d65c9;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+}
+
+.empty-state i {
+  font-size: 48px;
+  color: #d1c0d9;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.empty-state p {
+  font-size: 14px;
+  color: #999;
 } 

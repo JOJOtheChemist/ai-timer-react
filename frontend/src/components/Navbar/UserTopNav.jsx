@@ -10,7 +10,7 @@ const UserTopNav = () => {
     { id: 'main-schedule', label: '我的时间表', path: '/main-schedule' },
     { id: 'success', label: '上岸时间表', path: '/success' },
     { id: 'tutor', label: '导师推荐', path: '/tutor' },
-    { id: 'challenge', label: '打卡挑战', path: '/challenge' }
+    { id: 'study-method', label: '学习方法', path: '/study-method' }
   ];
 
   const handleTabClick = (tab) => {

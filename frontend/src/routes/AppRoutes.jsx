@@ -14,6 +14,7 @@ import MessagePage from '../pages/MessagePage/MessagePage';
 import AIChatPage from '../pages/AIChatPage/AIChatPage';
 import ShopPage from '../pages/ShopPage/ShopPage';
 import MomentsPage from '../pages/MomentsPage/MomentsPage';
+import SuccessPage from '../pages/SuccessPage/SuccessPage';
 
 const AppRoutes = () => {
   return (
@@ -36,6 +37,9 @@ const AppRoutes = () => {
       {/* 底部导航栏页面路由 */}
       <Route path="/shop" element={<ShopPage />} />
       <Route path="/moments" element={<MomentsPage />} />
+      
+      {/* 上岸时间表页面 */}
+      <Route path="/success" element={<SuccessPage />} />
       
       {/* 404 页面 */}
       <Route 

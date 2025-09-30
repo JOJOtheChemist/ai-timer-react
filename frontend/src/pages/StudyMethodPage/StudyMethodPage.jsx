@@ -7,7 +7,7 @@ const StudyMethodPage = () => {
   return (
     <div className="study-method-page bg-gray-50 font-sans text-gray-800">
       <UserTopNav />
-      
+                            
       <main className="px-4 py-3 pb-24">
         <div className="bg-white rounded-xl shadow-sm p-6">
           <h1 className="text-2xl font-bold text-center mb-4">学习方法区</h1>
@@ -19,9 +19,9 @@ const StudyMethodPage = () => {
               <i className="fa fa-book text-3xl text-blue-600"></i>
             </div>
             <p className="text-gray-500">功能开发中，敬请期待...</p>
-          </div>
+            </div>
         </div>
-      </main>
+    </main>
 
       <BottomNavBar />
     </div>

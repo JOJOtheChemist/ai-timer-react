@@ -1,0 +1,429 @@
+/* 上岸时间表页面样式 */
+.success-page {
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  background-color: #f9f7f9;
+  color: #333;
+  min-height: 100vh;
+}
+
+.success-content {
+  padding-top: 120px; /* 为UserTopNav留出空间 */
+  padding-bottom: 80px; /* 为BottomNavBar留出空间 */
+}
+
+/* 搜索栏 */
+.search-bar {
+  margin: 0 20px 15px;
+  height: 40px;
+  background-color: #fff;
+  border-radius: 20px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(221, 194, 230, 0.2);
+}
+
+.search-bar .search-icon {
+  color: #c1a3d1;
+  margin-right: 8px;
+  font-style: normal;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  color: #666;
+  background: transparent;
+}
+
+.search-bar input::placeholder {
+  color: #d1c0d9;
+}
+
+/* 推荐区标题 */
+.section-title {
+  padding: 0 20px;
+  margin: 10px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #5a3372;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.section-title::before {
+  content: "";
+  width: 4px;
+  height: 16px;
+  background-color: #c888d8;
+  margin-right: 8px;
+  border-radius: 2px;
+}
+
+/* 热门推荐案例 */
+.hot-cases {
+  padding: 0 20px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.hot-cases::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.case-card-hot {
+  min-width: 240px;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(221, 194, 230, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.case-card-hot:hover {
+  transform: translateY(-2px);
+}
+
+.case-card-hot .case-img {
+  height: 120px;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 40px;
+}
+
+.case-card-hot .case-info {
+  padding: 12px 15px;
+}
+
+.case-card-hot .case-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.case-card-hot .case-tags {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.case-card-hot .tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background-color: #f0e6f5;
+  color: #9d65c9;
+  white-space: nowrap;
+}
+
+.case-card-hot .case-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #888;
+}
+
+.case-card-hot .hot-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff6b8b;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+/* 筛选栏 */
+.filter-area {
+  padding: 15px 20px;
+  background-color: #fff;
+  margin: 0 20px 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(221, 194, 230, 0.15);
+}
+
+.filter-group {
+  margin-bottom: 12px;
+}
+
+.filter-group:last-child {
+  margin-bottom: 0;
+}
+
+.filter-group .group-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #5a3372;
+  margin-bottom: 8px;
+}
+
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-tag {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid #e0d0e8;
+  color: #666;
+  background-color: #fff;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.filter-tag:hover {
+  border-color: #9d65c9;
+  color: #9d65c9;
+}
+
+.filter-tag.active {
+  background-color: #f0e6f5;
+  border-color: #9d65c9;
+  color: #9d65c9;
+  font-weight: 500;
+}
+
+.filter-tag.reset {
+  border-color: #ff6b8b;
+  color: #ff6b8b;
+}
+
+.filter-tag.reset:hover {
+  background-color: #fff5f5;
+}
+
+/* 案例列表 */
+.case-list {
+  padding: 0 20px;
+  margin-bottom: 80px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+.case-card {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(221, 194, 230, 0.2);
+  display: flex;
+  transition: transform 0.2s ease;
+}
+
+.case-card:hover {
+  transform: translateY(-2px);
+}
+
+.case-card .card-img {
+  width: 100px;
+  height: 100px;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 30px;
+  flex-shrink: 0;
+}
+
+.case-card .card-content {
+  flex: 1;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.case-card .card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.case-card .card-tags {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.case-card .card-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background-color: #f0e6f5;
+  color: #9d65c9;
+  white-space: nowrap;
+}
+
+.card-tag.tutor {
+  background-color: #e6f5f0;
+  color: #65c985;
+}
+
+.case-card .card-meta {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.case-card .card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.case-card .price {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ff6b8b;
+}
+
+.case-card .view-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  background-color: #9d65c9;
+  color: white;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.case-card .view-btn:hover {
+  background-color: #8a4db8;
+}
+
+/* 底部提示 */
+.bottom-tip {
+  position: fixed;
+  bottom: 60px; /* 在BottomNavBar之上 */
+  left: 0;
+  right: 0;
+  height: 40px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #888;
+  border-top: 1px solid #f0e6f5;
+  z-index: 10;
+}
+
+.bottom-tip span {
+  color: #9d65c9;
+  margin: 0 3px;
+  font-weight: 500;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .search-bar {
+    margin: 0 15px 15px;
+  }
+  
+  .section-title {
+    padding: 0 15px;
+  }
+  
+  .hot-cases {
+    padding: 0 15px;
+  }
+  
+  .case-card-hot {
+    min-width: 200px;
+  }
+  
+  .filter-area {
+    margin: 0 15px 15px;
+    padding: 12px 15px;
+  }
+  
+  .case-list {
+    padding: 0 15px;
+  }
+  
+  .case-card .card-img {
+    width: 80px;
+    height: 80px;
+    font-size: 24px;
+  }
+  
+  .case-card .card-content {
+    padding: 12px;
+  }
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #9d65c9;
+}
+
+.loading::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f0e6f5;
+  border-top: 2px solid #9d65c9;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+}
+
+.empty-state i {
+  font-size: 48px;
+  color: #d1c0d9;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.empty-state p {
+  font-size: 14px;
+  color: #999;
+} 

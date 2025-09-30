@@ -1,15 +1,15 @@
-/* 消息界面页面样式 */
-
+/* MessagePage.css */
 .message-page {
-  min-height: 100vh;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
   background-color: #f9f7f9;
   color: #333;
   line-height: 1.5;
-  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  min-height: 100vh;
+  padding-bottom: 80px; /* 为底部导航栏留出空间 */
 }
 
 /* 顶部导航栏 */
-.message-page .nav-top {
+.nav-top {
   position: fixed;
   top: 0;
   left: 0;
@@ -21,16 +21,18 @@
   align-items: center;
   padding: 0 20px;
   z-index: 100;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
-.message-page .nav-top .back-btn {
+.nav-top .back-btn {
   font-size: 20px;
   color: #9d65c9;
   margin-right: 15px;
   cursor: pointer;
 }
 
-.message-page .nav-top .title {
+.nav-top .title {
   font-size: 18px;
   font-weight: 600;
   color: #5a3372;
@@ -38,21 +40,21 @@
   text-align: center;
 }
 
-.message-page .nav-top .setting-btn {
+.nav-top .setting-btn {
   font-size: 20px;
   color: #9d65c9;
   cursor: pointer;
 }
 
 /* 页面容器 */
-.message-page .container {
+.container {
   padding: 56px 0 10px;
   max-width: 500px;
   margin: 0 auto;
 }
 
 /* 标签页切换 */
-.message-page .tab-container {
+.tab-container {
   display: flex;
   background-color: #fff;
   border-bottom: 1px solid #f0e6f5;
@@ -65,7 +67,7 @@
   z-index: 90;
 }
 
-.message-page .tab-btn {
+.tab-btn {
   flex: 1;
   padding: 14px 0;
   text-align: center;
@@ -78,11 +80,11 @@
   position: relative;
 }
 
-.message-page .tab-btn.active {
+.tab-btn.active {
   color: #9d65c9;
 }
 
-.message-page .tab-btn.active::after {
+.tab-btn.active::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -94,7 +96,7 @@
   border-radius: 3px;
 }
 
-.message-page .tab-btn .badge {
+.tab-btn .badge {
   position: absolute;
   top: 8px;
   right: 30%;
@@ -110,17 +112,18 @@
 }
 
 /* 消息列表容器 */
-.message-page .msg-container {
-  padding: 70px 20px 15px;
+.msg-container {
+  padding: 130px 20px 15px; /* 增加顶部padding以适应固定的导航栏和标签页 */
   min-height: calc(100vh - 120px);
+  display: none;
 }
 
-.message-page .msg-container.active {
+.msg-container.active {
   display: block;
 }
 
 /* 搜索栏（仅私信页有） */
-.message-page .search-bar {
+.search-bar {
   height: 40px;
   background-color: #f9f7f9;
   border-radius: 20px;
@@ -130,12 +133,12 @@
   margin-bottom: 15px;
 }
 
-.message-page .search-bar i {
+.search-bar i {
   color: #c1a3d1;
   margin-right: 8px;
 }
 
-.message-page .search-bar input {
+.search-bar input {
   border: none;
   outline: none;
   flex: 1;
@@ -144,18 +147,18 @@
   color: #666;
 }
 
-.message-page .search-bar input::placeholder {
+.search-bar input::placeholder {
   color: #d1c0d9;
 }
 
 /* 消息项通用样式 */
-.message-page .msg-list {
+.msg-list {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
 }
 
-.message-page .msg-item {
+.msg-item {
   background-color: #fff;
   border-radius: 12px;
   padding: 12px 15px;
@@ -167,11 +170,11 @@
   transition: background-color 0.2s;
 }
 
-.message-page .msg-item:hover {
+.msg-item:hover {
   background-color: #f9f7f9;
 }
 
-.message-page .msg-avatar {
+.msg-avatar {
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -184,29 +187,29 @@
   flex-shrink: 0;
 }
 
-.message-page .msg-avatar.tutor {
+.msg-avatar.tutor {
   background-color: #e6f5f0;
   color: #65c985;
 }
 
-.message-page .msg-avatar.system {
+.msg-avatar.system {
   background-color: #f5e6f0;
   color: #c9659d;
 }
 
-.message-page .msg-content {
+.msg-content {
   flex: 1;
   min-width: 0;
 }
 
-.message-page .msg-header {
+.msg-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
 }
 
-.message-page .msg-name {
+.msg-name {
   font-size: 15px;
   font-weight: 500;
   color: #333;
@@ -215,12 +218,12 @@
   text-overflow: ellipsis;
 }
 
-.message-page .msg-time {
+.msg-time {
   font-size: 12px;
   color: #a88cb8;
 }
 
-.message-page .msg-text {
+.msg-text {
   font-size: 13px;
   color: #888;
   white-space: nowrap;
@@ -231,12 +234,12 @@
   gap: 6px;
 }
 
-.message-page .msg-text.highlight {
+.msg-text.highlight {
   color: #9d65c9;
   font-weight: 500;
 }
 
-.message-page .msg-badge {
+.msg-badge {
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -244,7 +247,7 @@
   display: inline-block;
 }
 
-.message-page .msg-tag {
+.msg-tag {
   font-size: 10px;
   padding: 1px 5px;
   border-radius: 4px;
@@ -253,8 +256,36 @@
   margin-left: 5px;
 }
 
+/* 空状态样式 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 200px);
+  color: #a88cb8;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 60px;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.empty-desc {
+  font-size: 12px;
+  max-width: 200px;
+  opacity: 0.8;
+}
+
 /* 导师反馈详情弹窗 */
-.message-page .detail-modal {
+.detail-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -269,12 +300,12 @@
   transition: opacity 0.3s;
 }
 
-.message-page .detail-modal.show {
+.detail-modal.show {
   opacity: 1;
   pointer-events: all;
 }
 
-.message-page .modal-content {
+.modal-content {
   background-color: #fff;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
@@ -286,97 +317,95 @@
   overflow-y: auto;
 }
 
-.message-page .modal-header {
+.modal-header {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding-bottom: 15px;
+  gap: 12px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
   border-bottom: 1px solid #f0e6f5;
-  margin-bottom: 20px;
 }
 
-.message-page .modal-avatar {
-  width: 50px;
-  height: 50px;
+.modal-avatar {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: #e6f5f0;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #65c985;
-  font-size: 24px;
+  font-size: 18px;
 }
 
-.message-page .modal-info {
+.modal-info {
   flex: 1;
 }
 
-.message-page .modal-name {
-  font-size: 16px;
+.modal-name {
+  font-size: 15px;
   font-weight: 600;
-  color: #5a3372;
-  margin-bottom: 4px;
+  color: #333;
+  margin-bottom: 2px;
 }
 
-.message-page .modal-meta {
+.modal-meta {
   font-size: 12px;
   color: #a88cb8;
 }
 
-.message-page .close-modal {
-  font-size: 24px;
+.close-modal {
+  font-size: 20px;
   color: #a88cb8;
   cursor: pointer;
-  line-height: 1;
 }
 
-.message-page .modal-body {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.modal-body {
+  margin-bottom: 20px;
 }
 
-.message-page .feedback-item {
+.feedback-item {
+  margin-bottom: 15px;
+  padding: 12px 15px;
   background-color: #f9f7f9;
   border-radius: 10px;
-  padding: 15px;
 }
 
-.message-page .feedback-header {
+.feedback-header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
 }
 
-.message-page .feedback-title {
+.feedback-title {
   font-size: 14px;
   font-weight: 500;
   color: #5a3372;
 }
 
-.message-page .feedback-time {
+.feedback-time {
   font-size: 11px;
   color: #a88cb8;
 }
 
-.message-page .feedback-content {
+.feedback-content {
   font-size: 13px;
   color: #666;
   line-height: 1.6;
   margin-bottom: 10px;
 }
 
-.message-page .feedback-highlight {
+.feedback-highlight {
   color: #9d65c9;
   font-weight: 500;
 }
 
-.message-page .feedback-actions {
+.feedback-actions {
   display: flex;
   gap: 10px;
 }
 
-.message-page .feedback-btn {
+.feedback-btn {
   padding: 5px 12px;
   border-radius: 16px;
   font-size: 12px;
@@ -384,21 +413,21 @@
   cursor: pointer;
 }
 
-.message-page .feedback-btn.primary {
+.feedback-btn.primary {
   background-color: #f0e6f5;
   color: #9d65c9;
 }
 
-.message-page .feedback-btn.secondary {
+.feedback-btn.secondary {
   background-color: #f9f7f9;
   color: #888;
   border: 1px solid #e0d0e8;
 }
 
 /* 底部提示 */
-.message-page .bottom-tip {
+.bottom-tip {
   position: fixed;
-  bottom: 0;
+  bottom: 80px; /* 调整位置以避免与底部导航栏重叠 */
   left: 0;
   right: 0;
   height: 40px;
@@ -410,9 +439,52 @@
   color: #888;
   border-top: 1px solid #f0e6f5;
   z-index: 80;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
-.message-page .bottom-tip span {
+.bottom-tip span {
   color: #9d65c9;
   margin: 0 3px;
 }
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .nav-top,
+  .tab-container,
+  .modal-content,
+  .bottom-tip {
+    max-width: 100%;
+  }
+  
+  .msg-container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+/* 确保在移动设备上的适配 */
+@media (max-width: 500px) {
+  .nav-top {
+    padding: 0 15px;
+  }
+  
+  .nav-top .title {
+    font-size: 16px;
+  }
+  
+  .tab-btn {
+    font-size: 14px;
+    padding: 12px 0;
+  }
+  
+  .msg-item {
+    padding: 10px 12px;
+  }
+  
+  .msg-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+} 

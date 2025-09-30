@@ -171,15 +171,15 @@ const StudyMethodPage = () => {
                 onClick={() => handleAiRecommendation('use')}
               >
                 立即使用
-              </button>
+                </button>
               <button 
                 className="ai-btn secondary"
                 onClick={() => handleAiRecommendation('change')}
               >
                 换一个
-              </button>
+                </button>
             </div>
-          </div>
+            </div>
         </div>
 
         {/* 分类筛选栏 */}
@@ -191,7 +191,7 @@ const StudyMethodPage = () => {
               onClick={() => handleFilterChange(option)}
             >
               {option}
-            </button>
+                    </button>
           ))}
         </div>
 
@@ -205,15 +205,15 @@ const StudyMethodPage = () => {
                   <div className="method-meta">
                     <span className={method.meta.tutor ? 'tutor-tag' : ''}>
                       {method.meta.tutor ? method.meta.tutor : `适用：${method.meta.scope}`}
-                    </span>
+                                    </span>
                     <span>{method.meta.checkinCount}人打卡</span>
-                  </div>
+                    </div>
                 </div>
                 <div className={`method-tag ${method.type === 'tutor' ? 'tutor' : ''}`}>
                   {method.category}
-                </div>
-              </div>
-              
+            </div>
+        </div>
+
               <div className="method-body">
                 <div className="method-desc">{method.description}</div>
                 <div className="method-steps">
@@ -224,16 +224,16 @@ const StudyMethodPage = () => {
                 <div className="method-scene">
                   <i>📍</i> {method.scene}
                 </div>
-              </div>
-              
+            </div>
+
               <div className="method-footer">
                 <div className="method-stats">
                   <div className="stats-item">
                     <i>⭐</i> {method.stats.rating}分
-                  </div>
+                    </div>
                   <div className="stats-item">
                     <i>💬</i> {method.stats.reviews}条评价
-                  </div>
+                    </div>
                 </div>
                 <button 
                   className={`checkin-btn ${method.type === 'tutor' ? 'tutor' : ''}`}
@@ -241,7 +241,7 @@ const StudyMethodPage = () => {
                 >
                   立即打卡
                 </button>
-              </div>
+                </div>
             </div>
           ))}
         </div>
@@ -250,7 +250,7 @@ const StudyMethodPage = () => {
         <div className="bottom-tip">
           坚持打卡可获<span>徽章奖励</span> | 导师独创方法可同步至时间表，AI实时优化学习计划
         </div>
-      </main>
+    </main>
 
       {/* 打卡弹窗 */}
       {showCheckinModal && selectedMethod && (
@@ -259,7 +259,7 @@ const StudyMethodPage = () => {
             <div className="modal-header">
               <div className="icon">
                 {selectedMethod.type === 'tutor' ? '👩‍🏫' : '📚'}
-              </div>
+        </div>
               <div className="title">{selectedMethod.name} · 打卡</div>
             </div>
             
@@ -284,9 +284,9 @@ const StudyMethodPage = () => {
                     onClick={() => handleCheckinProgressChange(index + 1)}
                   >
                     {item}
-                  </div>
+                            </div>
                 ))}
-              </div>
+                        </div>
               <textarea
                 className="checkin-note"
                 placeholder="记录今日复习心得（可选）"
@@ -302,8 +302,8 @@ const StudyMethodPage = () => {
               <button className="modal-btn confirm" onClick={handleCompleteCheckin}>
                 完成打卡
               </button>
+                </div>
             </div>
-          </div>
         </div>
       )}
 

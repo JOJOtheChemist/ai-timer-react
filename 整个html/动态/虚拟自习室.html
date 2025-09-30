@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟自习室 | 一起学习</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9d65c9',
+                        secondary: '#5a3372',
+                        accent: '#c888d8',
+                        light: '#f0e6f5',
+                        success: '#65c985',
+                        info: '#659dc9',
+                        warning: '#ffb74d',
+                        danger: '#ff6b8b',
+                        overlay: 'rgba(0, 0, 0, 0.5)'
+                    },
+                    fontFamily: {
+                        sans: ['PingFang SC', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .avatar-pulse {
+                animation: pulse 2s infinite;
+            }
+            .floating {
+                animation: float 3s ease-in-out infinite;
+            }
+            .progress-shine {
+                position: relative;
+                overflow: hidden;
+            }
+            .progress-shine::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 50%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+                animation: shine 2s infinite;
+            }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(101, 201, 133, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(101, 201, 133, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(101, 201, 133, 0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes shine {
+            to { left: 150%; }
+        }
+
+        .scene-slider {
+            scroll-snap-type: x mandatory;
+        }
+        
+        .scene-slide {
+            scroll-snap-align: start;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 overflow-x-hidden font-sans">
+    <!-- 顶部导航栏 -->
+    <header class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-40">
+        <div class="flex items-center justify-between px-5 h-14">
+            <button id="backBtn" class="text-secondary text-xl">
+                <i class="fa fa-angle-left"></i>
+            </button>
+            <h1 class="text-lg font-semibold text-secondary">公共自习室</h1>
+            <div class="flex gap-3">
+                <button id="helpBtn" class="text-secondary text-xl">
+                    <i class="fa fa-question-circle"></i>
+                </button>
+                <button id="settingsBtn" class="text-secondary text-xl">
+                    <i class="fa fa-cog"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 集体目标区域 -->
+    <div class="fixed top-14 left-0 right-0 bg-white/90 backdrop-blur-md p-3 shadow-md z-30 border-b border-gray-200">
+        <div class="flex flex-col">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-sm font-medium text-secondary">【集体挑战】考研冲刺30天</h2>
+                <div class="text-xs text-success flex items-center">
+                    <i class="fa fa-users mr-1"></i> 参与人数: 128人
+                </div>
+            </div>
+            
+            <!-- 进度条 -->
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                <div class="bg-gradient-to-r from-primary to-success h-2.5 rounded-full progress-shine" style="width: 65%"></div>
+            </div>
+            
+            <!-- 进度详情和奖励 -->
+            <div class="flex justify-between items-center">
+                <div class="text-xs text-gray-600">
+                    当前进度: 65% (19.5/30天)
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="relative">
+                        <div class="w-6 h-6 bg-warning rounded-full flex items-center justify-center text-white text-xs">
+                            <i class="fa fa-gift"></i>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-danger rounded-full border-2 border-white"></div>
+                    </div>
+                    <span class="text-xs text-warning font-medium">下一奖励: 资料包</span>
+                </div>
+            </div>
+            
+            <!-- 阶段指示器 -->
+            <div class="flex justify-between mt-1 relative">
+                <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 -translate-y-1/2 z-0"></div>
+                <div class="w-3 h-3 bg-success rounded-full z-10 relative"></div>
+                <div class="w-3 h-3 bg-success rounded-full z-10 relative"></div>
+                <div class="w-3 h-3 bg-success rounded-full z-10 relative"></div>
+                <div class="w-3 h-3 bg-primary rounded-full z-10 relative"></div>
+                <div class="w-3 h-3 bg-gray-300 rounded-full z-10 relative"></div>
+                <div class="w-3 h-3 bg-gray-300 rounded-full z-10 relative"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <main class="pt-36 pb-20 relative">
+        <!-- 场景滑动容器 -->
+        <div class="scene-slider flex overflow-x-auto snap-x snap-mandatory h-[calc(100vh-144px)]">
+            <!-- 场景1: 图书馆大厅 -->
+            <div class="scene-slide w-full flex-shrink-0 h-full relative">
+                <img src="https://picsum.photos/800/1200?random=10" alt="图书馆自习室背景" class="w-full h-full object-cover">
+                
+                <!-- 半透明遮罩 -->
+                <div class="absolute inset-0 bg-black/20"></div>
+                
+                <!-- 用户头像分布 -->
+                <div class="absolute inset-0 p-6">
+                    <!-- 左上角区域 -->
+                    <div class="absolute top-[15%] left-[10%]">
+                        <div class="user-avatar relative cursor-pointer group" data-user="1">
+                            <div class="w-10 h-10 rounded-full bg-light border-2 border-success flex items-center justify-center text-primary font-medium avatar-pulse">
+                                艾
+                            </div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute top-[20%] left-[25%]">
+                        <div class="user-avatar relative cursor-pointer group" data-user="2">
+                            <div class="w-12 h-12 rounded-full bg-light border-2 border-success flex items-center justify-center text-primary font-medium avatar-pulse">
+                                琳
+                            </div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 中间区域 -->
+                    <div class="absolute top-[40%] left-[45%]">
+                        <div class="user-avatar relative cursor-pointer group" data-user="3">
+                            <div class="w-14 h-14 rounded-full bg-light border-2 border-success flex items-center justify-center text-primary font-medium avatar-pulse">
+                                琪
+                            </div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute top-[35%] left-[65%]">
+                        <div class="user-avatar relative cursor-pointer group" data-user="4">
+                            <div class="w-10 h-10 rounded-full bg-light border-2 border-success flex items-center justify-center text-primary font-medium avatar-pulse">
+                                张
+                            </div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 右下角区域 -->
+                    <div class="absolute top-[60%] left-[70%]">
+                        <div class="user-avatar relative cursor-pointer group" data-user="5">
+                            <div class="w-11 h-11 rounded-full bg-light border-2 border-success flex items-center justify-center text-primary font-medium avatar-pulse">
+                                李
+                            </div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute top-[70%] left-[20%]">
+                        <div class="user-avatar relative cursor-pointer group" data-user="6">
+                            <div class="w-10 h-10 rounded-full bg-light border-2 border-success flex items-center justify-center text-primary font-medium avatar-pulse">
+                                王
+                            </div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 加入按钮 -->
+                    <div class="absolute top-[45%] left-[20%]">
+                        <div class="w-12 h-12 rounded-full bg-primary/80 backdrop-blur-sm border-2 border-white flex items-center justify-center text-white font-medium cursor-pointer hover:bg-primary transition-colors shadow-lg">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 场景标题 -->
+                <div class="absolute bottom-6 left-6 bg-black/50 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-sm">
+                    图书馆大厅
+                </div>
+            </div>
+            
+            <!-- 场景2: 安静角落 -->
+            <div class="scene-slide w-full flex-shrink-0 h-full relative">
+                <img src="https://picsum.photos/800/1200?random=11" alt="安静角落自习室背景" class="w-full h-full object-cover">
+                
+                <!-- 半透明遮罩 -->
+                <div class="absolute inset-0 bg-black/20"></div>
+                
+                <!-- 用户头像分布 -->
+                <div class="absolute inset-0 p-6">
+                    <div class="absolute top-[30%] left-[30%]">
+                        <div class="user-avatar relative cursor-pointer group" data-user="7">
+                            <div class="w-10 h-10 rounded-full bg-light border-2 border-success flex items-center justify-center text-primary font-medium avatar-pulse">
+                                赵
+                            </div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute top-[50%] left-[60%]">
+                        <div class="user-avatar relative cursor-pointer group" data-user="8">
+                            <div class="w-11 h-11 rounded-full bg-light border-2 border-success flex items-center justify-center text-primary font-medium avatar-pulse">
+                                陈
+                            </div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 加入按钮 -->
+                    <div class="absolute top-[40%] left-[50%]">
+                        <div class="w-12 h-12 rounded-full bg-primary/80 backdrop-blur-sm border-2 border-white flex items-center justify-center text-white font-medium cursor-pointer hover:bg-primary transition-colors shadow-lg">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 场景标题 -->
+                <div class="absolute bottom-6 left-6 bg-black/50 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-sm">
+                    安静角落
+                </div>
+            </div>
+            
+            <!-- 场景3: 研讨室 -->
+            <div class="scene-slide w-full flex-shrink-0 h-full relative">
+                <img src="https://picsum.photos/800/1200?random=12" alt="研讨室背景" class="w-full h-full object-cover">
+                
+                <!-- 半透明遮罩 -->
+                <div class="absolute inset-0 bg-black/20"></div>
+                
+                <!-- 用户头像分布 -->
+                <div class="absolute inset-0 p-6">
+                    <div class="absolute top-[25%] left-[40%]">
+                        <div class="user-avatar relative cursor-pointer group" data-user="9">
+                            <div class="w-12 h-12 rounded-full bg-light border-2 border-success flex items-center justify-center text-primary font-medium avatar-pulse">
+                                刘
+                            </div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute top-[35%] left-[60%]">
+                        <div class="user-avatar relative cursor-pointer group" data-user="10">
+                            <div class="w-10 h-10 rounded-full bg-light border-2 border-success flex items-center justify-center text-primary font-medium avatar-pulse">
+                                黄
+                            </div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute top-[55%] left-[30%]">
+                        <div class="user-avatar relative cursor-pointer group" data-user="11">
+                            <div class="w-10 h-10 rounded-full bg-light border-2 border-success flex items-center justify-center text-primary font-medium avatar-pulse">
+                                周
+                            </div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 加入按钮 -->
+                    <div class="absolute top-[50%] left-[50%]">
+                        <div class="w-12 h-12 rounded-full bg-primary/80 backdrop-blur-sm border-2 border-white flex items-center justify-center text-white font-medium cursor-pointer hover:bg-primary transition-colors shadow-lg">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 场景标题 -->
+                <div class="absolute bottom-6 left-6 bg-black/50 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-sm">
+                    研讨室
+                </div>
+            </div>
+        </div>
+        
+        <!-- 场景指示器 -->
+        <div class="absolute bottom-[80px] left-0 right-0 flex justify-center gap-2 z-20">
+            <div class="w-2 h-2 rounded-full bg-primary"></div>
+            <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+            <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+        </div>
+    </main>
+
+    <!-- 底部功能区 -->
+    <footer class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md p-3 shadow-lg z-40 max-w-md mx-auto">
+        <div class="flex justify-around items-center">
+            <button id="focusBtn" class="flex flex-col items-center text-primary">
+                <div class="w-10 h-10 rounded-full bg-light flex items-center justify-center mb-1">
+                    <i class="fa fa-clock-o"></i>
+                </div>
+                <span class="text-xs">专注计时</span>
+            </button>
+            
+            <button id="chatBtn" class="flex flex-col items-center text-gray-500 relative">
+                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mb-1">
+                    <i class="fa fa-comments"></i>
+                </div>
+                <span class="text-xs">自习室聊天</span>
+                <div class="absolute -top-1 -right-1 w-4 h-4 bg-danger rounded-full text-white text-xs flex items-center justify-center">
+                    5
+                </div>
+            </button>
+            
+            <button id="musicBtn" class="flex flex-col items-center text-gray-500">
+                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mb-1">
+                    <i class="fa fa-music"></i>
+                </div>
+                <span class="text-xs">专注音乐</span>
+            </button>
+            
+            <button id="targetBtn" class="flex flex-col items-center text-gray-500">
+                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mb-1">
+                    <i class="fa fa-bullseye"></i>
+                </div>
+                <span class="text-xs">个人目标</span>
+            </button>
+        </div>
+    </footer>
+
+    <!-- 用户信息弹窗 -->
+    <div id="userInfoModal" class="fixed inset-0 bg-overlay z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-xs shadow-xl overflow-hidden transform transition-all">
+            <div class="p-5">
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-20 h-20 rounded-full bg-light border-4 border-white flex items-center justify-center text-primary text-3xl font-medium mb-3 shadow-md">
+                        琪
+                    </div>
+                    <h3 class="text-xl font-semibold text-secondary mb-1">琪琪要上岸</h3>
+                    <p class="text-sm text-gray-500 mb-3">正在学习：考研英语 | 已专注2h30m</p>
+                    
+                    <div class="flex justify-center gap-4 mb-4">
+                        <div class="text-center">
+                            <div class="text-lg font-semibold text-primary">1286h</div>
+                            <div class="text-xs text-gray-500">总时长</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-lg font-semibold text-primary">8</div>
+                            <div class="text-xs text-gray-500">徽章</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-lg font-semibold text-primary">28</div>
+                            <div class="text-xs text-gray-500">粉丝</div>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full bg-gray-100 rounded-full h-1.5 mb-4">
+                        <div class="bg-success h-1.5 rounded-full" style="width: 75%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mb-5">今日学习目标：3小时（已完成75%）</p>
+                    
+                    <div class="flex gap-3 w-full">
+                        <button class="flex-1 bg-primary text-white py-2 rounded-xl text-sm font-medium hover:bg-secondary transition-colors">
+                            发消息
+                        </button>
+                        <button class="flex-1 border border-primary text-primary py-2 rounded-xl text-sm font-medium hover:bg-light transition-colors">
+                            查看详情
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 聊天面板 -->
+    <div id="chatPanel" class="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-xl z-50 max-w-md mx-auto transform translate-y-full transition-transform duration-300">
+        <div class="p-4 border-b border-gray-100">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-lg font-semibold text-secondary">自习室聊天</h3>
+                <button id="closeChatBtn" class="text-gray-500">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="relative">
+                <input type="text" placeholder="搜索聊天内容..." 
+                    class="w-full py-2 px-10 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+        </div>
+        
+        <div class="h-[300px] overflow-y-auto p-4 space-y-4">
+            <!-- 系统消息 -->
+            <div class="text-center">
+                <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">今天 14:30</span>
+            </div>
+            
+            <!-- 聊天消息1 -->
+            <div class="flex items-start gap-2">
+                <div class="w-8 h-8 rounded-full bg-light flex items-center justify-center text-primary text-sm font-medium mt-1">
+                    琳
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs font-medium">考研的小琳</span>
+                        <span class="text-xs text-gray-400">14:32</span>
+                    </div>
+                    <div class="bg-gray-100 rounded-lg rounded-tl-none px-3 py-2 text-sm max-w-[80%]">
+                        有没有人用过长难句解析的资料呀？求推荐
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 聊天消息2 -->
+            <div class="flex items-start gap-2 justify-end">
+                <div class="text-right">
+                    <div class="flex items-center gap-2 mb-1 justify-end">
+                        <span class="text-xs text-gray-400">14:35</span>
+                        <span class="text-xs font-medium">我</span>
+                    </div>
+                    <div class="bg-primary text-white rounded-lg rounded-tr-none px-3 py-2 text-sm max-w-[80%]">
+                        我用的《考研真相》感觉还不错，解析很详细
+                    </div>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-sm font-medium mt-1">
+                    我
+                </div>
+            </div>
+            
+            <!-- 聊天消息3 -->
+            <div class="flex items-start gap-2">
+                <div class="w-8 h-8 rounded-full bg-light flex items-center justify-center text-primary text-sm font-medium mt-1">
+                    张
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs font-medium">张学姐笔记</span>
+                        <span class="text-xs text-gray-400">14:40</span>
+                    </div>
+                    <div class="bg-gray-100 rounded-lg rounded-tl-none px-3 py-2 text-sm max-w-[80%]">
+                        同意楼上，那本书对基础差的很友好，我也推荐
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 聊天消息4 -->
+            <div class="flex items-start gap-2">
+                <div class="w-8 h-8 rounded-full bg-light flex items-center justify-center text-primary text-sm font-medium mt-1">
+                    李
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs font-medium">李同学</span>
+                        <span class="text-xs text-gray-400">14:45</span>
+                    </div>
+                    <div class="bg-gray-100 rounded-lg rounded-tl-none px-3 py-2 text-sm max-w-[80%]">
+                        想问下大家每天都学几个小时呀？我感觉时间不够用
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-4 border-t border-gray-100">
+            <div class="flex gap-3 items-center">
+                <button class="text-gray-500 hover:text-primary transition-colors">
+                    <i class="fa fa-smile-o text-xl"></i>
+                </button>
+                <input type="text" placeholder="输入消息..." 
+                    class="flex-1 py-2 px-4 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <button class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white hover:bg-secondary transition-colors">
+                    <i class="fa fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 用户数据
+        const userData = {
+            1: { name: "考研的小艾", studying: "会计学", focusTime: "3h15m", totalTime: "1286h", badges: 8, fans: 28, progress: 85 },
+            2: { name: "考研的小琳", studying: "考研英语", focusTime: "2h30m", totalTime: "954h", badges: 6, fans: 15, progress: 70 },
+            3: { name: "琪琪要上岸", studying: "考研英语", focusTime: "2h30m", totalTime: "1286h", badges: 8, fans: 28, progress: 75 },
+            // 更多用户数据...
+        };
+
+        // 用户头像点击事件
+        const userAvatars = document.querySelectorAll('.user-avatar');
+        const userInfoModal = document.getElementById('userInfoModal');
+
+        userAvatars.forEach(avatar => {
+            avatar.addEventListener('click', () => {
+                const userId = avatar.dataset.user;
+                const user = userData[userId] || userData[3]; // 默认显示琪琪的信息
+                
+                // 这里可以根据userId动态更新弹窗内容
+                userInfoModal.classList.remove('hidden');
+                userInfoModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // 关闭用户信息弹窗
+        userInfoModal.addEventListener('click', (e) => {
+            if (e.target === userInfoModal) {
+                userInfoModal.classList.add('hidden');
+                userInfoModal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // 聊天面板控制
+        const chatBtn = document.getElementById('chatBtn');
+        const chatPanel = document.getElementById('chatPanel');
+        const closeChatBtn = document.getElementById('closeChatBtn');
+
+        chatBtn.addEventListener('click', () => {
+            chatPanel.classList.remove('translate-y-full');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeChatBtn.addEventListener('click', () => {
+            chatPanel.classList.add('translate-y-full');
+            document.body.style.overflow = '';
+        });
+
+        // 场景滑动效果
+        const sceneSlider = document.querySelector('.scene-slider');
+        const sceneSlides = document.querySelectorAll('.scene-slide');
+        const sceneIndicators = document.querySelectorAll('.scene-indicators div');
+
+        sceneSlider.addEventListener('scroll', () => {
+            // 更新场景指示器
+            const scrollPosition = sceneSlider.scrollLeft;
+            sceneSlides.forEach((slide, index) => {
+                if (scrollPosition >= slide.offsetLeft - 50 && 
+                    scrollPosition < slide.offsetLeft + slide.offsetWidth - 50) {
+                    document.querySelectorAll('.scene指示器 > div').forEach((indicator, i) => {
+                        if (i === index) {
+                            indicator.classList.remove('bg-gray-400');
+                            indicator.classList.add('bg-primary');
+                        } else {
+                            indicator.classList.remove('bg-primary');
+                            indicator.classList.add('bg-gray-400');
+                        }
+                    });
+                }
+            });
+        });
+
+        // 其他按钮事件
+        document.getElementById('backBtn').addEventListener('click', () => {
+            alert('返回上一页');
+        });
+
+        document.getElementById('helpBtn').addEventListener('click', () => {
+            alert('自习室帮助说明');
+        });
+
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+            alert('自习室设置');
+        });
+
+        document.getElementById('focusBtn').addEventListener('click', () => {
+            alert('打开专注计时器');
+        });
+
+        document.getElementById('musicBtn').addEventListener('click', () => {
+            alert('打开专注音乐列表');
+        });
+
+        document.getElementById('targetBtn').addEventListener('click', () => {
+            alert('查看个人学习目标');
+        });
+
+        // 加入自习室按钮事件
+        document.querySelectorAll('.fa-plus').forEach(btn => {
+            btn.parentElement.addEventListener('click', () => {
+                alert('成功加入当前自习室');
+            });
+        });
+    </script>
+</body>
+</html>

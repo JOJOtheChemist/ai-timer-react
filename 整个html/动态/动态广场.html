@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态广场 | 女性成长时间管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9d65c9',
+                        secondary: '#5a3372',
+                        accent: '#c888d8',
+                        light: '#f0e6f5',
+                        success: '#65c985',
+                        info: '#659dc9',
+                        warning: '#c99d65',
+                        danger: '#ff6b8b',
+                        neutral: '#f9f7f9',
+                        "neutral-dark": '#7a5490'
+                    },
+                    fontFamily: {
+                        sans: ['PingFang SC', 'Microsoft YaHei', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .text-shadow {
+                text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                transition: all 0.2s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(221, 194, 230, 0.2);
+            }
+        }
+    </style>
+</head>
+<body class="bg-neutral text-gray-800 font-sans">
+    <!-- 顶部导航栏 -->
+    <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50 max-w-md mx-auto">
+        <div class="flex items-center justify-between px-5 h-14">
+            <button id="backBtn" class="text-secondary text-xl">
+                <i class="fa fa-angle-left"></i>
+            </button>
+            <h1 class="text-lg font-semibold text-secondary">动态广场</h1>
+            <button id="filterBtn" class="text-secondary text-xl">
+                <i class="fa fa-filter"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="pt-14 pb-20 px-4 max-w-md mx-auto">
+        <!-- 搜索栏 -->
+        <div class="relative mt-4 mb-5">
+            <input type="text" placeholder="搜索标签/内容/用户" 
+                class="w-full py-2 px-10 bg-white rounded-full shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+            <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+
+        <!-- 模式切换区 -->
+        <div class="flex border-b border-gray-200 mb-4">
+            <button id="dynamicMode" class="flex-1 py-3 text-primary font-medium border-b-2 border-primary">
+                动态
+            </button>
+            <button id="dryGoodsMode" class="flex-1 py-3 text-gray-500 font-medium">
+                干货
+            </button>
+        </div>
+
+        <!-- 内容展示区 -->
+        <div id="contentArea" class="space-y-4">
+            <!-- 广告植入卡片 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 card-hover">
+                <div class="flex items-center mb-3">
+                    <span class="bg-amber-100 text-amber-600 text-xs px-2 py-0.5 rounded-full mr-2">
+                        <i class="fa fa-bullhorn mr-1"></i>推荐
+                    </span>
+                    <div class="text-xs text-gray-500">置顶</div>
+                </div>
+                <div class="flex items-center mb-3">
+                    <div class="w-10 h-10 rounded-full bg-light flex items-center justify-center text-primary mr-3">
+                        <i class="fa fa-trophy"></i>
+                    </div>
+                    <div>
+                        <div class="font-medium">平台活动</div>
+                    </div>
+                </div>
+                <h3 class="font-semibold mb-2 text-secondary">上传上岸时间表，赢高奢真皮包！</h3>
+                <p class="text-sm text-gray-600 mb-3">真实时间表+上岸证明=品牌定制包，已有28人获奖，点击参与→</p>
+                <div class="flex items-center text-xs text-neutral-dark mb-3">
+                    <span class="flex items-center mr-3">
+                        <i class="fa fa-gift mr-1"></i> 奖品：真皮笔记本/珍珠首饰
+                    </span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-light/50 text-secondary text-xs px-2 py-1 rounded-full">#上传时间表</span>
+                    <span class="bg-light/50 text-secondary text-xs px-2 py-1 rounded-full">#赢奖品</span>
+                </div>
+            </div>
+
+            <!-- 动态模式卡片1 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 card-hover">
+                <div class="flex items-center mb-3">
+                    <div class="w-10 h-10 rounded-full bg-light flex items-center justify-center text-primary mr-3">
+                        琳
+                    </div>
+                    <div>
+                        <div class="font-medium">考研的小琳</div>
+                        <div class="text-xs text-gray-500">10分钟前</div>
+                    </div>
+                </div>
+                <p class="text-sm mb-3">今天做英语阅读错了5道😩 
+                    <span class="text-primary cursor-pointer">#考研英语</span> 
+                    <span class="text-primary cursor-pointer">#今日复盘</span> 
+                    感觉长难句还是没吃透...
+                </p>
+                <div class="flex items-center justify-between text-sm text-gray-500">
+                    <div class="flex gap-4">
+                        <button class="flex items-center hover:text-danger transition-colors">
+                            <i class="fa fa-heart-o mr-1"></i> 12
+                        </button>
+                        <button class="flex items-center hover:text-primary transition-colors">
+                            <i class="fa fa-comment-o mr-1"></i> 3
+                        </button>
+                        <button class="flex items-center hover:text-success transition-colors">
+                            <i class="fa fa-share mr-1"></i> 转发
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 动态模式卡片2 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 card-hover">
+                <div class="flex items-center mb-3">
+                    <div class="w-10 h-10 rounded-full bg-light flex items-center justify-center text-primary mr-3">
+                        琪
+                    </div>
+                    <div>
+                        <div class="font-medium">琪琪要上岸</div>
+                        <div class="text-xs text-gray-500">1小时前</div>
+                    </div>
+                </div>
+                <p class="text-sm mb-3">图书馆学习氛围太好了！专注了4小时💪 
+                    <span class="text-primary cursor-pointer">#图书馆打卡</span>
+                    推荐大家试试番茄工作法，真的有用！
+                </p>
+                <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden mb-3">
+                    <img src="https://picsum.photos/400/240?random=1" alt="图书馆学习场景" class="w-full h-full object-cover">
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500">
+                    <div class="flex gap-4">
+                        <button class="flex items-center hover:text-danger transition-colors">
+                            <i class="fa fa-heart-o mr-1"></i> 36
+                        </button>
+                        <button class="flex items-center hover:text-primary transition-colors">
+                            <i class="fa fa-comment-o mr-1"></i> 12
+                        </button>
+                        <button class="flex items-center hover:text-success transition-colors">
+                            <i class="fa fa-share mr-1"></i> 转发
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 干货模式卡片1 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 card-hover hidden" id="dryGoodsCard1">
+                <div class="flex items-center mb-3">
+                    <div class="w-10 h-10 rounded-full bg-light flex items-center justify-center text-primary mr-3">
+                        艾
+                    </div>
+                    <div>
+                        <div class="font-medium">考研的小艾</div>
+                        <div class="text-xs text-gray-500">昨天 19:45</div>
+                    </div>
+                </div>
+                <h3 class="font-semibold mb-2 text-secondary">考研英语3个月提分18分的时间表模板</h3>
+                <p class="text-sm mb-3">每天1.5h精读+1h单词，用
+                    <span class="text-success cursor-pointer">@艾宾浩斯复习法</span>
+                    复盘，感谢
+                    <span class="text-info cursor-pointer">@王英语老师</span>
+                    的规划！
+                </p>
+                <div class="flex flex-wrap gap-2 mb-3 text-xs">
+                    <div class="flex items-center bg-light/50 text-secondary px-2 py-1 rounded-full">
+                        <i class="fa fa-calendar-o mr-1"></i> 关联时间表：7.15-7.21（186h）
+                    </div>
+                    <div class="flex items-center bg-light/50 text-secondary px-2 py-1 rounded-full">
+                        <i class="fa fa-paperclip mr-1"></i> 附件：英语时间表.xlsx
+                    </div>
+                </div>
+                <div class="w-full h-48 bg-gray-100 rounded-lg overflow-hidden mb-3">
+                    <img src="https://picsum.photos/400/240?random=2" alt="英语学习计划表" class="w-full h-full object-cover">
+                </div>
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <span class="bg-light/50 text-secondary text-xs px-2 py-1 rounded-full">#考研英语</span>
+                    <span class="bg-light/50 text-secondary text-xs px-2 py-1 rounded-full">#时间表模板</span>
+                    <span class="bg-light/50 text-secondary text-xs px-2 py-1 rounded-full">#提分经验</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500">
+                    <div class="flex gap-4">
+                        <button class="flex items-center hover:text-danger transition-colors">
+                            <i class="fa fa-heart-o mr-1"></i> 156
+                        </button>
+                        <button class="flex items-center hover:text-primary transition-colors">
+                            <i class="fa fa-comment-o mr-1"></i> 42
+                        </button>
+                        <button class="flex items-center hover:text-success transition-colors">
+                            <i class="fa fa-share mr-1"></i> 28
+                        </button>
+                    </div>
+                    <button class="flex items-center hover:text-secondary transition-colors">
+                        <i class="fa fa-bookmark-o mr-1"></i> 收藏
+                    </button>
+                </div>
+            </div>
+
+            <!-- 干货模式卡片2 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 card-hover hidden" id="dryGoodsCard2">
+                <div class="flex items-center mb-3">
+                    <div class="w-10 h-10 rounded-full bg-light flex items-center justify-center text-primary mr-3">
+                        张
+                    </div>
+                    <div>
+                        <div class="font-medium">张学姐笔记</div>
+                        <div class="text-xs text-gray-500">3天前</div>
+                    </div>
+                </div>
+                <h3 class="font-semibold mb-2 text-secondary">财务管理高频考点整理（附记忆方法）</h3>
+                <p class="text-sm mb-3">整理了近5年财务管理考研高频考点，特别是
+                    <span class="text-primary cursor-pointer">#长期股权投资</span>
+                    这一章，结合
+                    <span class="text-success cursor-pointer">@思维导图学习法</span>
+                    记忆效率翻倍！
+                </p>
+                <div class="flex flex-wrap gap-2 mb-3 text-xs">
+                    <div class="flex items-center bg-light/50 text-secondary px-2 py-1 rounded-full">
+                        <i class="fa fa-calendar-o mr-1"></i> 关联学习计划：第8周
+                    </div>
+                    <div class="flex items-center bg-light/50 text-secondary px-2 py-1 rounded-full">
+                        <i class="fa fa-bar-chart mr-1"></i> 正确率提升：65%→82%
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <span class="bg-light/50 text-secondary text-xs px-2 py-1 rounded-full">#财务管理</span>
+                    <span class="bg-light/50 text-secondary text-xs px-2 py-1 rounded-full">#考点整理</span>
+                    <span class="bg-light/50 text-secondary text-xs px-2 py-1 rounded-full">#记忆方法</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-500">
+                    <div class="flex gap-4">
+                        <button class="flex items-center hover:text-danger transition-colors">
+                            <i class="fa fa-heart-o mr-1"></i> 215
+                        </button>
+                        <button class="flex items-center hover:text-primary transition-colors">
+                            <i class="fa fa-comment-o mr-1"></i> 58
+                        </button>
+                        <button class="flex items-center hover:text-success transition-colors">
+                            <i class="fa fa-share mr-1"></i> 42
+                        </button>
+                    </div>
+                    <button class="flex items-center hover:text-secondary transition-colors">
+                        <i class="fa fa-bookmark-o mr-1"></i> 收藏
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加载更多 -->
+        <div class="flex justify-center py-6">
+            <button class="text-primary text-sm flex items-center">
+                加载更多
+                <i class="fa fa-angle-down ml-1"></i>
+            </button>
+        </div>
+    </main>
+
+    <!-- 底部导航栏 -->
+    <footer class="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-50 max-w-md mx-auto">
+        <div class="flex items-center justify-around h-16">
+            <a href="#" class="flex flex-col items-center justify-center text-gray-500">
+                <i class="fa fa-calendar text-xl mb-1"></i>
+                <span class="text-xs">时间表</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-primary">
+                <i class="fa fa-users text-xl mb-1"></i>
+                <span class="text-xs">广场</span>
+            </a>
+            <button id="postBtn" class="w-14 h-14 bg-primary rounded-full -mt-8 flex items-center justify-center shadow-lg text-white">
+                <i class="fa fa-plus text-xl"></i>
+            </button>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-500">
+                <i class="fa fa-user text-xl mb-1"></i>
+                <span class="text-xs">我的</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-500">
+                <i class="fa fa-comments text-xl mb-1"></i>
+                <span class="text-xs">消息</span>
+            </a>
+        </div>
+    </footer>
+
+    <!-- 发布面板模态框 -->
+    <div id="postModal" class="fixed inset-0 bg-black/50 z-50 hidden items-end">
+        <div class="bg-white w-full max-w-md rounded-t-3xl p-5 max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-secondary">发布内容</h3>
+                <button id="closePostModal" class="text-gray-500 text-xl">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- 发布模式切换 -->
+            <div class="flex border-b border-gray-200 mb-4">
+                <button id="postDynamicBtn" class="flex-1 py-2 text-primary font-medium border-b-2 border-primary">
+                    动态
+                </button>
+                <button id="postDryGoodsBtn" class="flex-1 py-2 text-gray-500 font-medium">
+                    干货
+                </button>
+            </div>
+            
+            <!-- 动态发布区 -->
+            <div id="dynamicPostArea">
+                <textarea placeholder="分享你的学习状态和感悟..." 
+                    class="w-full border border-gray-200 rounded-lg p-3 min-h-[120px] focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"></textarea>
+                
+                <div class="mt-3 mb-4">
+                    <p class="text-sm text-gray-500 mb-2">添加情绪标签</p>
+                    <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+                        <span class="bg-light/50 text-secondary text-xs px-3 py-1 rounded-full cursor-pointer">#效率低😩</span>
+                        <span class="bg-light/50 text-secondary text-xs px-3 py-1 rounded-full cursor-pointer">#进度快💪</span>
+                        <span class="bg-light/50 text-secondary text-xs px-3 py-1 rounded-full cursor-pointer">#有疑问❓</span>
+                        <span class="bg-light/50 text-secondary text-xs px-3 py-1 rounded-full cursor-pointer">#很开心😊</span>
+                        <span class="bg-light/50 text-secondary text-xs px-3 py-1 rounded-full cursor-pointer">#求鼓励💖</span>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <div class="flex gap-3">
+                        <button class="text-gray-500 hover:text-primary transition-colors">
+                            <i class="fa fa-image text-xl"></i>
+                        </button>
+                        <button class="text-gray-500 hover:text-primary transition-colors">
+                            <i class="fa fa-smile-o text-xl"></i>
+                        </button>
+                        <button class="text-gray-500 hover:text-primary transition-colors">
+                            <i class="fa fa-tag text-xl"></i>
+                        </button>
+                    </div>
+                    <button class="bg-primary text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-secondary transition-colors">
+                        发布
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 干货发布区 (默认隐藏) -->
+            <div id="dryGoodsPostArea" class="hidden">
+                <input type="text" placeholder="给你的干货起个标题吧..." 
+                    class="w-full border border-gray-200 rounded-lg p-3 mb-3 focus:outline-none focus:ring-2 focus:ring-primary/30">
+                
+                <textarea placeholder="分享你的学习经验、方法或资料..." 
+                    class="w-full border border-gray-200 rounded-lg p-3 min-h-[120px] focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"></textarea>
+                
+                <div class="mt-3 mb-3">
+                    <p class="text-sm text-gray-500 mb-2">关联内容</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <button class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm flex items-center gap-1 hover:border-primary hover:text-primary transition-colors">
+                            <i class="fa fa-calendar-o"></i> 我的时间表
+                        </button>
+                        <button class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm flex items-center gap-1 hover:border-primary hover:text-primary transition-colors">
+                            <i class="fa fa-lightbulb-o"></i> 学习方法
+                        </button>
+                        <button class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm flex items-center gap-1 hover:border-primary hover:text-primary transition-colors">
+                            <i class="fa fa-user-o"></i> 导师
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-3 mb-4">
+                    <p class="text-sm text-gray-500 mb-2">添加标签</p>
+                    <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+                        <span class="bg-light/50 text-secondary text-xs px-3 py-1 rounded-full cursor-pointer">#考研英语</span>
+                        <span class="bg-light/50 text-secondary text-xs px-3 py-1 rounded-full cursor-pointer">#时间表模板</span>
+                        <span class="bg-light/50 text-secondary text-xs px-3 py-1 rounded-full cursor-pointer">#记忆方法</span>
+                        <span class="bg-light/50 text-secondary text-xs px-3 py-1 rounded-full cursor-pointer">#财务管理</span>
+                        <span class="bg-light/50 text-secondary text-xs px-3 py-1 rounded-full cursor-pointer">#考点整理</span>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <div class="flex gap-3">
+                        <button class="text-gray-500 hover:text-primary transition-colors">
+                            <i class="fa fa-image text-xl"></i>
+                        </button>
+                        <button class="text-gray-500 hover:text-primary transition-colors">
+                            <i class="fa fa-file-o text-xl"></i>
+                        </button>
+                        <button class="text-gray-500 hover:text-primary transition-colors">
+                            <i class="fa fa-tag text-xl"></i>
+                        </button>
+                    </div>
+                    <button class="bg-primary text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-secondary transition-colors">
+                        发布
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 筛选面板模态框 -->
+    <div id="filterModal" class="fixed inset-0 bg-black/50 z-50 hidden items-end">
+        <div class="bg-white w-full max-w-md rounded-t-3xl p-5 max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-secondary">筛选内容</h3>
+                <button id="closeFilterModal" class="text-gray-500 text-xl">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="mb-5">
+                <p class="text-sm text-gray-500 mb-3">按标签筛选</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-light text-primary text-xs px-3 py-1.5 rounded-full cursor-pointer">#全部标签</span>
+                    <span class="bg-light/50 text-secondary text-xs px-3 py-1.5 rounded-full cursor-pointer">#考研英语</span>
+                    <span class="bg-light/50 text-secondary text-xs px-3 py-1.5 rounded-full cursor-pointer">#财务管理</span>
+                    <span class="bg-light/50 text-secondary text-xs px-3 py-1.5 rounded-full cursor-pointer">#时间表</span>
+                    <span class="bg-light/50 text-secondary text-xs px-3 py-1.5 rounded-full cursor-pointer">#记忆方法</span>
+                    <span class="bg-light/50 text-secondary text-xs px-3 py-1.5 rounded-full cursor-pointer">#学习经验</span>
+                    <span class="bg-light/50 text-secondary text-xs px-3 py-1.5 rounded-full cursor-pointer">#图书馆</span>
+                    <span class="bg-light/50 text-secondary text-xs px-3 py-1.5 rounded-full cursor-pointer">#每日复盘</span>
+                </div>
+            </div>
+            
+            <div class="mb-5">
+                <p class="text-sm text-gray-500 mb-3">按时间筛选</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-light text-primary text-xs px-3 py-1.5 rounded-full cursor-pointer">全部时间</span>
+                    <span class="bg-light/50 text-secondary text-xs px-3 py-1.5 rounded-full cursor-pointer">今天</span>
+                    <span class="bg-light/50 text-secondary text-xs px-3 py-1.5 rounded-full cursor-pointer">本周</span>
+                    <span class="bg-light/50 text-secondary text-xs px-3 py-1.5 rounded-full cursor-pointer">本月</span>
+                </div>
+            </div>
+            
+            <div class="mb-5">
+                <p class="text-sm text-gray-500 mb-3">按热度筛选</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-light text-primary text-xs px-3 py-1.5 rounded-full cursor-pointer">推荐</span>
+                    <span class="bg-light/50 text-secondary text-xs px-3 py-1.5 rounded-full cursor-pointer">最新</span>
+                    <span class="bg-light/50 text-secondary text-xs px-3 py-1.5 rounded-full cursor-pointer">最热</span>
+                </div>
+            </div>
+            
+            <button class="w-full bg-primary text-white py-3 rounded-xl font-medium hover:bg-secondary transition-colors">
+                确认筛选
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 模式切换功能
+        const dynamicMode = document.getElementById('dynamicMode');
+        const dryGoodsMode = document.getElementById('dryGoodsMode');
+        const dryGoodsCards = [
+            document.getElementById('dryGoodsCard1'),
+            document.getElementById('dryGoodsCard2')
+        ];
+        const dynamicCards = document.querySelectorAll('.card-hover:not([id^="dryGoodsCard"])');
+
+        dynamicMode.addEventListener('click', () => {
+            dynamicMode.classList.add('text-primary', 'border-primary', 'border-b-2');
+            dynamicMode.classList.remove('text-gray-500');
+            dryGoodsMode.classList.remove('text-primary', 'border-primary', 'border-b-2');
+            dryGoodsMode.classList.add('text-gray-500');
+            
+            // 显示动态卡片，隐藏干货卡片
+            dynamicCards.forEach(card => {
+                if (!card.id.startsWith('dryGoodsCard')) {
+                    card.classList.remove('hidden');
+                }
+            });
+            dryGoodsCards.forEach(card => {
+                card.classList.add('hidden');
+            });
+        });
+
+        dryGoodsMode.addEventListener('click', () => {
+            dryGoodsMode.classList.add('text-primary', 'border-primary', 'border-b-2');
+            dryGoodsMode.classList.remove('text-gray-500');
+            dynamicMode.classList.remove('text-primary', 'border-primary', 'border-b-2');
+            dynamicMode.classList.add('text-gray-500');
+            
+            // 显示干货卡片，隐藏动态卡片（保留广告）
+            dynamicCards.forEach(card => {
+                if (!card.classList.contains('ad')) {
+                    card.classList.add('hidden');
+                }
+            });
+            dryGoodsCards.forEach(card => {
+                card.classList.remove('hidden');
+            });
+        });
+
+        // 发布面板功能
+        const postBtn = document.getElementById('postBtn');
+        const postModal = document.getElementById('postModal');
+        const closePostModal = document.getElementById('closePostModal');
+        const postDynamicBtn = document.getElementById('postDynamicBtn');
+        const postDryGoodsBtn = document.getElementById('postDryGoodsBtn');
+        const dynamicPostArea = document.getElementById('dynamicPostArea');
+        const dryGoodsPostArea = document.getElementById('dryGoodsPostArea');
+
+        postBtn.addEventListener('click', () => {
+            postModal.classList.remove('hidden');
+            postModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closePostModal.addEventListener('click', () => {
+            postModal.classList.add('hidden');
+            postModal.classList.remove('flex');
+            document.body.style.overflow = '';
+        });
+
+        postDynamicBtn.addEventListener('click', () => {
+            postDynamicBtn.classList.add('text-primary', 'border-primary', 'border-b-2');
+            postDynamicBtn.classList.remove('text-gray-500');
+            postDryGoodsBtn.classList.remove('text-primary', 'border-primary', 'border-b-2');
+            postDryGoodsBtn.classList.add('text-gray-500');
+            
+            dynamicPostArea.classList.remove('hidden');
+            dryGoodsPostArea.classList.add('hidden');
+        });
+
+        postDryGoodsBtn.addEventListener('click', () => {
+            postDryGoodsBtn.classList.add('text-primary', 'border-primary', 'border-b-2');
+            postDryGoodsBtn.classList.remove('text-gray-500');
+            postDynamicBtn.classList.remove('text-primary', 'border-primary', 'border-b-2');
+            postDynamicBtn.classList.add('text-gray-500');
+            
+            dryGoodsPostArea.classList.remove('hidden');
+            dynamicPostArea.classList.add('hidden');
+        });
+
+        // 筛选面板功能
+        const filterBtn = document.getElementById('filterBtn');
+        const filterModal = document.getElementById('filterModal');
+        const closeFilterModal = document.getElementById('closeFilterModal');
+
+        filterBtn.addEventListener('click', () => {
+            filterModal.classList.remove('hidden');
+            filterModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeFilterModal.addEventListener('click', () => {
+            filterModal.classList.add('hidden');
+            filterModal.classList.remove('flex');
+            document.body.style.overflow = '';
+        });
+
+        // 点击模态框外部关闭
+        postModal.addEventListener('click', (e) => {
+            if (e.target === postModal) {
+                postModal.classList.add('hidden');
+                postModal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+        });
+
+        filterModal.addEventListener('click', (e) => {
+            if (e.target === filterModal) {
+                filterModal.classList.add('hidden');
+                filterModal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // 标签点击事件
+        document.querySelectorAll('.text-primary.cursor-pointer').forEach(tag => {
+            tag.addEventListener('click', () => {
+                const tagText = tag.textContent;
+                alert(`查看包含${tagText}的所有内容`);
+                // 实际应用中这里会跳转到筛选结果页
+            });
+        });
+
+        // 互动按钮事件
+        document.querySelectorAll('.fa-heart-o').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const parent = btn.parentElement;
+                if (btn.classList.contains('fa-heart-o')) {
+                    btn.classList.remove('fa-heart-o');
+                    btn.classList.add('fa-heart');
+                    parent.classList.add('text-danger');
+                    // 更新数字
+                    const countEl = parent.querySelector('span');
+                    if (countEl) {
+                        countEl.textContent = parseInt(countEl.textContent) + 1;
+                    }
+                } else {
+                    btn.classList.remove('fa-heart');
+                    btn.classList.add('fa-heart-o');
+                    parent.classList.remove('text-danger');
+                    // 更新数字
+                    const countEl = parent.querySelector('span');
+                    if (countEl) {
+                        countEl.textContent = parseInt(countEl.textContent) - 1;
+                    }
+                }
+            });
+        });
+
+        // 评论按钮事件
+        document.querySelectorAll('.fa-comment-o').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                alert('查看评论区');
+            });
+        });
+
+        // 分享按钮事件
+        document.querySelectorAll('.fa-share').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                alert('分享此内容');
+            });
+        });
+
+        // 收藏按钮事件
+        document.querySelectorAll('.fa-bookmark-o').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (btn.classList.contains('fa-bookmark-o')) {
+                    btn.classList.remove('fa-bookmark-o');
+                    btn.classList.add('fa-bookmark');
+                    alert('收藏成功');
+                } else {
+                    btn.classList.remove('fa-bookmark');
+                    btn.classList.add('fa-bookmark-o');
+                    alert('取消收藏');
+                }
+            });
+        });
+
+        // 返回按钮事件
+        document.getElementById('backBtn').addEventListener('click', () => {
+            alert('返回上一页');
+        });
+
+        // 卡片点击事件（跳转到详情）
+        document.querySelectorAll('.card-hover').forEach(card => {
+            card.addEventListener('click', () => {
+                if (!card.classList.contains('ad')) {
+                    alert('查看内容详情');
+                } else {
+                    alert('查看活动详情');
+                }
+            });
+        });
+
+        // 加载更多按钮事件
+        document.querySelector('.fa-angle-down').parentElement.addEventListener('click', () => {
+            alert('加载更多内容');
+        });
+    </script>
+</body>
+</html>

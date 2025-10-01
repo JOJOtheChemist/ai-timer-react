@@ -1,0 +1,30 @@
+
+============================================================
+🚀 开始 Task API 测试
+============================================================
+
+💾 数据库验证: 任务 0 条, 子任务 0 条
+
+
+============================================================
+📊 Task API 测试结果
+============================================================
+✅ Health Check: 200
+✅ POST /tasks: Created ID=2, 2 subtasks
+✅ POST /tasks/quick-add: Created ID=3
+✅ GET /tasks: 200 - 2 tasks, total=2
+✅ GET /tasks/{id}: 200 - name=高等数学
+❌ PATCH /tasks/{id}: 500 - {"detail":"服务器内部错误: (psycopg2.errors.UndefinedColumn) record \"new\" has no field \"updated_at\"\nCO
+✅ GET /tasks/high-frequency/list: 200 - 1 tasks
+✅ GET /tasks/overcome/list: 200 - 0 tasks
+✅ GET /tasks/statistics/overview: 200 - success=True
+✅ PATCH /tasks/{id}/expand: 200
+✅ DELETE /tasks/{id}: 200
+============================================================
+
+✅ 成功: 10/11 (90.9%)
+
+💾 数据库验证: 任务 1 条, 子任务 2 条
+
+📝 测试报告已保存: tests/report/TASK_API_TEST_REPORT.md
+✅ 清理测试数据: 删除 1 个任务

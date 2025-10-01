@@ -361,6 +361,20 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
+# 加载任务路由
+try:
+    from api.v1.endpoints.task import tasks
+    app.include_router(
+        tasks.router,
+        prefix="/api/v1/tasks",
+        tags=["任务管理"]
+    )
+    print("✅ 任务模块加载成功")
+except Exception as e:
+    print(f"⚠️  任务模块加载失败: {e}")
+    import traceback
+    traceback.print_exc()
+
 # ============= 全局异常处理 =============
 
 @app.exception_handler(Exception)

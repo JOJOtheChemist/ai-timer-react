@@ -1,0 +1,399 @@
+INFO:     Started server process [77455]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+
+============================================================
+🚀 正在启动 AI Time Management API Server
+============================================================
+✅ AI聊天模块加载成功
+✅ AI推荐模块加载成功
+✅ 成功案例模块加载成功
+✅ 消息模块加载成功
+✅ 学习方法模块加载成功
+✅ 徽章模块加载成功
+✅ 动态模块加载成功
+✅ 动态模块加载成功
+✅ 导师模块加载成功
+✅ 时间表模块加载成功
+✅ 统计模块加载成功
+✅ 任务模块加载成功
+============================================================
+📚 API文档地址:
+   - Swagger UI: http://localhost:8000/docs
+   - ReDoc:      http://localhost:8000/redoc
+   - OpenAPI:    http://localhost:8000/openapi.json
+============================================================
+
+INFO:     127.0.0.1:49430 - "GET /api/v1/tasks/health/check HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49463 - "GET /api/v1/tasks/health/check HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49465 - "POST /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49468 - "POST /api/v1/tasks/quick-add?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49470 - "GET /api/v1/tasks?user_id=1&limit=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49472 - "GET /api/v1/tasks/2?user_id=1 HTTP/1.1" 200 OK
+Traceback (most recent call last):
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: record "new" has no field "updated_at"
+CONTEXT:  PL/pgSQL assignment "NEW.updated_at = CURRENT_TIMESTAMP"
+PL/pgSQL function update_updated_at_column() line 3 at assignment
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 387, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/task/tasks.py", line 115, in update_task
+    task = task_service.update_task(db=db, task_id=task_id, user_id=user_id, task_data=task_data)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/services/task/task_service.py", line 133, in update_task
+    db_task = crud_task.update(db=db, task_id=task_id, user_id=user_id, task_data=task_data)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/crud/task/crud_task.py", line 133, in update
+    db.commit()
+    ~~~~~~~~~^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 2032, in commit
+    trans.commit(_to_root=True)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "<string>", line 2, in commit
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 1313, in commit
+    self._prepare_impl()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "<string>", line 2, in _prepare_impl
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 1288, in _prepare_impl
+    self.session.flush()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 4345, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 4480, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/util/langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 4441, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/persistence.py", line 85, in save_obj
+    _emit_update_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        update,
+        ^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/persistence.py", line 912, in _emit_update_statements
+    c = connection.execute(
+        statement, multiparams, execution_options=execution_options
+    )
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) record "new" has no field "updated_at"
+CONTEXT:  PL/pgSQL assignment "NEW.updated_at = CURRENT_TIMESTAMP"
+PL/pgSQL function update_updated_at_column() line 3 at assignment
+
+[SQL: UPDATE task SET name=%(name)s, weekly_hours=%(weekly_hours)s, update_time=now() WHERE task.id = %(task_id)s]
+[parameters: {'name': '高等数学（更新）', 'weekly_hours': 12.0, 'task_id': 2}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+❌ Global Exception: (psycopg2.errors.UndefinedColumn) record "new" has no field "updated_at"
+CONTEXT:  PL/pgSQL assignment "NEW.updated_at = CURRENT_TIMESTAMP"
+PL/pgSQL function update_updated_at_column() line 3 at assignment
+
+[SQL: UPDATE task SET name=%(name)s, weekly_hours=%(weekly_hours)s, update_time=now() WHERE task.id = %(task_id)s]
+[parameters: {'name': '高等数学（更新）', 'weekly_hours': 12.0, 'task_id': 2}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+INFO:     127.0.0.1:49474 - "PATCH /api/v1/tasks/2?user_id=1 HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: record "new" has no field "updated_at"
+CONTEXT:  PL/pgSQL assignment "NEW.updated_at = CURRENT_TIMESTAMP"
+PL/pgSQL function update_updated_at_column() line 3 at assignment
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/applications.py", line 1133, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 387, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/task/tasks.py", line 115, in update_task
+    task = task_service.update_task(db=db, task_id=task_id, user_id=user_id, task_data=task_data)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/services/task/task_service.py", line 133, in update_task
+    db_task = crud_task.update(db=db, task_id=task_id, user_id=user_id, task_data=task_data)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/crud/task/crud_task.py", line 133, in update
+    db.commit()
+    ~~~~~~~~~^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 2032, in commit
+    trans.commit(_to_root=True)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "<string>", line 2, in commit
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 1313, in commit
+    self._prepare_impl()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "<string>", line 2, in _prepare_impl
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 1288, in _prepare_impl
+    self.session.flush()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 4345, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 4480, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/util/langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 4441, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/persistence.py", line 85, in save_obj
+    _emit_update_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        update,
+        ^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/orm/persistence.py", line 912, in _emit_update_statements
+    c = connection.execute(
+        statement, multiparams, execution_options=execution_options
+    )
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1419, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/sqlalchemy/engine/default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) record "new" has no field "updated_at"
+CONTEXT:  PL/pgSQL assignment "NEW.updated_at = CURRENT_TIMESTAMP"
+PL/pgSQL function update_updated_at_column() line 3 at assignment
+
+[SQL: UPDATE task SET name=%(name)s, weekly_hours=%(weekly_hours)s, update_time=now() WHERE task.id = %(task_id)s]
+[parameters: {'name': '高等数学（更新）', 'weekly_hours': 12.0, 'task_id': 2}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+INFO:     127.0.0.1:49476 - "GET /api/v1/tasks/high-frequency/list?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49478 - "GET /api/v1/tasks/overcome/list?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49480 - "GET /api/v1/tasks/statistics/overview?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49482 - "PATCH /api/v1/tasks/2/expand?user_id=1&is_expand=True HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49484 - "DELETE /api/v1/tasks/3?user_id=1 HTTP/1.1" 200 OK

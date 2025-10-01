@@ -43,3 +43,7 @@ INFO:     127.0.0.1:49219 - "GET /api/v1/statistics/efficiency-analysis?user_id=
 INFO:     127.0.0.1:49221 - "GET /api/v1/statistics/mood-trend?user_id=1&days=7 HTTP/1.1" 200 OK
 INFO:     127.0.0.1:49223 - "GET /api/v1/statistics/comparison?user_id=1&current_week=2025-40&previous_week=2025-39 HTTP/1.1" 200 OK
 INFO:     127.0.0.1:49225 - "GET /api/v1/statistics/dashboard?user_id=1&year_week=2025-40 HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [73877]

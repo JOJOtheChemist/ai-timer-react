@@ -13,14 +13,14 @@ class CRUDMessageStat:
         """按类型统计未读消息数量"""
         # 查询各类型未读消息数
         stats = db.query(
-            Message.message_type,
+            Message.type,
             func.count(Message.id).label('count')
         ).filter(
             and_(
                 Message.receiver_id == user_id,
-                Message.is_read == 0
+                Message.is_unread == 0
             )
-        ).group_by(Message.message_type).all()
+        ).group_by(Message.type).all()
         
         # 初始化结果
         result = {
@@ -35,11 +35,11 @@ class CRUDMessageStat:
             count = stat.count
             result["total_count"] += count
             
-            if stat.message_type == "tutor":
+            if stat.message_type == 0:
                 result["tutor_count"] = count
-            elif stat.message_type == "private":
+            elif stat.message_type == 1:
                 result["private_count"] = count
-            elif stat.message_type == "system":
+            elif stat.message_type == 2:
                 result["system_count"] = count
         
         return result
@@ -66,20 +66,20 @@ class CRUDMessageStat:
             and_(
                 Message.receiver_id == user_id,
                 Message.create_time >= start_date,
-                Message.is_read == 1
+                Message.is_unread == 1
             )
         ).scalar() or 0
         
         # 按类型统计
         type_stats = db.query(
-            Message.message_type,
+            Message.type,
             func.count(Message.id).label('count')
         ).filter(
             and_(
                 Message.receiver_id == user_id,
                 Message.create_time >= start_date
             )
-        ).group_by(Message.message_type).all()
+        ).group_by(Message.type).all()
         
         # 按日期统计
         daily_stats = db.query(
@@ -110,7 +110,7 @@ class CRUDMessageStat:
         stats = db.query(
             Message.sender_id,
             func.count(Message.id).label('message_count'),
-            func.sum(func.case([(Message.is_read == 0, 1)], else_=0)).label('unread_count')
+            func.sum(func.case([(Message.is_unread == 0, 1)], else_=0)).label('unread_count')
         ).filter(
             Message.receiver_id == user_id
         ).group_by(Message.sender_id)\
@@ -132,7 +132,7 @@ class CRUDMessageStat:
         received_messages = db.query(func.count(Message.id)).filter(
             and_(
                 Message.receiver_id == user_id,
-                Message.message_type != "system"
+                Message.type != 2
             )
         ).scalar() or 0
         

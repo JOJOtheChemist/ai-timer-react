@@ -24,7 +24,7 @@ class CRUDMessageInteraction:
             return None
         
         # 检查是否可以回复
-        if original_message.message_type == "system":
+        if original_message.message_type == 2:
             return None
         
         if original_message.receiver_id != user_id:
@@ -34,7 +34,7 @@ class CRUDMessageInteraction:
         reply_message = Message(
             sender_id=user_id,
             receiver_id=original_message.sender_id,  # 回复给原发送方
-            message_type=original_message.message_type,
+            type=original_message.message_type,
             title=f"Re: {original_message.title}",
             content=content,
             related_id=original_message.related_id,
@@ -74,8 +74,8 @@ class CRUDMessageInteraction:
         updated_count = db.query(Message).filter(
             and_(
                 Message.receiver_id == user_id,
-                Message.message_type == "system",
-                Message.is_read == 0
+                Message.type == 2,
+                Message.is_unread == 0
             )
         ).update({
             "is_read": 1,
@@ -128,7 +128,7 @@ class CRUDMessageInteraction:
         elif action == "reply":
             # 只有接收方可以回复，且系统消息不能回复
             return (message.receiver_id == user_id and 
-                   message.message_type != "system")
+                   message.message_type != 2)
         elif action == "delete":
             # 只有接收方可以删除
             return message.receiver_id == user_id

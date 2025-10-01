@@ -27,12 +27,12 @@ class CRUDMessageDetail:
         }
         
         # 根据消息类型获取不同的上下文
-        if main_message.message_type == "tutor":
+        if main_message.message_type == 0:
             # 导师反馈：获取与同一导师的历史互动
             result["context_messages"] = self._get_tutor_context(
                 db, user_id, main_message.related_id, message_id
             )
-        elif main_message.message_type == "private":
+        elif main_message.message_type == 1:
             # 私信：获取与发送方的对话历史
             result["context_messages"] = self._get_private_context(
                 db, user_id, main_message.sender_id, message_id
@@ -58,7 +58,7 @@ class CRUDMessageDetail:
         return db.query(Message).filter(
             and_(
                 Message.receiver_id == user_id,
-                Message.message_type == "tutor",
+                Message.type == 0,
                 Message.related_id == tutor_id,
                 Message.id != exclude_message_id
             )
@@ -85,7 +85,7 @@ class CRUDMessageDetail:
                         Message.receiver_id == user_id
                     )
                 ),
-                Message.message_type == "private",
+                Message.type == 1,
                 Message.id != exclude_message_id
             )
         ).order_by(desc(Message.create_time)).limit(limit).all()
@@ -111,7 +111,7 @@ class CRUDMessageDetail:
         }
         
         # 根据类型补充特定信息
-        if related_type == "tutor":
+        if related_type == 0:
             resource_info.update({
                 "title": "导师服务",
                 "url": f"/tutors/{related_id}"
@@ -132,7 +132,7 @@ class CRUDMessageDetail:
     def check_can_reply(self, message: Message, user_id: int) -> bool:
         """检查是否可以回复消息"""
         # 系统消息不能回复
-        if message.message_type == "system":
+        if message.message_type == 2:
             return False
         
         # 只有接收方可以回复

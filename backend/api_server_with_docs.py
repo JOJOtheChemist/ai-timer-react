@@ -214,6 +214,54 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
+# 加载消息路由
+try:
+    from api.v1.endpoints.message import messages, message_details, message_interactions, message_stats
+    app.include_router(
+        messages.router,
+        prefix="/api/v1/messages",
+        tags=["消息管理"]
+    )
+    app.include_router(
+        message_details.router,
+        prefix="/api/v1/messages",
+        tags=["消息详情"]
+    )
+    app.include_router(
+        message_interactions.router,
+        prefix="/api/v1/messages",
+        tags=["消息交互"]
+    )
+    app.include_router(
+        message_stats.router,
+        prefix="/api/v1/messages",
+        tags=["消息统计"]
+    )
+    print("✅ 消息模块加载成功")
+except Exception as e:
+    print(f"⚠️  消息模块加载失败: {e}")
+    import traceback
+    traceback.print_exc()
+
+# 加载学习方法路由
+try:
+    from api.v1.endpoints.method import methods, checkins
+    app.include_router(
+        methods.router,
+        prefix="/api/v1/methods",
+        tags=["学习方法"]
+    )
+    app.include_router(
+        checkins.router,
+        prefix="/api/v1/methods",
+        tags=["学习打卡"]
+    )
+    print("✅ 学习方法模块加载成功")
+except Exception as e:
+    print(f"⚠️  学习方法模块加载失败: {e}")
+    import traceback
+    traceback.print_exc()
+
 # ============= 全局异常处理 =============
 
 @app.exception_handler(Exception)

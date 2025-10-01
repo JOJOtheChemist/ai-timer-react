@@ -4,10 +4,10 @@ from datetime import datetime
 from enum import Enum
 
 # 枚举类型
-class MessageTypeEnum(str, Enum):
-    TUTOR = "tutor"
-    PRIVATE = "private"
-    SYSTEM = "system"
+class MessageTypeEnum(int, Enum):
+    TUTOR = 0
+    PRIVATE = 1
+    SYSTEM = 2
 
 class ReminderTypeEnum(str, Enum):
     PUSH = "push"

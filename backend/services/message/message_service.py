@@ -35,7 +35,7 @@ class MessageService:
             message_response = MessageResponse.from_orm(message)
             
             # 补充扩展字段
-            message_response.is_unread = message.is_read == 0
+            message_response.is_unread = message.is_unread == 0
             message_response.sender_name = self._get_sender_name(db, message.sender_id)
             message_response.sender_avatar = self._get_sender_avatar(db, message.sender_id)
             message_response.reply_count = self._get_reply_count(db, message.id)
@@ -78,7 +78,7 @@ class MessageService:
     
     def _enrich_tutor_message(self, db: Session, message: MessageResponse) -> MessageResponse:
         """为导师反馈消息补充关联信息"""
-        if message.related_id and message.related_type == "tutor":
+        if message.related_id and message.related_type == 0:
             # 这里应该调用导师服务获取导师认证状态等信息
             # 目前添加模拟数据
             message.sender_name = f"导师{message.related_id}"
@@ -119,7 +119,7 @@ class MessageService:
         message_response = MessageResponse.from_orm(db_message)
         message_response.sender_name = self._get_sender_name(db, db_message.sender_id)
         message_response.sender_avatar = self._get_sender_avatar(db, db_message.sender_id)
-        message_response.is_unread = db_message.is_read == 0
+        message_response.is_unread = db_message.is_unread == 0
         message_response.reply_count = self._get_reply_count(db, message_id)
         
         return message_response
@@ -143,7 +143,7 @@ class MessageService:
             message_response = MessageResponse.from_orm(message)
             message_response.sender_name = self._get_sender_name(db, message.sender_id)
             message_response.sender_avatar = self._get_sender_avatar(db, message.sender_id)
-            message_response.is_unread = message.is_read == 0
+            message_response.is_unread = message.is_unread == 0
             message_response.reply_count = self._get_reply_count(db, message.id)
             message_responses.append(message_response)
         

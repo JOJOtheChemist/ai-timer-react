@@ -93,7 +93,7 @@ class MessageStatService:
         
         # 分析各类型的特点
         type_analysis = {}
-        for msg_type in ["tutor", "private", "system"]:
+        for msg_type in [0, 1, 2]:
             count = type_stats.get(msg_type, 0)
             percentage = type_percentages.get(msg_type, 0)
             
@@ -201,11 +201,11 @@ class MessageStatService:
     
     def _get_type_suggestion(self, msg_type: str, count: int, percentage: float) -> str:
         """获取消息类型建议"""
-        if msg_type == "tutor" and percentage > 40:
+        if msg_type == 0 and percentage > 40:
             return "导师反馈较多，建议及时查看和回复"
-        elif msg_type == "private" and percentage > 60:
+        elif msg_type == 1 and percentage > 60:
             return "私信较多，注意保持良好的沟通"
-        elif msg_type == "system" and percentage > 50:
+        elif msg_type == 2 and percentage > 50:
             return "系统通知较多，可考虑开启自动已读"
         else:
             return "消息分布正常"

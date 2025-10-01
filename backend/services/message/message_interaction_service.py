@@ -181,7 +181,7 @@ class MessageInteractionService:
             message_response = MessageResponse.from_orm(message)
             message_response.sender_name = message_service._get_sender_name(db, message.sender_id)
             message_response.sender_avatar = message_service._get_sender_avatar(db, message.sender_id)
-            message_response.is_unread = message.is_read == 0
+            message_response.is_unread = message.is_unread == 0
             message_response.reply_count = 0  # 回复链中不显示嵌套回复数
             message_responses.append(message_response)
         

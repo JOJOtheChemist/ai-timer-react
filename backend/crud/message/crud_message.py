@@ -14,7 +14,7 @@ class CRUDMessage:
         db_message = Message(
             sender_id=sender_id,
             receiver_id=message_data.receiver_id,
-            message_type=message_data.message_type.value,
+            type=message_data.message_type.value,
             title=message_data.title,
             content=message_data.content,
             related_id=message_data.related_id,
@@ -38,7 +38,7 @@ class CRUDMessage:
         query = db.query(Message).filter(Message.receiver_id == user_id)
         
         if message_type:
-            query = query.filter(Message.message_type == message_type.value)
+            query = query.filter(Message.type == message_type.value)
         
         # 获取总数
         total = query.count()
@@ -61,12 +61,12 @@ class CRUDMessage:
         query = db.query(Message).filter(
             and_(
                 Message.receiver_id == user_id,
-                Message.is_read == 0
+                Message.is_unread == 0
             )
         )
         
         if message_type:
-            query = query.filter(Message.message_type == message_type.value)
+            query = query.filter(Message.type == message_type.value)
         
         return query.count()
     
@@ -110,12 +110,12 @@ class CRUDMessage:
             and_(
                 Message.id == message_id,
                 Message.receiver_id == user_id,
-                Message.is_read == 0
+                Message.is_unread == 0
             )
         ).first()
         
         if db_message:
-            db_message.is_read = 1
+            db_message.is_unread = 1
             db_message.read_time = datetime.now()
             db.commit()
             db.refresh(db_message)
@@ -128,7 +128,7 @@ class CRUDMessage:
             and_(
                 Message.id.in_(message_ids),
                 Message.receiver_id == user_id,
-                Message.is_read == 0
+                Message.is_unread == 0
             )
         ).update({
             "is_read": 1,

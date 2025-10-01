@@ -5,6 +5,7 @@ import uvicorn
 
 # 导入路由模块
 from routers import tasks, users, ai, tutors
+from api.v1.api import api_router
 
 # 创建FastAPI应用实例
 app = FastAPI(
@@ -37,6 +38,9 @@ app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
 app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(ai.router, prefix="/api/ai", tags=["ai"])
 app.include_router(tutors.router, prefix="/api/tutors", tags=["tutors"])
+
+# 注册新的API v1路由
+app.include_router(api_router, prefix="/api/v1")
 
 # 全局异常处理
 @app.exception_handler(Exception)

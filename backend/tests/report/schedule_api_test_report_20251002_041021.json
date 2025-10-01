@@ -1,0 +1,83 @@
+{
+  "summary": {
+    "total_tests": 12,
+    "passed": 2,
+    "failed": 10,
+    "success_rate": "16.67%"
+  },
+  "test_results": [
+    {
+      "test_name": "服务器健康检查",
+      "success": true,
+      "details": "服务器正常运行",
+      "timestamp": "2025-10-02T04:10:21.903587"
+    },
+    {
+      "test_name": "插入测试数据",
+      "success": true,
+      "details": "成功创建 4 个时间段和 1 个任务",
+      "timestamp": "2025-10-02T04:10:21.940345"
+    },
+    {
+      "test_name": "GET /time-slots",
+      "success": false,
+      "details": "HTTP 422: {\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"user_id\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "timestamp": "2025-10-02T04:10:21.949043"
+    },
+    {
+      "test_name": "POST /time-slots",
+      "success": false,
+      "details": "HTTP 422: {\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"user_id\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "timestamp": "2025-10-02T04:10:21.950966"
+    },
+    {
+      "test_name": "PATCH /time-slots/{id}",
+      "success": false,
+      "details": "HTTP 422: {\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"user_id\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "timestamp": "2025-10-02T04:10:21.952441"
+    },
+    {
+      "test_name": "POST /time-slots/{id}/mood",
+      "success": false,
+      "details": "HTTP 422: {\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"user_id\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "timestamp": "2025-10-02T04:10:21.954040"
+    },
+    {
+      "test_name": "POST /time-slots/{id}/task",
+      "success": false,
+      "details": "HTTP 422: {\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"user_id\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "timestamp": "2025-10-02T04:10:21.955797"
+    },
+    {
+      "test_name": "PATCH /time-slots/batch/status",
+      "success": false,
+      "details": "HTTP 422: {\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"user_id\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "timestamp": "2025-10-02T04:10:21.957779"
+    },
+    {
+      "test_name": "GET /time-slots/completion-stats",
+      "success": false,
+      "details": "HTTP 422: {\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"user_id\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "timestamp": "2025-10-02T04:10:21.959253"
+    },
+    {
+      "test_name": "GET /time-slots/ai-recommended",
+      "success": false,
+      "details": "HTTP 422: {\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"user_id\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "timestamp": "2025-10-02T04:10:21.960586"
+    },
+    {
+      "test_name": "PATCH /time-slots/{id}/complete",
+      "success": false,
+      "details": "HTTP 422: {\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"user_id\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "timestamp": "2025-10-02T04:10:21.961931"
+    },
+    {
+      "test_name": "PATCH /time-slots/{id}/start",
+      "success": false,
+      "details": "HTTP 422: {\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"user_id\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "timestamp": "2025-10-02T04:10:21.963258"
+    }
+  ],
+  "generated_at": "2025-10-02T04:10:21.963291"
+}

@@ -115,8 +115,8 @@ class TimeSlotResponse(TimeSlotBase):
     task_id: Optional[int] = None
     subtask_id: Optional[int] = None
     is_ai_recommended: bool = False
-    task: Optional[TaskResponse] = None
-    subtask: Optional[SubtaskResponse] = None
+    task: Optional['TaskResponse'] = None
+    subtask: Optional['SubtaskResponse'] = None
     mood: Optional[str] = None  # 从关联的心情记录获取
     create_time: datetime
     update_time: datetime

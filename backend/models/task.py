@@ -1,81 +1,90 @@
-from sqlalchemy import Column, Integer, String, Float, Text, DateTime, Date, Time, Enum, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Boolean, Text, DateTime, ForeignKey, Date, SmallInteger, Numeric
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from core.database import Base
 import enum
 
+
 class TaskCategory(str, enum.Enum):
-    """任务分类枚举"""
     STUDY = "study"
     WORK = "work"
-    REST = "rest"
-    EXERCISE = "exercise"
+    LIFE = "life"
     OTHER = "other"
 
 class TaskStatus(str, enum.Enum):
-    """任务状态枚举"""
     PENDING = "pending"
-    IN_PROGRESS = "in_progress"
+    IN_PROGRESS = "in-progress"
     COMPLETED = "completed"
+    EMPTY = "empty"
     CANCELLED = "cancelled"
 
 class Task(Base):
     """任务模型"""
-    __tablename__ = "tasks"
+    __tablename__ = "task"
     
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, nullable=False, index=True)
-    title = Column(String(200), nullable=False)
-    description = Column(Text)
-    category = Column(String(50), default=TaskCategory.STUDY.value)
-    status = Column(String(50), default=TaskStatus.PENDING.value)
-    priority = Column(Integer, default=3)  # 1-5
-    estimated_hours = Column(Float, default=1.0)
-    actual_hours = Column(Float)
-    start_time = Column(DateTime)
-    end_time = Column(DateTime)
-    deadline = Column(DateTime)
-    is_recurring = Column(Boolean, default=False)
-    recurring_pattern = Column(String(100))
-    created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    name = Column(String(100), nullable=False)
+    type = Column(String(20), nullable=False)  # study, life, work
+    category = Column(String(20))
+    weekly_hours = Column(Numeric(5, 1), default=0.0)
+    is_high_frequency = Column(SmallInteger, default=0)
+    is_overcome = Column(SmallInteger, default=0)
+    create_time = Column(DateTime(timezone=True), server_default=func.now())
+    update_time = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     
     # 关系
     time_slots = relationship("TimeSlot", back_populates="task")
+    subtasks = relationship("Subtask", back_populates="task")
+
+class Subtask(Base):
+    """子任务模型"""
+    __tablename__ = "subtask"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    task_id = Column(Integer, ForeignKey("task.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, nullable=False, index=True)
+    name = Column(String(100), nullable=False)
+    hours = Column(Numeric(5, 1), default=0.0)
+    is_high_frequency = Column(SmallInteger, default=0)
+    is_overcome = Column(SmallInteger, default=0)
+    create_time = Column(DateTime(timezone=True), server_default=func.now())
+    update_time = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    # 关系
+    task = relationship("Task", back_populates="subtasks")
 
 class TimeSlot(Base):
     """时间段模型"""
-    __tablename__ = "time_slots"
+    __tablename__ = "time_slot"
     
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, nullable=False, index=True)
-    task_id = Column(Integer, ForeignKey("tasks.id"), nullable=True)
-    title = Column(String(200), nullable=False)
-    description = Column(Text)
-    category = Column(String(50), default=TaskCategory.STUDY.value)
-    start_time = Column(DateTime, nullable=False)
-    end_time = Column(DateTime, nullable=False)
-    duration_minutes = Column(Integer)
-    is_completed = Column(Boolean, default=False)
-    completion_rate = Column(Float, default=0.0)  # 0-100
-    mood = Column(String(50))  # happy, neutral, sad, etc.
-    notes = Column(Text)
-    created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    date = Column(Date, nullable=False)
+    time_range = Column(String(20), nullable=False)  # 格式：07:30-08:30
+    task_id = Column(Integer, ForeignKey("task.id", ondelete="SET NULL"), nullable=True)
+    subtask_id = Column(Integer, ForeignKey("subtask.id", ondelete="SET NULL"), nullable=True)
+    status = Column(String(20), default='pending')  # completed, in-progress, pending, empty
+    is_ai_recommended = Column(SmallInteger, default=0)
+    note = Column(Text)
+    ai_tip = Column(Text)
+    create_time = Column(DateTime(timezone=True), server_default=func.now())
+    update_time = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     
     # 关系
-    task = relationship("Task", back_populates="time_slots")
+    task = relationship("Task", back_populates="time_slots", foreign_keys=[task_id])
+    subtask = relationship("Subtask", foreign_keys=[subtask_id])
+    mood_record = relationship("MoodRecord", back_populates="time_slot", uselist=False)
 
 class MoodRecord(Base):
     """心情记录模型"""
-    __tablename__ = "mood_records"
+    __tablename__ = "mood_record"
     
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, nullable=False, index=True)
-    time_slot_id = Column(Integer, ForeignKey("time_slots.id"), nullable=True)
-    mood_type = Column(String(50), nullable=False)  # happy, sad, anxious, calm, energetic, tired, etc.
-    intensity = Column(Integer, default=3)  # 1-5
-    note = Column(Text)
-    recorded_at = Column(DateTime, server_default=func.now(), nullable=False)
-    created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now()) 
+    time_slot_id = Column(Integer, ForeignKey("time_slot.id", ondelete="CASCADE"), nullable=False, unique=True)
+    mood = Column(String(20), nullable=False)  # happy, focused, tired, stressed, excited
+    create_time = Column(DateTime(timezone=True), server_default=func.now())
+    
+    # 关系
+    time_slot = relationship("TimeSlot", back_populates="mood_record") 

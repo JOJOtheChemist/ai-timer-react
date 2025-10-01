@@ -333,6 +333,20 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
+# 加载时间表路由
+try:
+    from api.v1.endpoints.schedule import time_slots
+    app.include_router(
+        time_slots.router,
+        prefix="/api/v1/schedule",
+        tags=["时间表管理"]
+    )
+    print("✅ 时间表模块加载成功")
+except Exception as e:
+    print(f"⚠️  时间表模块加载失败: {e}")
+    import traceback
+    traceback.print_exc()
+
 # ============= 全局异常处理 =============
 
 @app.exception_handler(Exception)

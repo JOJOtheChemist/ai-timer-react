@@ -1,12 +1,12 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
-from datetime import datetime, date
+from datetime import datetime, date as date_type
 from models.schemas.task import TimeSlotResponse, MoodType
 
 # 时间表相关模型
 class ScheduleOverview(BaseModel):
     """时间表概览"""
-    date: date = Field(..., description="日期")
+    date: date_type = Field(..., description="日期")
     total_slots: int = Field(..., description="总时间段数")
     completed_slots: int = Field(0, description="已完成时间段数")
     in_progress_slots: int = Field(0, description="进行中时间段数")
@@ -14,6 +14,9 @@ class ScheduleOverview(BaseModel):
     empty_slots: int = Field(0, description="空白时间段数")
     completion_rate: float = Field(0.0, description="完成率")
     total_study_hours: float = Field(0.0, description="总学习时长")
+
+    class Config:
+        populate_by_name = True
 
 class TimeSlotDetail(TimeSlotResponse):
     """时间段详情（扩展版）"""
@@ -34,16 +37,19 @@ class TodayScheduleResponse(BaseModel):
 # 心情相关模型
 class MoodStatistics(BaseModel):
     """心情统计"""
-    date: date = Field(..., description="日期")
-    mood_distribution: Dict[MoodType, int] = Field(..., description="心情分布")
-    dominant_mood: Optional[MoodType] = Field(None, description="主要心情")
+    stat_date: date_type = Field(..., description="日期", alias="date")
+    mood_distribution: Dict[str, int] = Field(..., description="心情分布")
+    dominant_mood: Optional[str] = Field(None, description="主要心情")
     total_records: int = Field(0, description="总记录数")
+
+    class Config:
+        populate_by_name = True
 
 class WeeklyMoodTrend(BaseModel):
     """周心情趋势"""
-    week_start: date = Field(..., description="周开始日期")
+    week_start: date_type = Field(..., description="周开始日期")
     daily_moods: List[MoodStatistics] = Field(..., description="每日心情统计")
-    week_dominant_mood: Optional[MoodType] = Field(None, description="本周主要心情")
+    week_dominant_mood: Optional[str] = Field(None, description="本周主要心情")
 
 # 时间段操作相关
 class TimeSlotBatchUpdate(BaseModel):
@@ -79,8 +85,8 @@ class ScheduleTemplate(BaseModel):
 # 时间表生成
 class ScheduleGenerateRequest(BaseModel):
     """生成时间表请求"""
-    start_date: date = Field(..., description="开始日期")
-    end_date: date = Field(..., description="结束日期")
+    start_date: date_type = Field(..., description="开始日期")
+    end_date: date_type = Field(..., description="结束日期")
     template_id: Optional[int] = Field(None, description="使用的模板ID")
     include_weekends: bool = Field(True, description="是否包含周末")
     daily_start_time: str = Field("07:00", description="每日开始时间")

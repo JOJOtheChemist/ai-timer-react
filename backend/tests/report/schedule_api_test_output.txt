@@ -1,0 +1,25 @@
+
+============================================================
+🚀 开始 Schedule API 测试
+============================================================
+
+✅ 服务器健康检查: 服务器正常运行
+✅ 插入测试数据: 成功创建 4 个时间段和 1 个任务
+❌ GET /time-slots: HTTP 422: {"detail":[{"type":"missing","loc":["query","user_id"],"msg":"Field required","input":null}]}
+❌ POST /time-slots: HTTP 422: {"detail":[{"type":"missing","loc":["query","user_id"],"msg":"Field required","input":null}]}
+❌ PATCH /time-slots/{id}: HTTP 422: {"detail":[{"type":"missing","loc":["query","user_id"],"msg":"Field required","input":null}]}
+❌ POST /time-slots/{id}/mood: HTTP 422: {"detail":[{"type":"missing","loc":["query","user_id"],"msg":"Field required","input":null}]}
+❌ POST /time-slots/{id}/task: HTTP 422: {"detail":[{"type":"missing","loc":["query","user_id"],"msg":"Field required","input":null}]}
+❌ PATCH /time-slots/batch/status: HTTP 422: {"detail":[{"type":"missing","loc":["query","user_id"],"msg":"Field required","input":null}]}
+❌ GET /time-slots/completion-stats: HTTP 422: {"detail":[{"type":"missing","loc":["query","user_id"],"msg":"Field required","input":null}]}
+❌ GET /time-slots/ai-recommended: HTTP 422: {"detail":[{"type":"missing","loc":["query","user_id"],"msg":"Field required","input":null}]}
+❌ PATCH /time-slots/{id}/complete: HTTP 422: {"detail":[{"type":"missing","loc":["query","user_id"],"msg":"Field required","input":null}]}
+❌ PATCH /time-slots/{id}/start: HTTP 422: {"detail":[{"type":"missing","loc":["query","user_id"],"msg":"Field required","input":null}]}
+
+============================================================
+📊 测试总结: 2/12 通过 (16.67%)
+📄 JSON报告已保存到: tests/report/schedule_api_test_report_20251002_041021.json
+📄 Markdown报告已保存到: tests/report/SCHEDULE_API_TEST_SUMMARY.md
+============================================================
+
+✅ 清理测试数据: 成功清理 4 个时间段和 1 个任务

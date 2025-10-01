@@ -53,6 +53,18 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
+# 加载Case相关路由
+try:
+    from api.v1.endpoints.case import cases, case_details, case_permissions
+    app.include_router(cases.router, prefix="/api/v1/cases", tags=["成功案例"])
+    app.include_router(case_details.router, prefix="/api/v1/cases", tags=["案例详情"])
+    app.include_router(case_permissions.router, prefix="/api/v1/cases", tags=["案例权限"])
+    print("✅ Case routers loaded")
+except Exception as e:
+    print(f"⚠️  Failed to load Case routers: {e}")
+    import traceback
+    traceback.print_exc()
+
 # 全局异常处理
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):

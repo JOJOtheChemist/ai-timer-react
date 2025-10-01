@@ -3,8 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_, desc
 from datetime import datetime, date
 
-# 注意：这里假设有对应的数据库模型，实际使用时需要根据具体的模型进行调整
-# from models.case import SuccessCaseDetail, CaseViewRecord, CasePurchaseRecord
+from models.case import SuccessCase, CaseInteraction, CasePurchase
 
 class CRUDCaseDetail:
     def __init__(self):
@@ -13,10 +12,10 @@ class CRUDCaseDetail:
     async def get_by_id(self, db: Session, case_id: int) -> Optional[Any]:
         """查询案例详情数据"""
         try:
-            case_detail = db.query(SuccessCaseDetail).filter(
+            case_detail = db.query(SuccessCase).filter(
                 and_(
-                    SuccessCaseDetail.id == case_id,
-                    SuccessCaseDetail.is_active == True
+                    SuccessCase.id == case_id,
+                    SuccessCase.status == 1
                 )
             ).first()
             
@@ -28,11 +27,11 @@ class CRUDCaseDetail:
         """检查用户今天是否已浏览过此案例"""
         try:
             today = date.today()
-            view_record = db.query(CaseViewRecord).filter(
+            view_record = db.query(CaseInteraction).filter(
                 and_(
-                    CaseViewRecord.case_id == case_id,
-                    CaseViewRecord.user_id == user_id,
-                    CaseViewRecord.view_date == today
+                    CaseInteraction.case_id == case_id,
+                    CaseInteraction.user_id == user_id,
+                    CaseInteraction.view_date == today
                 )
             ).first()
             
@@ -43,7 +42,7 @@ class CRUDCaseDetail:
     async def create_view_record(self, db: Session, case_id: int, user_id: int) -> bool:
         """创建用户浏览记录"""
         try:
-            view_record = CaseViewRecord(
+            view_record = CaseInteraction(
                 case_id=case_id,
                 user_id=user_id,
                 view_date=date.today(),
@@ -60,11 +59,11 @@ class CRUDCaseDetail:
     async def check_user_purchased(self, db: Session, case_id: int, user_id: int) -> bool:
         """检查用户是否已购买此案例"""
         try:
-            purchase_record = db.query(CasePurchaseRecord).filter(
+            purchase_record = db.query(CasePurchase).filter(
                 and_(
-                    CasePurchaseRecord.case_id == case_id,
-                    CasePurchaseRecord.user_id == user_id,
-                    CasePurchaseRecord.status == 'completed'
+                    CasePurchase.case_id == case_id,
+                    CasePurchase.user_id == user_id,
+                    CasePurchase.status == 'completed'
                 )
             ).first()
             
@@ -81,9 +80,9 @@ class CRUDCaseDetail:
     ) -> List[Any]:
         """获取用户浏览历史"""
         try:
-            view_records = db.query(CaseViewRecord).filter(
-                CaseViewRecord.user_id == user_id
-            ).order_by(desc(CaseViewRecord.view_time)).offset(skip).limit(limit).all()
+            view_records = db.query(CaseInteraction).filter(
+                CaseInteraction.user_id == user_id
+            ).order_by(desc(CaseInteraction.view_time)).offset(skip).limit(limit).all()
             
             return view_records
         except Exception as e:
@@ -93,28 +92,28 @@ class CRUDCaseDetail:
         """获取案例浏览统计"""
         try:
             # 总浏览次数
-            total_views = db.query(CaseViewRecord).filter(
-                CaseViewRecord.case_id == case_id
+            total.view_count = db.query(CaseInteraction).filter(
+                CaseInteraction.case_id == case_id
             ).count()
             
             # 独立访客数
-            unique_visitors = db.query(CaseViewRecord.user_id).filter(
-                CaseViewRecord.case_id == case_id
+            unique_visitors = db.query(CaseInteraction.user_id).filter(
+                CaseInteraction.case_id == case_id
             ).distinct().count()
             
             # 今日浏览次数
             today = date.today()
-            today_views = db.query(CaseViewRecord).filter(
+            today.view_count = db.query(CaseInteraction).filter(
                 and_(
-                    CaseViewRecord.case_id == case_id,
-                    CaseViewRecord.view_date == today
+                    CaseInteraction.case_id == case_id,
+                    CaseInteraction.view_date == today
                 )
             ).count()
             
             return {
-                "total_views": total_views,
+                "total.view_count": total.view_count,
                 "unique_visitors": unique_visitors,
-                "today_views": today_views
+                "today.view_count": today.view_count
             }
         except Exception as e:
             raise Exception(f"获取浏览统计失败: {str(e)}")
@@ -122,7 +121,7 @@ class CRUDCaseDetail:
     async def create_case_detail(self, db: Session, detail_data: Dict[str, Any]) -> Any:
         """创建案例详情"""
         try:
-            case_detail = SuccessCaseDetail(**detail_data)
+            case_detail = SuccessCase(**detail_data)
             db.add(case_detail)
             db.commit()
             db.refresh(case_detail)
@@ -139,8 +138,8 @@ class CRUDCaseDetail:
     ) -> bool:
         """更新案例详情"""
         try:
-            case_detail = db.query(SuccessCaseDetail).filter(
-                SuccessCaseDetail.id == case_id
+            case_detail = db.query(SuccessCase).filter(
+                SuccessCase.id == case_id
             ).first()
             
             if not case_detail:
@@ -160,14 +159,14 @@ class CRUDCaseDetail:
     async def delete_case_detail(self, db: Session, case_id: int) -> bool:
         """软删除案例详情"""
         try:
-            case_detail = db.query(SuccessCaseDetail).filter(
-                SuccessCaseDetail.id == case_id
+            case_detail = db.query(SuccessCase).filter(
+                SuccessCase.id == case_id
             ).first()
             
             if not case_detail:
                 return False
             
-            case_detail.is_active = False
+            case_detail.status = False
             case_detail.deleted_at = datetime.now()
             db.commit()
             return True
@@ -188,11 +187,11 @@ class CRUDCaseDetail:
             
             # 统计指定时间内的浏览量
             popular_cases = db.query(
-                CaseViewRecord.case_id,
-                db.func.count(CaseViewRecord.id).label('view_count')
+                CaseInteraction.case_id,
+                db.func.count(CaseInteraction.id).label('view_count')
             ).filter(
-                CaseViewRecord.view_date >= start_date
-            ).group_by(CaseViewRecord.case_id).order_by(
+                CaseInteraction.view_date >= start_date
+            ).group_by(CaseInteraction.case_id).order_by(
                 desc('view_count')
             ).limit(limit).all()
             

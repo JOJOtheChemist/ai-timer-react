@@ -3,8 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_, desc
 from datetime import datetime
 
-# 注意：这里假设有对应的数据库模型，实际使用时需要根据具体的模型进行调整
-# from models.case import CasePermission, CasePurchaseRecord, SuccessCase
+from models.case import SuccessCase, CasePurchase
 
 class CRUDCasePermission:
     def __init__(self):
@@ -13,8 +12,8 @@ class CRUDCasePermission:
     async def get_permission_info(self, db: Session, case_id: int) -> Optional[Any]:
         """查询案例的权限配置（预览天数、价格等）"""
         try:
-            permission_info = db.query(CasePermission).filter(
-                CasePermission.case_id == case_id
+            permission_info = db.query(SuccessCase).filter(
+                SuccessCase.case_id == case_id
             ).first()
             
             return permission_info
@@ -24,11 +23,11 @@ class CRUDCasePermission:
     async def check_user_purchased(self, db: Session, case_id: int, user_id: int) -> bool:
         """检查用户是否已购买此案例"""
         try:
-            purchase_record = db.query(CasePurchaseRecord).filter(
+            purchase_record = db.query(CasePurchase).filter(
                 and_(
-                    CasePurchaseRecord.case_id == case_id,
-                    CasePurchaseRecord.user_id == user_id,
-                    CasePurchaseRecord.status == 'completed'
+                    CasePurchase.case_id == case_id,
+                    CasePurchase.user_id == user_id,
+                    CasePurchase.status == 'completed'
                 )
             ).first()
             
@@ -65,7 +64,7 @@ class CRUDCasePermission:
             # 生成订单ID
             order_id = f"CASE_{case_id}_{user_id}_{int(purchase_time.timestamp())}"
             
-            purchase_record = CasePurchaseRecord(
+            purchase_record = CasePurchase(
                 order_id=order_id,
                 case_id=case_id,
                 user_id=user_id,
@@ -94,15 +93,15 @@ class CRUDCasePermission:
     ) -> List[Any]:
         """获取用户已购买的案例列表"""
         try:
-            purchased_cases = db.query(CasePurchaseRecord).join(
-                SuccessCase, CasePurchaseRecord.case_id == SuccessCase.id
+            purchased_cases = db.query(CasePurchase).join(
+                SuccessCase, CasePurchase.case_id == SuccessCase.id
             ).filter(
                 and_(
-                    CasePurchaseRecord.user_id == user_id,
-                    CasePurchaseRecord.status == 'completed',
-                    SuccessCase.is_active == True
+                    CasePurchase.user_id == user_id,
+                    CasePurchase.status == 'completed',
+                    SuccessCase.status == 1
                 )
-            ).order_by(desc(CasePurchaseRecord.purchase_time)).offset(skip).limit(limit).all()
+            ).order_by(desc(CasePurchase.purchase_time)).offset(skip).limit(limit).all()
             
             return purchased_cases
         except Exception as e:
@@ -111,10 +110,10 @@ class CRUDCasePermission:
     async def count_user_purchased_cases(self, db: Session, user_id: int) -> int:
         """统计用户已购买的案例数量"""
         try:
-            count = db.query(CasePurchaseRecord).filter(
+            count = db.query(CasePurchase).filter(
                 and_(
-                    CasePurchaseRecord.user_id == user_id,
-                    CasePurchaseRecord.status == 'completed'
+                    CasePurchase.user_id == user_id,
+                    CasePurchase.status == 'completed'
                 )
             ).count()
             
@@ -125,8 +124,8 @@ class CRUDCasePermission:
     async def get_purchase_record_by_order_id(self, db: Session, order_id: str) -> Optional[Any]:
         """根据订单ID获取购买记录"""
         try:
-            purchase_record = db.query(CasePurchaseRecord).filter(
-                CasePurchaseRecord.order_id == order_id
+            purchase_record = db.query(CasePurchase).filter(
+                CasePurchase.order_id == order_id
             ).first()
             
             return purchase_record
@@ -142,8 +141,8 @@ class CRUDCasePermission:
     ) -> bool:
         """更新购买记录状态"""
         try:
-            purchase_record = db.query(CasePurchaseRecord).filter(
-                CasePurchaseRecord.order_id == order_id
+            purchase_record = db.query(CasePurchase).filter(
+                CasePurchase.order_id == order_id
             ).first()
             
             if not purchase_record:
@@ -172,7 +171,7 @@ class CRUDCasePermission:
     ) -> Any:
         """创建案例权限配置"""
         try:
-            permission_config = CasePermission(
+            permission_config = SuccessCase(
                 case_id=case_id,
                 preview_days=preview_days,
                 price=price,
@@ -199,8 +198,8 @@ class CRUDCasePermission:
     ) -> bool:
         """更新案例权限配置"""
         try:
-            permission_config = db.query(CasePermission).filter(
-                CasePermission.case_id == case_id
+            permission_config = db.query(SuccessCase).filter(
+                SuccessCase.case_id == case_id
             ).first()
             
             if not permission_config:
@@ -222,19 +221,19 @@ class CRUDCasePermission:
         try:
             # 总销售额
             total_revenue = db.query(
-                db.func.sum(CasePurchaseRecord.price)
+                db.func.sum(CasePurchase.price)
             ).filter(
                 and_(
-                    CasePurchaseRecord.case_id == case_id,
-                    CasePurchaseRecord.status == 'completed'
+                    CasePurchase.case_id == case_id,
+                    CasePurchase.status == 'completed'
                 )
             ).scalar() or 0
             
             # 购买人数
-            purchase_count = db.query(CasePurchaseRecord).filter(
+            purchase_count = db.query(CasePurchase).filter(
                 and_(
-                    CasePurchaseRecord.case_id == case_id,
-                    CasePurchaseRecord.status == 'completed'
+                    CasePurchase.case_id == case_id,
+                    CasePurchase.status == 'completed'
                 )
             ).count()
             
@@ -242,12 +241,12 @@ class CRUDCasePermission:
             from datetime import timedelta
             thirty_days_ago = datetime.now() - timedelta(days=30)
             recent_revenue = db.query(
-                db.func.sum(CasePurchaseRecord.price)
+                db.func.sum(CasePurchase.price)
             ).filter(
                 and_(
-                    CasePurchaseRecord.case_id == case_id,
-                    CasePurchaseRecord.status == 'completed',
-                    CasePurchaseRecord.purchase_time >= thirty_days_ago
+                    CasePurchase.case_id == case_id,
+                    CasePurchase.status == 'completed',
+                    CasePurchase.purchase_time >= thirty_days_ago
                 )
             ).scalar() or 0
             
@@ -259,3 +258,5 @@ class CRUDCasePermission:
             }
         except Exception as e:
             raise Exception(f"获取收益统计失败: {str(e)}") 
+# 创建CRUD实例
+crud_case_permission = CRUDCasePermission()

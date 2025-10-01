@@ -3,8 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import desc, func, and_, or_
 from datetime import datetime
 
-# 注意：这里假设有对应的数据库模型，实际使用时需要根据具体的模型进行调整
-# from models.case import SuccessCase
+from models.case import SuccessCase
 
 class CRUDCase:
     def __init__(self):
@@ -16,8 +15,9 @@ class CRUDCase:
             # 这里需要根据实际的数据库模型进行查询
             # 示例查询逻辑（需要根据实际模型调整）
             query = db.query(SuccessCase).filter(
-                SuccessCase.is_active == True
-            ).order_by(desc(SuccessCase.views)).limit(limit)
+                SuccessCase.status == 1,
+                SuccessCase.is_hot == 1
+            ).order_by(desc(SuccessCase.view_count)).limit(limit)
             
             return query.all()
         except Exception as e:
@@ -32,7 +32,7 @@ class CRUDCase:
     ) -> List[Any]:
         """按筛选条件从数据库查询案例"""
         try:
-            query = db.query(SuccessCase).filter(SuccessCase.is_active == True)
+            query = db.query(SuccessCase).filter(SuccessCase.status == 1)
             
             # 应用筛选条件
             if filters.get('category'):
@@ -68,7 +68,7 @@ class CRUDCase:
             
             query = db.query(SuccessCase).filter(
                 and_(
-                    SuccessCase.is_active == True,
+                    SuccessCase.status == 1,
                     or_(
                         SuccessCase.title.ilike(search_term),
                         SuccessCase.tags.ilike(search_term),
@@ -91,7 +91,7 @@ class CRUDCase:
         """获取所有案例分类"""
         try:
             categories = db.query(SuccessCase.category).distinct().filter(
-                SuccessCase.is_active == True
+                SuccessCase.status == 1
             ).all()
             
             return [category[0] for category in categories if category[0]]
@@ -101,7 +101,7 @@ class CRUDCase:
     async def count_total_cases(self, db: Session) -> int:
         """统计总案例数"""
         try:
-            return db.query(SuccessCase).filter(SuccessCase.is_active == True).count()
+            return db.query(SuccessCase).filter(SuccessCase.status == 1).count()
         except Exception as e:
             raise Exception(f"统计总案例数失败: {str(e)}")
 
@@ -112,7 +112,7 @@ class CRUDCase:
                 SuccessCase.category,
                 func.count(SuccessCase.id).label('count')
             ).filter(
-                SuccessCase.is_active == True
+                SuccessCase.status == 1
             ).group_by(SuccessCase.category).all()
             
             return {category: count for category, count in category_stats}
@@ -124,19 +124,19 @@ class CRUDCase:
         try:
             return db.query(SuccessCase).filter(
                 and_(
-                    SuccessCase.is_active == True,
+                    SuccessCase.status == 1,
                     SuccessCase.created_at >= since_date
                 )
             ).count()
         except Exception as e:
             raise Exception(f"统计新增案例失败: {str(e)}")
 
-    async def increment_views(self, db: Session, case_id: int) -> bool:
+    async def increment_view_count(self, db: Session, case_id: int) -> bool:
         """增加案例浏览次数"""
         try:
             case = db.query(SuccessCase).filter(SuccessCase.id == case_id).first()
             if case:
-                case.views = (case.views or 0) + 1
+                case.view_count = (case.view_count or 0) + 1
                 db.commit()
                 return True
             return False
@@ -156,7 +156,7 @@ class CRUDCase:
         try:
             query = db.query(SuccessCase).filter(
                 and_(
-                    SuccessCase.is_active == True,
+                    SuccessCase.status == 1,
                     SuccessCase.id != exclude_id
                 )
             )
@@ -176,7 +176,7 @@ class CRUDCase:
                     query = query.filter(or_(*tag_conditions))
             
             # 按浏览量排序
-            query = query.order_by(desc(SuccessCase.views)).limit(limit)
+            query = query.order_by(desc(SuccessCase.view_count)).limit(limit)
             
             return query.all()
         except Exception as e:

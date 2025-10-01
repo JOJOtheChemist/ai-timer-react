@@ -56,13 +56,13 @@ def get_current_user_optional(
 
 # 临时的用户ID获取方式（用于开发测试）
 def get_current_user_dev(
-    user_id: int = Query(..., description="用户ID（开发测试用）")
+    current_user_id: int = Query(..., description="当前用户ID（开发测试用）", alias="user_id")
 ) -> int:
     """
     开发测试用的用户ID获取方式
     生产环境应该使用get_current_user_id
     """
-    return user_id
+    return current_user_id
 
 # 获取当前用户信息（返回字典格式）
 def get_current_user(

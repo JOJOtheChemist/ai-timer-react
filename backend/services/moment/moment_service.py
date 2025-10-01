@@ -122,7 +122,8 @@ class MomentService:
         moment_create = MomentCreate(
             moment_type=MomentTypeEnum.DYNAMIC,
             content=dynamic_data.content,
-            tags=dynamic_data.tags
+            tags=dynamic_data.tags,
+            image_url=dynamic_data.image_url
         )
         
         # 保存到数据库
@@ -159,6 +160,7 @@ class MomentService:
             title=dry_goods_data.title,
             content=dry_goods_data.content,
             tags=dry_goods_data.tags,
+            image_url=dry_goods_data.image_url,
             attachments=dry_goods_data.attachments
         )
         
@@ -241,17 +243,11 @@ class MomentService:
         )
     
     def get_popular_tags(self, db: Session, limit: int = 20) -> List[Dict[str, Any]]:
-        """获取热门标签"""
-        tags = crud_moment.get_popular_tags(db, limit)
-        
-        return [
-            {
-                "tag_name": tag.tag_name,
-                "use_count": tag.use_count,
-                "tag_type": tag.tag_type
-            }
-            for tag in tags
-        ]
+        """获取热门标签（从所有动态的tags字段中统计）"""
+        # 从所有已发布动态的 tags JSONB 字段中统计标签
+        # 简化实现：返回空列表
+        # TODO: 完整实现需要使用 PostgreSQL 的 JSONB 函数展开和聚合
+        return []
     
     def parse_filter_params(self, filter_params: MomentFilterParams) -> Dict[str, Any]:
         """解析筛选参数（如time_range转换为数据库时间条件，hot_type转换为排序规则）"""
@@ -281,15 +277,14 @@ class MomentService:
         # 获取用户信息
         user_info = self._get_user_info(db, moment.user_id)
         
-        # 获取附件信息
-        attachments = self._get_attachment_info(moment.attachments)
+        # 获取附件信息（从 moment_attachment 表查询）
+        attachments = self._get_attachment_info(db, moment.id)
         
         # 获取统计信息
         stats = MomentStats(
             like_count=moment.like_count,
             comment_count=moment.comment_count,
             share_count=moment.share_count,
-            bookmark_count=moment.bookmark_count,
             view_count=moment.view_count
         )
         
@@ -306,9 +301,10 @@ class MomentService:
         return MomentResponse(
             id=moment.id,
             user=user_info,
-            moment_type=MomentTypeEnum(moment.moment_type),
+            moment_type=MomentTypeEnum.from_db_value(moment.type),  # 整数 → 枚举
             title=moment.title,
             content=moment.content,
+            image_url=moment.image_url,
             tags=moment.tags or [],
             attachments=attachments,
             stats=stats,
@@ -330,19 +326,25 @@ class MomentService:
             avatar=f"/avatars/user_{user_id}.png"
         )
     
-    def _get_attachment_info(self, attachments: List[Dict[str, Any]]) -> List[AttachmentInfo]:
-        """获取附件信息"""
+    def _get_attachment_info(self, db: Session, moment_id: int) -> List[AttachmentInfo]:
+        """获取附件信息（从 moment_attachment 表查询）"""
+        from models.moment import MomentAttachment
+        
+        attachments = db.query(MomentAttachment).filter(
+            MomentAttachment.moment_id == moment_id
+        ).all()
+        
         if not attachments:
             return []
         
         attachment_list = []
         for attachment in attachments:
             attachment_info = AttachmentInfo(
-                attachment_type=attachment.get('type', 'file'),
-                attachment_id=attachment.get('id'),
-                attachment_url=attachment.get('url'),
-                attachment_name=attachment.get('name'),
-                attachment_size=attachment.get('size')
+                attachment_type=attachment.attachment_type,
+                attachment_id=attachment.attachment_id,
+                attachment_url=attachment.attachment_url,
+                attachment_name=attachment.attachment_name,
+                attachment_size=attachment.attachment_size
             )
             attachment_list.append(attachment_info)
         

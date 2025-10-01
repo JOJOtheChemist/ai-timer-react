@@ -1,23 +1,29 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, desc, func
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Tuple
 from datetime import datetime
 
-from models.moment import (
-    Moment, MomentComment, MomentLike, MomentBookmark, 
-    MomentShare, MomentView
-)
+from models.moment import Moment, MomentComment, MomentInteraction
+
+# 互动类型常量
+INTERACTION_TYPE_LIKE = 0
+INTERACTION_TYPE_BOOKMARK = 1
+INTERACTION_TYPE_SHARE = 2
 
 class CRUDMomentInteraction:
-    """动态互动CRUD操作"""
+    """动态互动CRUD操作（使用统一的 moment_interaction 表）"""
     
-    def toggle_like(self, db: Session, user_id: int, moment_id: int) -> tuple[bool, int]:
-        """更新点赞状态（含唯一约束：user_id+moment_id）"""
+    def toggle_like(self, db: Session, user_id: int, moment_id: int) -> Tuple[bool, int]:
+        """
+        切换点赞状态
+        返回: (is_liked, current_like_count)
+        """
         # 检查是否已点赞
-        existing_like = db.query(MomentLike).filter(
+        existing_like = db.query(MomentInteraction).filter(
             and_(
-                MomentLike.user_id == user_id,
-                MomentLike.moment_id == moment_id
+                MomentInteraction.user_id == user_id,
+                MomentInteraction.moment_id == moment_id,
+                MomentInteraction.interaction_type == INTERACTION_TYPE_LIKE
             )
         ).first()
         
@@ -35,7 +41,11 @@ class CRUDMomentInteraction:
             return False, moment.like_count if moment else 0
         else:
             # 添加点赞
-            new_like = MomentLike(user_id=user_id, moment_id=moment_id)
+            new_like = MomentInteraction(
+                user_id=user_id,
+                moment_id=moment_id,
+                interaction_type=INTERACTION_TYPE_LIKE
+            )
             db.add(new_like)
             # 增加动态的点赞数
             db.query(Moment).filter(Moment.id == moment_id).update({
@@ -47,41 +57,53 @@ class CRUDMomentInteraction:
             moment = db.query(Moment).filter(Moment.id == moment_id).first()
             return True, moment.like_count if moment else 0
     
-    def toggle_bookmark(self, db: Session, user_id: int, moment_id: int) -> tuple[bool, int]:
-        """更新收藏状态"""
+    def toggle_bookmark(self, db: Session, user_id: int, moment_id: int) -> Tuple[bool, int]:
+        """
+        切换收藏状态
+        返回: (is_bookmarked, current_bookmark_count)
+        """
         # 检查是否已收藏
-        existing_bookmark = db.query(MomentBookmark).filter(
+        existing_bookmark = db.query(MomentInteraction).filter(
             and_(
-                MomentBookmark.user_id == user_id,
-                MomentBookmark.moment_id == moment_id
+                MomentInteraction.user_id == user_id,
+                MomentInteraction.moment_id == moment_id,
+                MomentInteraction.interaction_type == INTERACTION_TYPE_BOOKMARK
             )
         ).first()
         
         if existing_bookmark:
             # 取消收藏
             db.delete(existing_bookmark)
-            # 减少动态的收藏数
-            db.query(Moment).filter(Moment.id == moment_id).update({
-                "bookmark_count": Moment.bookmark_count - 1
-            })
             db.commit()
             
-            # 获取更新后的收藏数
-            moment = db.query(Moment).filter(Moment.id == moment_id).first()
-            return False, moment.bookmark_count if moment else 0
+            # 获取当前收藏数（从 interaction 表统计）
+            bookmark_count = db.query(func.count(MomentInteraction.id)).filter(
+                and_(
+                    MomentInteraction.moment_id == moment_id,
+                    MomentInteraction.interaction_type == INTERACTION_TYPE_BOOKMARK
+                )
+            ).scalar() or 0
+            
+            return False, bookmark_count
         else:
             # 添加收藏
-            new_bookmark = MomentBookmark(user_id=user_id, moment_id=moment_id)
+            new_bookmark = MomentInteraction(
+                user_id=user_id,
+                moment_id=moment_id,
+                interaction_type=INTERACTION_TYPE_BOOKMARK
+            )
             db.add(new_bookmark)
-            # 增加动态的收藏数
-            db.query(Moment).filter(Moment.id == moment_id).update({
-                "bookmark_count": Moment.bookmark_count + 1
-            })
             db.commit()
             
-            # 获取更新后的收藏数
-            moment = db.query(Moment).filter(Moment.id == moment_id).first()
-            return True, moment.bookmark_count if moment else 0
+            # 获取当前收藏数
+            bookmark_count = db.query(func.count(MomentInteraction.id)).filter(
+                and_(
+                    MomentInteraction.moment_id == moment_id,
+                    MomentInteraction.interaction_type == INTERACTION_TYPE_BOOKMARK
+                )
+            ).scalar() or 0
+            
+            return True, bookmark_count
     
     def get_comments_by_moment(
         self, 
@@ -89,13 +111,14 @@ class CRUDMomentInteraction:
         moment_id: int, 
         page: int = 1, 
         page_size: int = 10
-    ) -> tuple[List[MomentComment], int]:
-        """按动态ID查评论"""
-        # 只查询顶级评论（parent_comment_id为空）
+    ) -> Tuple[List[MomentComment], int]:
+        """获取动态的评论列表（只查询顶级评论）"""
+        # 只查询顶级评论（parent_id为空），状态正常
         query = db.query(MomentComment).filter(
             and_(
                 MomentComment.moment_id == moment_id,
-                MomentComment.parent_comment_id.is_(None)
+                MomentComment.parent_id.is_(None),
+                MomentComment.status == 0  # status=0 正常
             )
         )
         
@@ -110,16 +133,27 @@ class CRUDMomentInteraction:
     def get_comment_replies(self, db: Session, comment_id: int) -> List[MomentComment]:
         """获取评论的回复"""
         return db.query(MomentComment).filter(
-            MomentComment.parent_comment_id == comment_id
+            and_(
+                MomentComment.parent_id == comment_id,
+                MomentComment.status == 0
+            )
         ).order_by(MomentComment.create_time).all()
     
-    def create_comment(self, db: Session, user_id: int, moment_id: int, content: str, parent_comment_id: Optional[int] = None) -> MomentComment:
-        """保存评论"""
+    def create_comment(
+        self, 
+        db: Session, 
+        user_id: int, 
+        moment_id: int, 
+        content: str, 
+        parent_comment_id: Optional[int] = None
+    ) -> MomentComment:
+        """创建评论"""
         db_comment = MomentComment(
             moment_id=moment_id,
             user_id=user_id,
             content=content,
-            parent_comment_id=parent_comment_id
+            parent_id=parent_comment_id,  # 注意字段名是 parent_id
+            status=0  # 默认正常状态
         )
         db.add(db_comment)
         
@@ -133,11 +167,12 @@ class CRUDMomentInteraction:
         return db_comment
     
     def delete_comment(self, db: Session, comment_id: int, user_id: int) -> bool:
-        """删除评论"""
+        """删除评论（软删除）"""
         db_comment = db.query(MomentComment).filter(
             and_(
                 MomentComment.id == comment_id,
-                MomentComment.user_id == user_id
+                MomentComment.user_id == user_id,
+                MomentComment.status == 0
             )
         ).first()
         
@@ -146,12 +181,8 @@ class CRUDMomentInteraction:
         
         moment_id = db_comment.moment_id
         
-        # 删除评论及其回复
-        db.query(MomentComment).filter(
-            MomentComment.parent_comment_id == comment_id
-        ).delete()
-        
-        db.delete(db_comment)
+        # 软删除评论
+        db_comment.status = 1  # status=1 已删除
         
         # 减少动态的评论数
         db.query(Moment).filter(Moment.id == moment_id).update({
@@ -161,27 +192,22 @@ class CRUDMomentInteraction:
         db.commit()
         return True
     
-    def record_share(self, db: Session, user_id: int, moment_id: int, share_type: str = 'general') -> bool:
-        """记录分享行为（不重复计数）"""
-        # 检查是否已经分享过（同一天内）
-        today = datetime.now().date()
-        existing_share = db.query(MomentShare).filter(
-            and_(
-                MomentShare.user_id == user_id,
-                MomentShare.moment_id == moment_id,
-                func.date(MomentShare.create_time) == today
-            )
-        ).first()
-        
-        if existing_share:
-            # 今天已经分享过，不重复计数
-            return False
-        
+    def record_share(
+        self, 
+        db: Session, 
+        user_id: int, 
+        moment_id: int, 
+        share_type: str = 'general'
+    ) -> bool:
+        """
+        记录分享行为
+        分享不需要唯一约束，允许重复分享
+        """
         # 记录分享
-        new_share = MomentShare(
+        new_share = MomentInteraction(
             user_id=user_id,
             moment_id=moment_id,
-            share_type=share_type
+            interaction_type=INTERACTION_TYPE_SHARE
         )
         db.add(new_share)
         
@@ -202,17 +228,9 @@ class CRUDMomentInteraction:
         user_agent: Optional[str] = None,
         view_duration: int = 0
     ) -> bool:
-        """记录浏览行为"""
-        # 记录浏览
-        new_view = MomentView(
-            moment_id=moment_id,
-            user_id=user_id,
-            ip_address=ip_address,
-            user_agent=user_agent,
-            view_duration=view_duration
-        )
-        db.add(new_view)
-        
+        """
+        记录浏览行为（直接增加计数，不单独存储浏览记录）
+        """
         # 增加动态的浏览数
         db.query(Moment).filter(Moment.id == moment_id).update({
             "view_count": Moment.view_count + 1
@@ -224,18 +242,20 @@ class CRUDMomentInteraction:
     def get_user_interaction_status(self, db: Session, user_id: int, moment_id: int) -> Dict[str, bool]:
         """获取用户对动态的互动状态"""
         # 检查点赞状态
-        is_liked = db.query(MomentLike).filter(
+        is_liked = db.query(MomentInteraction).filter(
             and_(
-                MomentLike.user_id == user_id,
-                MomentLike.moment_id == moment_id
+                MomentInteraction.user_id == user_id,
+                MomentInteraction.moment_id == moment_id,
+                MomentInteraction.interaction_type == INTERACTION_TYPE_LIKE
             )
         ).first() is not None
         
         # 检查收藏状态
-        is_bookmarked = db.query(MomentBookmark).filter(
+        is_bookmarked = db.query(MomentInteraction).filter(
             and_(
-                MomentBookmark.user_id == user_id,
-                MomentBookmark.moment_id == moment_id
+                MomentInteraction.user_id == user_id,
+                MomentInteraction.moment_id == moment_id,
+                MomentInteraction.interaction_type == INTERACTION_TYPE_BOOKMARK
             )
         ).first() is not None
         
@@ -250,19 +270,21 @@ class CRUDMomentInteraction:
         user_id: int, 
         page: int = 1, 
         page_size: int = 10
-    ) -> tuple[List[Moment], int]:
+    ) -> Tuple[List[Moment], int]:
         """获取用户收藏的动态"""
-        # 通过收藏表关联查询动态
-        query = db.query(Moment).join(MomentBookmark).filter(
+        # 通过 interaction 表关联查询动态
+        query = db.query(Moment).join(
+            MomentInteraction,
             and_(
-                MomentBookmark.user_id == user_id,
-                Moment.status == 'published'
+                MomentInteraction.moment_id == Moment.id,
+                MomentInteraction.user_id == user_id,
+                MomentInteraction.interaction_type == INTERACTION_TYPE_BOOKMARK
             )
-        )
+        ).filter(Moment.status == 1)
         
         total = query.count()
         
-        moments = query.order_by(desc(MomentBookmark.create_time))\
+        moments = query.order_by(desc(MomentInteraction.create_time))\
                       .offset((page - 1) * page_size)\
                       .limit(page_size).all()
         
@@ -274,19 +296,21 @@ class CRUDMomentInteraction:
         user_id: int, 
         page: int = 1, 
         page_size: int = 10
-    ) -> tuple[List[Moment], int]:
+    ) -> Tuple[List[Moment], int]:
         """获取用户点赞的动态"""
-        # 通过点赞表关联查询动态
-        query = db.query(Moment).join(MomentLike).filter(
+        # 通过 interaction 表关联查询动态
+        query = db.query(Moment).join(
+            MomentInteraction,
             and_(
-                MomentLike.user_id == user_id,
-                Moment.status == 'published'
+                MomentInteraction.moment_id == Moment.id,
+                MomentInteraction.user_id == user_id,
+                MomentInteraction.interaction_type == INTERACTION_TYPE_LIKE
             )
-        )
+        ).filter(Moment.status == 1)
         
         total = query.count()
         
-        moments = query.order_by(desc(MomentLike.create_time))\
+        moments = query.order_by(desc(MomentInteraction.create_time))\
                       .offset((page - 1) * page_size)\
                       .limit(page_size).all()
         
@@ -301,41 +325,64 @@ class CRUDMomentInteraction:
                 "like_count": 0,
                 "comment_count": 0,
                 "share_count": 0,
-                "bookmark_count": 0,
-                "view_count": 0
+                "view_count": 0,
+                "bookmark_count": 0
             }
+        
+        # 统计收藏数（从 interaction 表）
+        bookmark_count = db.query(func.count(MomentInteraction.id)).filter(
+            and_(
+                MomentInteraction.moment_id == moment_id,
+                MomentInteraction.interaction_type == INTERACTION_TYPE_BOOKMARK
+            )
+        ).scalar() or 0
         
         return {
             "like_count": moment.like_count,
             "comment_count": moment.comment_count,
             "share_count": moment.share_count,
-            "bookmark_count": moment.bookmark_count,
-            "view_count": moment.view_count
+            "view_count": moment.view_count,
+            "bookmark_count": bookmark_count
         }
     
     def get_user_interaction_stats(self, db: Session, user_id: int) -> Dict[str, int]:
         """获取用户的互动统计"""
         # 用户发布的动态获得的总互动数
         user_moments = db.query(Moment).filter(
-            and_(Moment.user_id == user_id, Moment.status == 'published')
+            and_(Moment.user_id == user_id, Moment.status == 1)
         ).all()
         
         total_likes_received = sum(moment.like_count for moment in user_moments)
         total_comments_received = sum(moment.comment_count for moment in user_moments)
         total_shares_received = sum(moment.share_count for moment in user_moments)
-        total_bookmarks_received = sum(moment.bookmark_count for moment in user_moments)
         
         # 用户的互动行为统计
-        likes_given = db.query(func.count(MomentLike.id)).filter(MomentLike.user_id == user_id).scalar() or 0
-        comments_given = db.query(func.count(MomentComment.id)).filter(MomentComment.user_id == user_id).scalar() or 0
-        bookmarks_made = db.query(func.count(MomentBookmark.id)).filter(MomentBookmark.user_id == user_id).scalar() or 0
+        likes_given = db.query(func.count(MomentInteraction.id)).filter(
+            and_(
+                MomentInteraction.user_id == user_id,
+                MomentInteraction.interaction_type == INTERACTION_TYPE_LIKE
+            )
+        ).scalar() or 0
+        
+        comments_given = db.query(func.count(MomentComment.id)).filter(
+            and_(
+                MomentComment.user_id == user_id,
+                MomentComment.status == 0
+            )
+        ).scalar() or 0
+        
+        bookmarks_made = db.query(func.count(MomentInteraction.id)).filter(
+            and_(
+                MomentInteraction.user_id == user_id,
+                MomentInteraction.interaction_type == INTERACTION_TYPE_BOOKMARK
+            )
+        ).scalar() or 0
         
         return {
             "published_count": len(user_moments),
             "total_likes_received": total_likes_received,
             "total_comments_received": total_comments_received,
             "total_shares_received": total_shares_received,
-            "total_bookmarks_received": total_bookmarks_received,
             "likes_given": likes_given,
             "comments_given": comments_given,
             "bookmarks_made": bookmarks_made

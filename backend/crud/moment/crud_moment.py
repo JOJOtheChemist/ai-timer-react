@@ -1,35 +1,35 @@
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import and_, desc, func, or_, text
-from typing import List, Optional, Dict, Any
+from sqlalchemy.orm import Session
+from sqlalchemy import and_, desc, func, or_, cast, Text
+from typing import List, Optional, Dict, Any, Tuple
 from datetime import datetime, timedelta
 
-from models.moment import Moment, MomentAttachment, MomentTag
+from models.moment import Moment, MomentAttachment
 from models.schemas.moment import MomentCreate, MomentUpdate, MomentTypeEnum, HotTypeEnum
 
 class CRUDMoment:
     """动态CRUD操作"""
     
     def create(self, db: Session, user_id: int, moment_data: MomentCreate) -> Moment:
-        """保存内容到数据库（自动填充发布时间、用户ID）"""
+        """
+        创建动态/干货
+        将枚举类型转换为数据库整数值
+        """
         db_moment = Moment(
             user_id=user_id,
-            moment_type=moment_data.moment_type.value,
+            type=MomentTypeEnum.to_db_value(moment_data.moment_type),  # 枚举 → 整数
             title=moment_data.title,
             content=moment_data.content,
+            image_url=moment_data.image_url,
             tags=moment_data.tags,
-            attachments=moment_data.attachments
+            status=1  # 默认已发布
         )
         db.add(db_moment)
         db.commit()
         db.refresh(db_moment)
         
-        # 保存附件关联
+        # 保存附件关联（干货专用）
         if moment_data.attachments:
             self.save_attachments(db, db_moment.id, moment_data.attachments)
-        
-        # 更新标签使用次数
-        if moment_data.tags:
-            self.update_tag_usage(db, moment_data.tags)
         
         return db_moment
     
@@ -39,12 +39,13 @@ class CRUDMoment:
         moment_type: Optional[MomentTypeEnum] = None,
         page: int = 1,
         page_size: int = 10
-    ) -> tuple[List[Moment], int]:
-        """按类型从数据库查询内容"""
-        query = db.query(Moment).filter(Moment.status == 'published')
+    ) -> Tuple[List[Moment], int]:
+        """按类型查询动态列表"""
+        query = db.query(Moment).filter(Moment.status == 1)  # status=1 表示已发布
         
         if moment_type:
-            query = query.filter(Moment.moment_type == moment_type.value)
+            type_value = MomentTypeEnum.to_db_value(moment_type)
+            query = query.filter(Moment.type == type_value)
         
         # 获取总数
         total = query.count()
@@ -64,19 +65,19 @@ class CRUDMoment:
         filters: Optional[Dict[str, Any]] = None,
         page: int = 1,
         page_size: int = 10
-    ) -> tuple[List[Moment], int]:
-        """按筛选条件执行数据库查询（标签匹配、时间范围、热度排序）"""
-        query = db.query(Moment).filter(Moment.status == 'published')
+    ) -> Tuple[List[Moment], int]:
+        """按筛选条件查询（标签、时间范围、热度排序）"""
+        query = db.query(Moment).filter(Moment.status == 1)
         
         if moment_type:
-            query = query.filter(Moment.moment_type == moment_type.value)
+            type_value = MomentTypeEnum.to_db_value(moment_type)
+            query = query.filter(Moment.type == type_value)
         
         if filters:
-            # 标签筛选
+            # 标签筛选（JSONB数组包含查询）
             if filters.get('tags'):
-                tags = filters['tags']
-                # 使用JSON_CONTAINS或类似功能进行标签匹配
-                for tag in tags:
+                for tag in filters['tags']:
+                    # PostgreSQL JSONB 包含查询
                     query = query.filter(Moment.tags.contains([tag]))
             
             # 时间范围筛选
@@ -131,34 +132,27 @@ class CRUDMoment:
         moment_type: Optional[MomentTypeEnum] = None,
         page: int = 1,
         page_size: int = 10
-    ) -> tuple[List[Moment], int]:
-        """执行数据库模糊查询（关联用户表匹配用户名）"""
-        # 基础查询
-        query = db.query(Moment).filter(Moment.status == 'published')
+    ) -> Tuple[List[Moment], int]:
+        """关键词搜索（标题、内容、标签）"""
+        query = db.query(Moment).filter(Moment.status == 1)
         
         if moment_type:
-            query = query.filter(Moment.moment_type == moment_type.value)
+            type_value = MomentTypeEnum.to_db_value(moment_type)
+            query = query.filter(Moment.type == type_value)
         
-        # 关键词搜索：标题、内容、标签
+        # 关键词搜索：标题、内容
         search_conditions = [
             Moment.content.contains(keyword)
         ]
         
-        # 如果有标题，也搜索标题
+        # 搜索标题（可能为NULL）
         if keyword:
             search_conditions.append(Moment.title.contains(keyword))
         
-        # 标签搜索（JSON数组中包含关键词）
-        # 注意：这里的实现可能需要根据具体数据库调整
-        try:
-            search_conditions.append(
-                func.json_search(Moment.tags, 'one', f'%{keyword}%').isnot(None)
-            )
-        except:
-            # 如果数据库不支持json_search，使用简单的文本搜索
-            search_conditions.append(
-                func.cast(Moment.tags, text('TEXT')).contains(keyword)
-            )
+        # 标签搜索（JSONB转文本后搜索）
+        search_conditions.append(
+            cast(Moment.tags, Text).contains(keyword)
+        )
         
         query = query.filter(or_(*search_conditions))
         
@@ -176,9 +170,9 @@ class CRUDMoment:
         """查询置顶广告内容"""
         return db.query(Moment).filter(
             and_(
-                Moment.moment_type == 'ad',
+                Moment.type == 2,  # type=2 表示广告
                 Moment.is_top == 1,
-                Moment.status == 'published'
+                Moment.status == 1
             )
         ).first()
     
@@ -187,7 +181,7 @@ class CRUDMoment:
         return db.query(Moment).filter(
             and_(
                 Moment.id == moment_id,
-                Moment.status == 'published'
+                Moment.status == 1
             )
         ).first()
     
@@ -196,7 +190,8 @@ class CRUDMoment:
         db_moment = db.query(Moment).filter(
             and_(
                 Moment.id == moment_id,
-                Moment.user_id == user_id
+                Moment.user_id == user_id,
+                Moment.status == 1
             )
         ).first()
         
@@ -206,16 +201,12 @@ class CRUDMoment:
         update_data = moment_data.dict(exclude_unset=True)
         
         for field, value in update_data.items():
-            if hasattr(db_moment, field):
+            if hasattr(db_moment, field) and value is not None:
                 setattr(db_moment, field, value)
         
         # 更新附件
-        if 'attachments' in update_data:
+        if 'attachments' in update_data and update_data['attachments'] is not None:
             self.update_attachments(db, moment_id, update_data['attachments'])
-        
-        # 更新标签使用次数
-        if 'tags' in update_data:
-            self.update_tag_usage(db, update_data['tags'])
         
         db.commit()
         db.refresh(db_moment)
@@ -226,14 +217,15 @@ class CRUDMoment:
         db_moment = db.query(Moment).filter(
             and_(
                 Moment.id == moment_id,
-                Moment.user_id == user_id
+                Moment.user_id == user_id,
+                Moment.status == 1
             )
         ).first()
         
         if not db_moment:
             return False
         
-        db_moment.status = 'deleted'
+        db_moment.status = 2  # status=2 表示已删除
         db.commit()
         return True
     
@@ -258,25 +250,8 @@ class CRUDMoment:
         db.query(MomentAttachment).filter(MomentAttachment.moment_id == moment_id).delete()
         
         # 保存新附件
-        self.save_attachments(db, moment_id, attachments)
-    
-    def update_tag_usage(self, db: Session, tags: List[str]):
-        """更新标签使用次数"""
-        for tag_name in tags:
-            # 查找或创建标签
-            db_tag = db.query(MomentTag).filter(MomentTag.tag_name == tag_name).first()
-            
-            if db_tag:
-                db_tag.use_count += 1
-            else:
-                db_tag = MomentTag(tag_name=tag_name, use_count=1)
-                db.add(db_tag)
-        
-        db.commit()
-    
-    def get_popular_tags(self, db: Session, limit: int = 20) -> List[MomentTag]:
-        """获取热门标签"""
-        return db.query(MomentTag).order_by(desc(MomentTag.use_count)).limit(limit).all()
+        if attachments:
+            self.save_attachments(db, moment_id, attachments)
     
     def get_user_moments(
         self,
@@ -285,17 +260,18 @@ class CRUDMoment:
         moment_type: Optional[MomentTypeEnum] = None,
         page: int = 1,
         page_size: int = 10
-    ) -> tuple[List[Moment], int]:
+    ) -> Tuple[List[Moment], int]:
         """获取用户发布的动态"""
         query = db.query(Moment).filter(
             and_(
                 Moment.user_id == user_id,
-                Moment.status == 'published'
+                Moment.status == 1
             )
         )
         
         if moment_type:
-            query = query.filter(Moment.moment_type == moment_type.value)
+            type_value = MomentTypeEnum.to_db_value(moment_type)
+            query = query.filter(Moment.type == type_value)
         
         total = query.count()
         
@@ -311,33 +287,6 @@ class CRUDMoment:
             "view_count": Moment.view_count + 1
         })
         db.commit()
-    
-    def get_moment_stats(self, db: Session) -> Dict[str, int]:
-        """获取动态统计信息"""
-        total_moments = db.query(func.count(Moment.id)).filter(Moment.status == 'published').scalar() or 0
-        
-        total_dynamics = db.query(func.count(Moment.id)).filter(
-            and_(Moment.moment_type == 'dynamic', Moment.status == 'published')
-        ).scalar() or 0
-        
-        total_dry_goods = db.query(func.count(Moment.id)).filter(
-            and_(Moment.moment_type == 'dryGoods', Moment.status == 'published')
-        ).scalar() or 0
-        
-        total_likes = db.query(func.sum(Moment.like_count)).filter(Moment.status == 'published').scalar() or 0
-        total_comments = db.query(func.sum(Moment.comment_count)).filter(Moment.status == 'published').scalar() or 0
-        total_shares = db.query(func.sum(Moment.share_count)).filter(Moment.status == 'published').scalar() or 0
-        total_bookmarks = db.query(func.sum(Moment.bookmark_count)).filter(Moment.status == 'published').scalar() or 0
-        
-        return {
-            "total_moments": total_moments,
-            "total_dynamics": total_dynamics,
-            "total_dry_goods": total_dry_goods,
-            "total_likes": total_likes,
-            "total_comments": total_comments,
-            "total_shares": total_shares,
-            "total_bookmarks": total_bookmarks
-        }
 
 # 创建CRUD实例
 crud_moment = CRUDMoment() 

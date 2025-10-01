@@ -305,7 +305,7 @@ class MomentInteractionService:
             id=comment.id,
             user=user_info,
             content=comment.content,
-            parent_comment_id=comment.parent_comment_id,
+            parent_id=comment.parent_id,  # 注意：数据库字段名是 parent_id
             like_count=comment.like_count,
             create_time=comment.create_time,
             replies=[]  # 将在调用方填充

@@ -1,0 +1,32 @@
+{
+  "timestamp": "2025-10-02T03:20:38.656540",
+  "base_url": "http://localhost:8000",
+  "test_user_id": 1,
+  "results": {
+    "total": 16,
+    "passed": 0,
+    "failed": 16,
+    "errors": [
+      "创建动态: HTTP 502",
+      "创建干货: HTTP 502",
+      "获取动态列表（默认）: HTTP 502",
+      "获取动态列表（仅dynamic）: HTTP 502",
+      "获取动态列表（仅dryGoods）: HTTP 502",
+      "获取动态列表（按标签筛选）: HTTP 502",
+      "获取动态列表（今日）: HTTP 502",
+      "获取动态列表（按热度排序）: HTTP 502",
+      "搜索动态: HTTP 502",
+      "获取热门标签: HTTP 502",
+      "获取我发布的动态: HTTP 502",
+      "获取我的收藏: HTTP 502",
+      "获取我点赞的动态: HTTP 502",
+      "获取我的互动统计: HTTP 502",
+      "动态服务健康检查: HTTP 502",
+      "动态互动服务健康检查: HTTP 502"
+    ]
+  },
+  "test_data_ids": {
+    "moment_id": null,
+    "comment_id": null
+  }
+}

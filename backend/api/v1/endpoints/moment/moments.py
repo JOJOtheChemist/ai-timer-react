@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Path
 from sqlalchemy.orm import Session
 from typing import Optional, List
 
@@ -194,7 +194,7 @@ async def delete_moment(
 
 @router.get("/user/{user_id}", response_model=MomentListResponse)
 async def get_user_moments(
-    user_id: int,
+    user_id: int = Path(..., description="用户ID"),
     moment_type: Optional[MomentTypeEnum] = Query(None, description="内容类型筛选"),
     page: int = Query(1, ge=1, description="页码"),
     page_size: int = Query(10, ge=1, le=50, description="每页大小"),

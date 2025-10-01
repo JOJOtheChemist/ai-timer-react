@@ -347,6 +347,20 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
+# 加载统计路由
+try:
+    from api.v1.endpoints.statistic import statistics
+    app.include_router(
+        statistics.router,
+        prefix="/api/v1/statistics",
+        tags=["统计分析"]
+    )
+    print("✅ 统计模块加载成功")
+except Exception as e:
+    print(f"⚠️  统计模块加载失败: {e}")
+    import traceback
+    traceback.print_exc()
+
 # ============= 全局异常处理 =============
 
 @app.exception_handler(Exception)

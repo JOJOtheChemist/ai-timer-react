@@ -1,0 +1,39 @@
+
+============================================================
+🚀 开始 Statistic API 测试
+============================================================
+
+❌ 插入测试数据失败: window functions are not allowed in WHERE
+LINE 5: ...heckin_time) = CURRENT_DATE - INTERVAL '1 day' * (ROW_NUMBER...
+                                                             ^
+QUERY:  SELECT COUNT(*) >= (badge_record.condition_config->>'days')::INTEGER
+                                                  FROM checkin_record cr
+                WHERE cr.user_id = target_user_id
+                AND cr.checkin_time >= CURRENT_DATE - INTERVAL '1 day' * (badge_record.condition_config->>'days')::INTEGER
+                AND DATE(cr.checkin_time) = CURRENT_DATE - INTERVAL '1 day' * (ROW_NUMBER() OVER (ORDER BY cr.checkin_time DESC) - 1)
+CONTEXT:  PL/pgSQL function check_badge_conditions(bigint,bigint) line 22 at SQL statement
+SQL statement "SELECT check_badge_conditions(NEW.user_id)"
+PL/pgSQL function auto_check_badges() line 15 at PERFORM
+
+❌ 测试数据插入失败，继续测试...
+
+💾 数据库验证: 每日统计 0 条, 每周统计 0 条
+
+
+============================================================
+📊 Statistic API 测试结果
+============================================================
+✅ Health Check: 200
+✅ GET /weekly-overview: 200 - 0.0h
+✅ GET /weekly-chart: 200 - 0 days
+✅ GET /weekly-task-hours: 200
+✅ GET /weekly-category-hours: 200
+✅ GET /efficiency-analysis: 200
+✅ GET /mood-trend: 200
+✅ GET /comparison: 200
+✅ GET /dashboard: 200 - overview=True, charts=True
+============================================================
+
+✅ 成功: 9/9 (100.0%)
+
+📝 测试报告已保存: tests/report/STATISTIC_API_TEST_REPORT.md

@@ -262,6 +262,20 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
+# 加载徽章路由
+try:
+    from api.v1.endpoints.badge import badges
+    app.include_router(
+        badges.router,
+        prefix="/api/v1/badges",
+        tags=["徽章系统"]
+    )
+    print("✅ 徽章模块加载成功")
+except Exception as e:
+    print(f"⚠️  徽章模块加载失败: {e}")
+    import traceback
+    traceback.print_exc()
+
 # ============= 全局异常处理 =============
 
 @app.exception_handler(Exception)

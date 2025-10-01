@@ -1,4 +1,4 @@
-INFO:     Started server process [851]
+INFO:     Started server process [11030]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
@@ -11,6 +11,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 ✅ 成功案例模块加载成功
 ✅ 消息模块加载成功
 ✅ 学习方法模块加载成功
+✅ 徽章模块加载成功
 ============================================================
 📚 API文档地址:
    - Swagger UI: http://localhost:8000/docs
@@ -18,6 +19,19 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
    - OpenAPI:    http://localhost:8000/openapi.json
 ============================================================
 
-INFO:     127.0.0.1:58742 - "GET /api/v1/messages?user_id=1&page=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58745 - "GET /api/v1/messages/unread/count?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:58757 - "GET /api/v1/messages?user_id=1&page=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58974 - "GET /api/v1/badges?user_id=1&limit=3 HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:58978 - "GET /api/v1/badges?user_id=1 HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:58990 - "GET /health HTTP/1.1" 200 OK
+获取徽章列表失败: Textual SQL expression '\n            SELECT \n    ...' should be explicitly declared as text('\n            SELECT \n    ...')
+INFO:     127.0.0.1:58992 - "GET /api/v1/badges/?user_id=1&limit=5 HTTP/1.1" 200 OK
+查询用户徽章关联失败: Textual SQL expression '\n            SELECT \n    ...' should be explicitly declared as text('\n            SELECT \n    ...')
+获取徽章列表失败: Textual SQL expression '\n            SELECT \n    ...' should be explicitly declared as text('\n            SELECT \n    ...')
+INFO:     127.0.0.1:58994 - "GET /api/v1/badges/my?user_id=1 HTTP/1.1" 200 OK
+获取徽章列表失败: Textual SQL expression '\n            SELECT \n    ...' should be explicitly declared as text('\n            SELECT \n    ...')
+INFO:     127.0.0.1:59010 - "GET /api/v1/badges/?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59070 - "GET /docs HTTP/1.1" 200 OK
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID delete_message_api_v1_messages__message_id__delete for function delete_message at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/message/message_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID health_check_api_v1_messages_health_get for function health_check at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/message/message_stats.py
+  warnings.warn(message, stacklevel=1)
+INFO:     127.0.0.1:59070 - "GET /openapi.json HTTP/1.1" 200 OK

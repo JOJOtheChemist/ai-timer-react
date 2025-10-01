@@ -206,10 +206,110 @@ class UserSimpleInfoResponse(BaseModel):
     class Config:
         from_attributes = True
 
+# 导师服务相关模型
+class TutorServicePurchaseCreate(BaseModel):
+    """服务购买请求模型（tutor_id、service_id）"""
+    tutor_id: int = Field(..., description="导师ID")
+    service_id: int = Field(..., description="服务ID")
+
+class TutorServiceOrderResponse(BaseModel):
+    """订单响应模型（含order_id、status、amount等）"""
+    order_id: str = Field(..., description="订单ID")
+    user_id: int = Field(..., description="用户ID")
+    tutor_id: int = Field(..., description="导师ID")
+    service_id: int = Field(..., description="服务ID")
+    service_name: str = Field(..., description="服务名称")
+    amount: float = Field(..., description="订单金额")
+    currency: str = Field(default="diamonds", description="货币类型")
+    status: str = Field(..., description="订单状态")
+    created_at: datetime = Field(..., description="创建时间")
+
+# 私信相关模型
+class PrivateMessageCreate(BaseModel):
+    """私信发送请求模型（receiver_id、content）"""
+    content: str = Field(..., min_length=1, max_length=1000, description="消息内容")
+
+class PrivateMessageResponse(BaseModel):
+    """私信响应模型（含sender、receiver、content、time等）"""
+    id: int = Field(..., description="消息ID")
+    sender_id: int = Field(..., description="发送者ID")
+    receiver_id: int = Field(..., description="接收者ID")
+    content: str = Field(..., description="消息内容")
+    message_type: str = Field(default="private", description="消息类型")
+    is_read: bool = Field(default=False, description="是否已读")
+    created_at: datetime = Field(..., description="创建时间")
+
+# 关注相关模型
+class FollowResponse(BaseModel):
+    """关注操作响应模型（含is_followed状态、follow_time等）"""
+    is_followed: bool = Field(..., description="是否已关注")
+    message: str = Field(..., description="操作结果消息")
+    follow_time: Optional[datetime] = Field(None, description="关注时间")
+
+# 导师信息模型
+class TutorInfo(BaseModel):
+    """导师基础信息模型"""
+    tutor_id: int = Field(..., description="导师ID")
+    name: str = Field(..., description="导师姓名")
+    avatar: Optional[str] = Field(None, description="头像URL")
+    title: str = Field(..., description="导师头衔")
+    rating: float = Field(..., description="评分")
+    is_verified: bool = Field(default=False, description="是否认证")
+
 # 个人主页综合响应
 class PersonalPageResponse(BaseModel):
     """个人主页综合响应"""
     profile: UserProfileResponse
     assets: UserAssetResponse
     relations: RelationStatsResponse
-    stats: UserStatsResponse 
+    stats: UserStatsResponse
+
+# 导师服务相关模型
+class TutorServicePurchaseCreate(BaseModel):
+    """服务购买请求模型（tutor_id、service_id）"""
+    tutor_id: int = Field(..., description="导师ID")
+    service_id: int = Field(..., description="服务ID")
+
+class TutorServiceOrderResponse(BaseModel):
+    """订单响应模型（含order_id、status、amount等）"""
+    order_id: str = Field(..., description="订单ID")
+    user_id: int = Field(..., description="用户ID")
+    tutor_id: int = Field(..., description="导师ID")
+    service_id: int = Field(..., description="服务ID")
+    service_name: str = Field(..., description="服务名称")
+    amount: float = Field(..., description="订单金额")
+    currency: str = Field(default="diamonds", description="货币类型")
+    status: str = Field(..., description="订单状态")
+    created_at: datetime = Field(..., description="创建时间")
+
+# 私信相关模型
+class PrivateMessageCreate(BaseModel):
+    """私信发送请求模型（receiver_id、content）"""
+    content: str = Field(..., min_length=1, max_length=1000, description="消息内容")
+
+class PrivateMessageResponse(BaseModel):
+    """私信响应模型（含sender、receiver、content、time等）"""
+    id: int = Field(..., description="消息ID")
+    sender_id: int = Field(..., description="发送者ID")
+    receiver_id: int = Field(..., description="接收者ID")
+    content: str = Field(..., description="消息内容")
+    message_type: str = Field(default="private", description="消息类型")
+    is_read: bool = Field(default=False, description="是否已读")
+    created_at: datetime = Field(..., description="创建时间")
+
+# 关注相关模型
+class FollowResponse(BaseModel):
+    """关注操作响应模型（含is_followed状态、follow_time等）"""
+    is_followed: bool = Field(..., description="是否已关注")
+    message: str = Field(..., description="操作结果消息")
+    follow_time: Optional[datetime] = Field(None, description="关注时间")
+
+# 导师信息模型
+class TutorInfo(BaseModel):
+    """导师基础信息模型"""
+    tutor_id: int = Field(..., description="导师ID")
+    name: str = Field(..., description="导师姓名")
+    avatar: Optional[str] = Field(None, description="头像URL")
+    title: str = Field(..., description="导师头衔")
+    rating: float = Field(..., description="评分")
+    is_verified: bool = Field(default=False, description="是否认证") 

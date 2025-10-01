@@ -10,6 +10,7 @@ from api.v1.endpoints.moment import moments, moment_interactions
 from api.v1.endpoints.badge import badges
 from api.v1.endpoints.method import methods, checkins
 from api.v1.endpoints.case import cases, case_details, case_permissions
+from api.v1.endpoints.tutor import tutors, tutor_details
 
 api_router = APIRouter()
 
@@ -153,4 +154,17 @@ api_router.include_router(
     case_permissions.router,
     prefix="/cases",
     tags=["案例权限"]
+)
+
+# 导师相关路由
+api_router.include_router(
+    tutors.router,
+    prefix="/tutors",
+    tags=["导师管理"]
+)
+
+api_router.include_router(
+    tutor_details.router,
+    prefix="/tutors",
+    tags=["导师详情"]
 ) 

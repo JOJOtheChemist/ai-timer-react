@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
-from datetime import datetime, date
+from datetime import datetime
+from datetime import date as date_type
 
 # 周统计相关模型
 class WeeklyOverviewResponse(BaseModel):
@@ -11,8 +12,8 @@ class WeeklyOverviewResponse(BaseModel):
     ai_accept_rate: int = Field(0, description="AI推荐采纳率")
     efficiency_score: Optional[float] = Field(None, description="效率评分")
     improvement_rate: Optional[float] = Field(None, description="相比上周的改进率")
-    week_start: date = Field(..., description="本周开始日期")
-    week_end: date = Field(..., description="本周结束日期")
+    week_start: date_type = Field(..., description="本周开始日期")
+    week_end: date_type = Field(..., description="本周结束日期")
 
 class CategoryHours(BaseModel):
     """分类时长统计"""
@@ -23,7 +24,7 @@ class CategoryHours(BaseModel):
 
 class DailyHours(BaseModel):
     """每日时长统计"""
-    date: date = Field(..., description="日期")
+    date: date_type = Field(..., description="日期")
     hours: float = Field(0.0, description="时长")
     completion_rate: float = Field(0.0, description="完成率")
     mood: Optional[str] = Field(None, description="主要心情")
@@ -41,7 +42,7 @@ class WeeklyChartResponse(BaseModel):
 # 日统计相关模型
 class DailyStatisticResponse(BaseModel):
     """日统计响应"""
-    date: date = Field(..., description="日期")
+    date: date_type = Field(..., description="日期")
     total_study_hours: float = Field(0.0, description="总学习时长")
     completed_tasks: int = Field(0, description="完成任务数")
     total_tasks: int = Field(0, description="总任务数")
@@ -86,8 +87,8 @@ class TaskEfficiencyResponse(BaseModel):
 # 对比分析相关模型
 class ComparisonPeriod(BaseModel):
     """对比时期"""
-    start_date: date = Field(..., description="开始日期")
-    end_date: date = Field(..., description="结束日期")
+    start_date: date_type = Field(..., description="开始日期")
+    end_date: date_type = Field(..., description="结束日期")
     label: str = Field(..., description="时期标签")
 
 class ComparisonAnalysis(BaseModel):
@@ -99,8 +100,8 @@ class ComparisonAnalysis(BaseModel):
 # 统计查询参数
 class StatisticQueryParams(BaseModel):
     """统计查询参数"""
-    start_date: Optional[date] = Field(None, description="开始日期")
-    end_date: Optional[date] = Field(None, description="结束日期")
+    start_date: Optional[date_type] = Field(None, description="开始日期")
+    end_date: Optional[date_type] = Field(None, description="结束日期")
     category: Optional[str] = Field(None, description="任务分类筛选")
     task_type: Optional[str] = Field(None, description="任务类型筛选")
     include_weekends: bool = Field(True, description="是否包含周末")

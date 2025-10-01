@@ -16,7 +16,7 @@ class MethodService:
     def __init__(self, db: Session):
         self.db = db
         self.crud_method = CRUDMethod()
-        self.statistic_service = StatisticService(db)
+        self.statistic_service = StatisticService()
         self.cache_ttl = 3600  # 1小时缓存
     
     async def get_method_list(

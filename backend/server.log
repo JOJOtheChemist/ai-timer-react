@@ -1,0 +1,12 @@
+INFO:     Started server process [51955]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+✅ AI Chat router loaded
+✅ AI Recommendations router loaded
+============================================================
+🚀 启动AI API测试服务器
+============================================================
+✅ AI Chat router loaded
+✅ AI Recommendations router loaded
+INFO:     127.0.0.1:51443 - "GET /health HTTP/1.1" 200 OK

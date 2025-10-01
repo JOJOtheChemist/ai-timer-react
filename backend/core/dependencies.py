@@ -64,6 +64,20 @@ def get_current_user_dev(
     """
     return user_id
 
+# 获取当前用户信息（返回字典格式）
+def get_current_user(
+    user_id: int = Query(..., description="用户ID")
+) -> dict:
+    """
+    获取当前用户信息（简化版，用于开发测试）
+    生产环境应该从JWT token解析并查询数据库
+    """
+    return {
+        "id": user_id,
+        "username": f"user_{user_id}",
+        "is_active": True
+    }
+
 # 数据库会话和用户ID的组合依赖
 def get_db_and_user(
     db: Session = Depends(get_db),

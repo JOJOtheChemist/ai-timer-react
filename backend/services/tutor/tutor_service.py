@@ -193,4 +193,55 @@ class TutorService:
             # 解析价格区间（如"100-500"）
             parsed['price_range'] = filters.price_range
         
-        return parsed 
+        return parsed
+
+    async def get_tutor_service_price(self, tutor_id: int, service_id: int) -> Optional[dict]:
+        """获取服务价格信息（确保价格一致性，避免前端传参篡改）"""
+        try:
+            service = await self.crud_tutor.get_service_by_id(self.db, service_id)
+            if not service or service.tutor_id != tutor_id:
+                return None
+            
+            return {
+                "id": service.id,
+                "name": service.name,
+                "price": service.price,
+                "currency": service.currency,
+                "is_available": service.is_available
+            }
+        except Exception as e:
+            raise Exception(f"获取服务价格失败: {str(e)}")
+
+    async def check_tutor_exists(self, tutor_id: int) -> bool:
+        """校验导师是否存在"""
+        try:
+            tutor = await self.crud_tutor.get_by_id(self.db, tutor_id)
+            return tutor is not None and tutor.is_active
+        except Exception as e:
+            raise Exception(f"校验导师存在性失败: {str(e)}")
+
+    async def update_tutor_fan_count(self, tutor_id: int, increment: int) -> bool:
+        """更新导师粉丝数（通过调用导师服务的update_tutor_fan_count接口）"""
+        try:
+            success = await self.crud_tutor.update_fan_count(self.db, tutor_id, increment)
+            return success
+        except Exception as e:
+            raise Exception(f"更新导师粉丝数失败: {str(e)}")
+
+    async def get_tutor_basic_info(self, tutor_id: int) -> Optional[dict]:
+        """获取导师基础信息"""
+        try:
+            tutor = await self.crud_tutor.get_by_id(self.db, tutor_id)
+            if not tutor:
+                return None
+            
+            return {
+                "id": tutor.id,
+                "name": tutor.name,
+                "avatar": tutor.avatar,
+                "title": tutor.title,
+                "rating": tutor.rating,
+                "is_verified": tutor.is_verified
+            }
+        except Exception as e:
+            raise Exception(f"获取导师基础信息失败: {str(e)}") 

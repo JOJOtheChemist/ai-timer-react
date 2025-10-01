@@ -1,0 +1,26 @@
+INFO:     Started server process [60244]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+✅ AI Chat router loaded
+✅ AI Recommendations router loaded
+============================================================
+🚀 启动AI API测试服务器
+============================================================
+✅ AI Chat router loaded
+✅ AI Recommendations router loaded
+INFO:     127.0.0.1:52160 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52162 - "GET /api/v1/ai/recommendations/method?user_id=1&limit=2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52173 - "GET /api/v1/ai/chat/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52175 - "GET /api/v1/ai/recommendations/method?user_id=1&limit=2 HTTP/1.1" 200 OK
+分析用户行为失败: (psycopg2.errors.UndefinedTable) relation "time_slots" does not exist
+LINE 2: FROM time_slots 
+             ^
+
+[SQL: SELECT count(time_slots.id) AS total_slots, sum(time_slots.duration_minutes) AS total_minutes, avg(time_slots.completion_rate) AS avg_completion 
+FROM time_slots 
+WHERE time_slots.user_id = %(user_id_1)s AND time_slots.start_time >= %(start_time_1)s 
+ LIMIT %(param_1)s]
+[parameters: {'user_id_1': 1, 'start_time_1': datetime.datetime(2025, 9, 2, 1, 35, 50, 165114), 'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+INFO:     127.0.0.1:52177 - "GET /api/v1/ai/analysis/user-behavior?user_id=1 HTTP/1.1" 200 OK

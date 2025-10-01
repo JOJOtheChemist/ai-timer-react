@@ -131,4 +131,73 @@ class ErrorResponse(BaseModel):
     success: bool = Field(False, description="是否成功")
     message: str = Field(..., description="错误消息")
     error_code: Optional[str] = Field(None, description="错误代码")
-    details: Optional[Dict[str, Any]] = Field(None, description="错误详情") 
+    details: Optional[Dict[str, Any]] = Field(None, description="错误详情")
+
+# 学习方法推荐相关模型
+class AIStudyMethodResponse(BaseModel):
+    """AI学习方法推荐响应"""
+    method_id: int = Field(..., description="方法ID")
+    name: str = Field(..., description="方法名称")
+    description: str = Field(..., description="方法描述")
+    category: str = Field(..., description="方法分类")
+    suitable_scenarios: List[str] = Field(..., description="适用场景")
+    recommendation_reason: str = Field(..., description="推荐理由")
+    match_score: float = Field(..., ge=0, le=1, description="匹配度0-1")
+    priority: int = Field(1, ge=1, le=5, description="优先级1-5")
+    
+    class Config:
+        from_attributes = True
+
+class UserBehaviorAnalysisResponse(BaseModel):
+    """用户行为分析响应"""
+    user_id: int = Field(..., description="用户ID")
+    learning_patterns: Dict[str, Any] = Field(..., description="学习模式分析")
+    time_preferences: Dict[str, Any] = Field(..., description="时间偏好分析")
+    task_completion_rate: float = Field(..., ge=0, le=1, description="任务完成率")
+    common_issues: List[str] = Field(..., description="常见问题列表")
+    suggested_improvements: List[str] = Field(..., description="改进建议")
+    analysis_time: datetime = Field(..., description="分析时间")
+    
+    class Config:
+        from_attributes = True
+
+class RecommendationExplanationResponse(BaseModel):
+    """推荐理由详细解释响应"""
+    method_id: int = Field(..., description="方法ID")
+    method_name: str = Field(..., description="方法名称")
+    explanation: str = Field(..., description="详细解释")
+    user_behavior_insights: List[str] = Field(..., description="基于用户行为的洞察")
+    expected_benefits: List[str] = Field(..., description="预期收益")
+    implementation_tips: List[str] = Field(..., description="实施建议")
+    
+    class Config:
+        from_attributes = True
+
+class PersonalizedRecommendationResponse(BaseModel):
+    """个性化推荐响应"""
+    study_methods: List[AIStudyMethodResponse] = Field(..., description="学习方法推荐")
+    task_suggestions: List[Dict[str, Any]] = Field(..., description="任务安排建议")
+    schedule_optimization: Dict[str, Any] = Field(..., description="时间表优化建议")
+    motivational_tips: List[str] = Field(..., description="激励建议")
+    
+    class Config:
+        from_attributes = True
+
+class RecommendationFeedbackRequest(BaseModel):
+    """推荐反馈请求"""
+    method_id: int = Field(..., description="方法ID")
+    feedback_type: str = Field(..., description="反馈类型: helpful/not_helpful/tried")
+    rating: Optional[int] = Field(None, ge=1, le=5, description="评分1-5")
+    comment: Optional[str] = Field(None, max_length=500, description="反馈评论")
+    
+    class Config:
+        from_attributes = True
+
+class RecommendationFeedbackResponse(BaseModel):
+    """推荐反馈响应"""
+    success: bool = Field(True, description="是否成功")
+    message: str = Field(..., description="反馈消息")
+    feedback_id: Optional[int] = Field(None, description="反馈ID")
+    
+    class Config:
+        from_attributes = True 

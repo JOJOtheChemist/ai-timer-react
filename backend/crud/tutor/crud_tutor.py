@@ -370,4 +370,12 @@ class CRUDTutor:
             return True
         except Exception as e:
             db.rollback()
-            raise Exception(f"更新导师失败: {str(e)}") 
+            raise Exception(f"更新导师失败: {str(e)}")
+
+    async def get_service_by_id(self, db: Session, service_id: int) -> Optional[Any]:
+        """根据服务ID获取服务信息"""
+        try:
+            service = db.query(TutorService).filter(TutorService.id == service_id).first()
+            return service
+        except Exception as e:
+            raise Exception(f"查询服务失败: {str(e)}") 

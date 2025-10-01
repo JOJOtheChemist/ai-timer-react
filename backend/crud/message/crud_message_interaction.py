@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 from models.message import Message
@@ -38,8 +38,7 @@ class CRUDMessageInteraction:
             title=f"Re: {original_message.title}",
             content=content,
             related_id=original_message.related_id,
-            related_type=original_message.related_type,
-            parent_message_id=message_id
+            related_type=original_message.related_type
         )
         
         db.add(reply_message)
@@ -97,18 +96,22 @@ class CRUDMessageInteraction:
         if not original_message:
             return []
         
-        # 如果当前消息是回复，先找到根消息
-        root_message_id = original_message.parent_message_id or message_id
+        # 获取消息上下文 (注意：数据库中无parent_message_id字段，简化实现)
+        # TODO: 通过message_reply表查询完整对话链
+        return [original_message]
+    
+    def get_message_context(
+        self, db: Session, message_id: int, user_id: int, limit: int = 10
+    ) -> List[Message]:
+        """获取消息上下文（上下文对话历史）"""
+        # 获取原始消息
+        original_message = crud_message.get_by_id(db, message_id, user_id)
+        if not original_message:
+            return []
         
-        # 获取所有相关的消息（包括根消息和所有回复）
-        all_messages = db.query(Message).filter(
-            and_(
-                Message.id.in_([root_message_id]),
-                Message.parent_message_id == root_message_id
-            )
-        ).order_by(Message.create_time).all()
-        
-        return all_messages
+        # 简化实现：只返回当前消息
+        # TODO: 通过message_reply表查询完整对话链
+        return [original_message]
     
     def check_message_permission(
         self, 

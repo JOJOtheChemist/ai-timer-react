@@ -136,13 +136,8 @@ class CRUDMessageStat:
             )
         ).scalar() or 0
         
-        # 已回复的消息
-        replied_messages = db.query(func.count(func.distinct(Message.parent_message_id))).filter(
-            and_(
-                Message.sender_id == user_id,
-                Message.parent_message_id.isnot(None)
-            )
-        ).scalar() or 0
+        # 已回复的消息 (注意：数据库中没有parent_message_id字段，暂时设为0)
+        replied_messages = 0  # TODO: 需要通过message_reply表统计
         
         return {
             "received_messages": received_messages,

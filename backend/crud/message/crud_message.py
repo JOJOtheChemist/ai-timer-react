@@ -19,7 +19,7 @@ class CRUDMessage:
             content=message_data.content,
             related_id=message_data.related_id,
             related_type=message_data.related_type,
-            parent_message_id=message_data.parent_message_id
+            attachment_url=message_data.attachment_url if hasattr(message_data, 'attachment_url') else None
         )
         db.add(db_message)
         db.commit()
@@ -188,16 +188,9 @@ class CRUDMessage:
         ).order_by(desc(Message.create_time)).limit(limit).all()
     
     def get_message_replies(self, db: Session, message_id: int, user_id: int) -> List[Message]:
-        """获取消息的回复列表"""
-        return db.query(Message).filter(
-            and_(
-                Message.parent_message_id == message_id,
-                or_(
-                    Message.receiver_id == user_id,
-                    Message.sender_id == user_id
-                )
-            )
-        ).order_by(Message.create_time).all()
+        """获取消息的回复列表 (注意：需要通过message_reply表查询)"""
+        # TODO: 通过message_reply表查询回复
+        return []
     
     def cleanup_old_messages(self, db: Session, days: int = 30) -> int:
         """清理过期消息"""

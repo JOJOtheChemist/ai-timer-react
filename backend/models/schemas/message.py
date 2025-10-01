@@ -16,34 +16,34 @@ class ReminderTypeEnum(str, Enum):
 
 # 消息基础模型
 class MessageBase(BaseModel):
-    title: str = Field(..., min_length=1, max_length=200, description="消息标题")
+    title: Optional[str] = Field(None, max_length=100, description="消息标题")
     content: str = Field(..., min_length=1, description="消息内容")
-    message_type: MessageTypeEnum = Field(..., description="消息类型")
+    type: int = Field(..., description="消息类型: 0-导师,1-私信,2-系统")
     related_id: Optional[int] = Field(None, description="关联资源ID")
     related_type: Optional[str] = Field(None, max_length=20, description="关联资源类型")
 
 class MessageCreate(MessageBase):
     receiver_id: int = Field(..., description="接收方用户ID")
-    parent_message_id: Optional[int] = Field(None, description="回复的原消息ID")
+    sender_id: Optional[int] = Field(None, description="发送方用户ID（系统消息为None）")
+    attachment_url: Optional[str] = Field(None, max_length=255, description="附件URL")
 
 class MessageUpdate(BaseModel):
-    title: Optional[str] = Field(None, min_length=1, max_length=200)
+    title: Optional[str] = Field(None, max_length=100)
     content: Optional[str] = Field(None, min_length=1)
-    is_read: Optional[bool] = Field(None, description="是否已读")
+    is_unread: Optional[int] = Field(None, description="是否未读: 0-已读,1-未读")
 
 class MessageResponse(MessageBase):
     id: int
-    sender_id: int
+    sender_id: Optional[int] = None
     receiver_id: int
-    parent_message_id: Optional[int] = None
-    is_read: bool = False
+    is_unread: int = Field(1, description="是否未读: 0-已读,1-未读")
     read_time: Optional[datetime] = None
     create_time: datetime
+    attachment_url: Optional[str] = None
     
     # 扩展字段（由服务层填充）
     sender_name: Optional[str] = Field(None, description="发送方姓名")
     sender_avatar: Optional[str] = Field(None, description="发送方头像")
-    is_unread: bool = Field(True, description="是否未读（用于前端显示）")
     reply_count: int = Field(0, description="回复数量")
     
     class Config:
@@ -117,8 +117,8 @@ class MessageTemplateResponse(BaseModel):
 # 消息查询参数
 class MessageQueryParams(BaseModel):
     """消息查询参数"""
-    message_type: Optional[MessageTypeEnum] = Field(None, description="消息类型筛选")
-    is_read: Optional[bool] = Field(None, description="已读状态筛选")
+    message_type: Optional[int] = Field(None, description="消息类型筛选: 0-导师,1-私信,2-系统")
+    is_unread: Optional[int] = Field(None, description="未读状态筛选: 0-已读,1-未读")
     sender_id: Optional[int] = Field(None, description="发送方筛选")
     start_date: Optional[datetime] = Field(None, description="开始时间")
     end_date: Optional[datetime] = Field(None, description="结束时间")

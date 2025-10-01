@@ -180,4 +180,43 @@ class UserProfileData:
         self.is_public = kwargs.get('is_public', True)
         self.allow_follow = kwargs.get('allow_follow', True)
         self.create_time = kwargs.get('create_time')
-        self.update_time = kwargs.get('update_time') 
+        self.update_time = kwargs.get('update_time')
+
+    def get_simple_info(self, db: Session, user_id: int):
+        """从数据库查询用户简易信息（仅名称、头像等非敏感信息）"""
+        try:
+            # 查询用户简易信息
+            query = """
+            SELECT 
+                user_id,
+                username,
+                nickname,
+                avatar,
+                is_verified,
+                create_time
+            FROM user_profiles 
+            WHERE user_id = :user_id
+            """
+            
+            result = db.execute(query, {"user_id": user_id}).fetchone()
+            
+            if result:
+                return UserProfileData(
+                    user_id=result.user_id,
+                    username=result.username,
+                    nickname=result.nickname,
+                    avatar=result.avatar,
+                    is_verified=getattr(result, 'is_verified', False),
+                    create_time=result.create_time,
+                    # 其他字段设为None或默认值
+                    email=None,
+                    phone=None,
+                    goal=None,
+                    bio=None,
+                    is_public=True,
+                    allow_follow=True,
+                    update_time=None
+                )
+            return None
+        except Exception as e:
+            raise Exception(f"查询用户简易信息失败: {str(e)}") 

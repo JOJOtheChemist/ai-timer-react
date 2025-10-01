@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from core.dependencies import get_db, get_current_user
-from models.schemas.user import UserProfileResponse, UserProfileUpdate, UserOperationResponse
+from models.schemas.user import UserProfileResponse, UserProfileUpdate, UserOperationResponse, UserSimpleInfoResponse
 from services.user.user_profile_service import UserProfileService
 
 router = APIRouter()
@@ -59,4 +59,30 @@ async def update_current_user_profile(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"更新用户个人信息失败: {str(e)}"
+        )
+
+@router.get("/{user_id}/simple-info", response_model=UserSimpleInfoResponse)
+async def get_user_simple_info(
+    user_id: int,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """获取用户简易信息（仅名称、头像等非敏感信息，用于案例作者展示）"""
+    try:
+        user_profile_service = UserProfileService(db)
+        simple_info = await user_profile_service.get_simple_user_info(user_id)
+        
+        if not simple_info:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="用户不存在"
+            )
+        
+        return simple_info
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"获取用户简易信息失败: {str(e)}"
         ) 

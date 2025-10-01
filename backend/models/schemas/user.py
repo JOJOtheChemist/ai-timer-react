@@ -193,6 +193,19 @@ class UserStatsResponse(BaseModel):
     study_hours_rank: Optional[int] = Field(None, description="学习时长排名")
     badge_count_rank: Optional[int] = Field(None, description="徽章数量排名")
 
+# 用户简易信息响应（用于案例作者展示等场景）
+class UserSimpleInfoResponse(BaseModel):
+    """用户简易信息响应模型（仅名称、头像等非敏感信息）"""
+    id: int = Field(..., description="用户ID")
+    username: str = Field(..., description="用户名")
+    nickname: Optional[str] = Field(None, description="昵称")
+    avatar: Optional[str] = Field(None, description="头像URL")
+    is_verified: bool = Field(default=False, description="是否认证用户")
+    created_at: datetime = Field(..., description="创建时间")
+    
+    class Config:
+        from_attributes = True
+
 # 个人主页综合响应
 class PersonalPageResponse(BaseModel):
     """个人主页综合响应"""

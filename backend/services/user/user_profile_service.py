@@ -3,7 +3,7 @@ from typing import Optional
 from decimal import Decimal
 
 from crud.user.crud_user_profile import CRUDUserProfile
-from models.schemas.user import UserProfileResponse, UserProfileUpdate
+from models.schemas.user import UserProfileResponse, UserProfileUpdate, UserSimpleInfoResponse
 from services.statistic.statistic_service import StatisticService
 
 class UserProfileService:
@@ -109,4 +109,26 @@ class UserProfileService:
             # 暂时返回0，待badge服务实现后替换
             return 0
         except Exception:
-            return 0 
+            return 0
+
+    async def get_simple_user_info(self, user_id: int) -> Optional[UserSimpleInfoResponse]:
+        """获取用户简易信息（仅名称、头像等非敏感信息，用于案例作者展示）"""
+        try:
+            # 获取用户基础信息
+            user_profile = self.crud_user_profile.get_simple_info(self.db, user_id)
+            if not user_profile:
+                return None
+            
+            # 构建简易信息响应
+            simple_info = UserSimpleInfoResponse(
+                id=user_profile.user_id,
+                username=user_profile.username,
+                nickname=user_profile.nickname,
+                avatar=user_profile.avatar,
+                is_verified=getattr(user_profile, 'is_verified', False),  # 是否认证用户
+                created_at=user_profile.create_time
+            )
+            
+            return simple_info
+        except Exception as e:
+            raise Exception(f"获取用户简易信息失败: {str(e)}") 

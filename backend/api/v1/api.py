@@ -9,6 +9,7 @@ from api.v1.endpoints.user import user_message_settings, user_profiles, user_ass
 from api.v1.endpoints.moment import moments, moment_interactions
 from api.v1.endpoints.badge import badges
 from api.v1.endpoints.method import methods, checkins
+from api.v1.endpoints.case import cases, case_details, case_permissions
 
 api_router = APIRouter()
 
@@ -133,4 +134,23 @@ api_router.include_router(
     moment_interactions.router,
     prefix="/moments",
     tags=["动态互动"]
+)
+
+# 成功案例相关路由
+api_router.include_router(
+    cases.router,
+    prefix="/cases",
+    tags=["成功案例"]
+)
+
+api_router.include_router(
+    case_details.router,
+    prefix="/cases",
+    tags=["案例详情"]
+)
+
+api_router.include_router(
+    case_permissions.router,
+    prefix="/cases",
+    tags=["案例权限"]
 ) 

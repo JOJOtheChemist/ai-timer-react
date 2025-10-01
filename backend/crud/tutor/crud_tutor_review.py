@@ -1,10 +1,9 @@
 from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
-from sqlalchemy import desc, and_
+from sqlalchemy import desc, and_, func
 from datetime import datetime
 
-# 注意：这里假设有对应的数据库模型，实际使用时需要根据具体的模型进行调整
-# from models.tutor import TutorReview
+from models.tutor import TutorReview
 
 class CRUDTutorReview:
     def __init__(self):
@@ -16,21 +15,18 @@ class CRUDTutorReview:
         tutor_id: int,
         skip: int = 0,
         limit: int = 10
-    ) -> List[Any]:
+    ) -> List[TutorReview]:
         """查询指定导师的学员评价（默认取前10条）"""
         try:
             reviews = db.query(TutorReview).filter(
-                and_(
-                    TutorReview.tutor_id == tutor_id,
-                    TutorReview.is_active == True
-                )
-            ).order_by(desc(TutorReview.created_at)).offset(skip).limit(limit).all()
+                TutorReview.tutor_id == tutor_id
+            ).order_by(desc(TutorReview.create_time)).offset(skip).limit(limit).all()
             
             return reviews
         except Exception as e:
             raise Exception(f"查询导师评价失败: {str(e)}")
 
-    async def get_by_id(self, db: Session, review_id: int) -> Optional[Any]:
+    async def get_by_id(self, db: Session, review_id: int) -> Optional[TutorReview]:
         """根据ID获取评价详情"""
         try:
             review = db.query(TutorReview).filter(TutorReview.id == review_id).first()
@@ -38,7 +34,7 @@ class CRUDTutorReview:
         except Exception as e:
             raise Exception(f"查询评价详情失败: {str(e)}")
 
-    async def create_review(self, db: Session, review_data: Dict[str, Any]) -> Any:
+    async def create_review(self, db: Session, review_data: Dict[str, Any]) -> TutorReview:
         """创建导师评价"""
         try:
             new_review = TutorReview(**review_data)
@@ -86,22 +82,14 @@ class CRUDTutorReview:
     async def get_review_stats(self, db: Session, tutor_id: int) -> Dict[str, Any]:
         """获取导师评价统计"""
         try:
-            from sqlalchemy import func
-            
             # 总评价数
             total_reviews = db.query(TutorReview).filter(
-                and_(
-                    TutorReview.tutor_id == tutor_id,
-                    TutorReview.is_active == True
-                )
+                TutorReview.tutor_id == tutor_id
             ).count()
             
             # 平均评分
             avg_rating = db.query(func.avg(TutorReview.rating)).filter(
-                and_(
-                    TutorReview.tutor_id == tutor_id,
-                    TutorReview.is_active == True
-                )
+                TutorReview.tutor_id == tutor_id
             ).scalar() or 0.0
             
             # 各星级评价数量
@@ -109,10 +97,7 @@ class CRUDTutorReview:
                 TutorReview.rating,
                 func.count(TutorReview.id).label('count')
             ).filter(
-                and_(
-                    TutorReview.tutor_id == tutor_id,
-                    TutorReview.is_active == True
-                )
+                TutorReview.tutor_id == tutor_id
             ).group_by(TutorReview.rating).all()
             
             rating_dist_dict = {rating: count for rating, count in rating_distribution}
@@ -132,16 +117,15 @@ class CRUDTutorReview:
         rating: int,
         skip: int = 0,
         limit: int = 10
-    ) -> List[Any]:
+    ) -> List[TutorReview]:
         """按评分筛选评价"""
         try:
             reviews = db.query(TutorReview).filter(
                 and_(
                     TutorReview.tutor_id == tutor_id,
-                    TutorReview.rating == rating,
-                    TutorReview.is_active == True
+                    TutorReview.rating == rating
                 )
-            ).order_by(desc(TutorReview.created_at)).offset(skip).limit(limit).all()
+            ).order_by(desc(TutorReview.create_time)).offset(skip).limit(limit).all()
             
             return reviews
         except Exception as e:
@@ -153,8 +137,7 @@ class CRUDTutorReview:
             review = db.query(TutorReview).filter(
                 and_(
                     TutorReview.tutor_id == tutor_id,
-                    TutorReview.reviewer_id == user_id,
-                    TutorReview.is_active == True
+                    TutorReview.user_id == user_id
                 )
             ).first()
             
@@ -168,16 +151,15 @@ class CRUDTutorReview:
         user_id: int,
         skip: int = 0,
         limit: int = 20
-    ) -> List[Any]:
+    ) -> List[TutorReview]:
         """获取用户发表的所有评价"""
         try:
             reviews = db.query(TutorReview).filter(
-                and_(
-                    TutorReview.reviewer_id == user_id,
-                    TutorReview.is_active == True
-                )
-            ).order_by(desc(TutorReview.created_at)).offset(skip).limit(limit).all()
+                TutorReview.user_id == user_id
+            ).order_by(desc(TutorReview.create_time)).offset(skip).limit(limit).all()
             
             return reviews
         except Exception as e:
-            raise Exception(f"获取用户评价失败: {str(e)}") 
+            raise Exception(f"获取用户评价失败: {str(e)}")
+
+crud_tutor_review = CRUDTutorReview() 

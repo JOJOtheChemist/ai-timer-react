@@ -23,3 +23,61 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 
 INFO:     127.0.0.1:61214 - "GET /api/v1/moments?user_id=1&page=1&page_size=10 HTTP/1.1" 200 OK
 INFO:     127.0.0.1:61307 - "POST /api/v1/moments?user_id=1 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:61467 - "GET /docs HTTP/1.1" 200 OK
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID delete_message_api_v1_messages__message_id__delete for function delete_message at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/message/message_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID health_check_api_v1_messages_health_get for function health_check at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/message/message_stats.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID health_check_api_v1_moments_health_get for function health_check at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_moments_api_v1_moments_get for function get_moments at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID create_moment_api_v1_moments_post for function create_moment at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID search_moments_api_v1_moments_search_get for function search_moments at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_moment_detail_api_v1_moments__moment_id__get for function get_moment_detail at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID update_moment_api_v1_moments__moment_id__put for function update_moment at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID delete_moment_api_v1_moments__moment_id__delete for function delete_moment at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_user_moments_api_v1_moments_user__user_id__get for function get_user_moments at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_popular_tags_api_v1_moments_tags_popular_get for function get_popular_tags at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_my_moments_api_v1_moments_me_published_get for function get_my_moments at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID health_check_api_v1_moments_health_get for function health_check at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID toggle_like_api_v1_moments__moment_id__like_post for function toggle_like at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID toggle_bookmark_api_v1_moments__moment_id__bookmark_post for function toggle_bookmark at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_comments_api_v1_moments__moment_id__comments_get for function get_comments at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID create_comment_api_v1_moments__moment_id__comments_post for function create_comment at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID delete_comment_api_v1_moments_comments__comment_id__delete for function delete_comment at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID share_moment_api_v1_moments__moment_id__share_post for function share_moment at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID record_view_api_v1_moments__moment_id__view_post for function record_view at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_interaction_status_api_v1_moments__moment_id__interaction_status_get for function get_interaction_status at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_interaction_stats_api_v1_moments__moment_id__stats_get for function get_interaction_stats at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_interaction_summary_api_v1_moments__moment_id__summary_get for function get_interaction_summary at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_my_bookmarks_api_v1_moments_me_bookmarks_get for function get_my_bookmarks at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_my_likes_api_v1_moments_me_likes_get for function get_my_likes at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_my_interaction_stats_api_v1_moments_me_stats_get for function get_my_interaction_stats at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
+  warnings.warn(message, stacklevel=1)
+INFO:     127.0.0.1:61467 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [45982]

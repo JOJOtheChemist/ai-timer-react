@@ -314,6 +314,25 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
+# 加载导师路由
+try:
+    from api.v1.endpoints.tutor import tutors, tutor_details
+    app.include_router(
+        tutors.router,
+        prefix="/api/v1/tutors",
+        tags=["导师列表"]
+    )
+    app.include_router(
+        tutor_details.router,
+        prefix="/api/v1/tutors",
+        tags=["导师详情"]
+    )
+    print("✅ 导师模块加载成功")
+except Exception as e:
+    print(f"⚠️  导师模块加载失败: {e}")
+    import traceback
+    traceback.print_exc()
+
 # ============= 全局异常处理 =============
 
 @app.exception_handler(Exception)

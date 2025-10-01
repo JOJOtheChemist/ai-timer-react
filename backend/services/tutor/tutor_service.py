@@ -1,18 +1,20 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from datetime import datetime, timedelta
+from sqlalchemy import func
 
-from crud.tutor.crud_tutor import CRUDTutor
+from crud.tutor.crud_tutor import crud_tutor
+from models.tutor import Tutor, TutorService, TutorReview
 from models.schemas.tutor import (
     TutorListResponse,
     TutorFilterParams,
-    TutorSearchResponse
+    TutorSearchResponse,
+    TutorStatsResponse
 )
 
 class TutorService:
     def __init__(self, db: Session):
         self.db = db
-        self.crud_tutor = CRUDTutor()
+        self.crud_tutor = crud_tutor
 
     async def get_tutor_list(
         self, 
@@ -24,7 +26,11 @@ class TutorService:
         """按筛选条件+排序规则查询导师列表，计算分页信息"""
         try:
             # 解析筛选参数
-            parsed_filters = await self.parse_filters(filters)
+            parsed_filters = {
+                'tutor_type': filters.tutor_type,
+                'domain': filters.domain,
+                'price_range': filters.price_range
+            }
             
             # 从数据库查询
             tutors = await self.crud_tutor.get_multi_by_filters(
@@ -38,24 +44,37 @@ class TutorService:
             # 转换为响应模型
             result = []
             for tutor in tutors:
+                # 查询该导师的最低和最高服务价格
+                price_stats = self.db.query(
+                    func.min(TutorService.price).label('min_price'),
+                    func.max(TutorService.price).label('max_price')
+                ).filter(
+                    TutorService.tutor_id == tutor.id,
+                    TutorService.is_active == 1
+                ).first()
+                
+                # 查询评价数量
+                review_count = self.db.query(func.count(TutorReview.id)).filter(
+                    TutorReview.tutor_id == tutor.id
+                ).scalar() or 0
+                
                 result.append(TutorListResponse(
                     id=tutor.id,
-                    name=tutor.name,
+                    username=tutor.username,
                     avatar=tutor.avatar,
-                    title=tutor.title,
-                    tutor_type=tutor.tutor_type,
-                    domains=tutor.domains.split(',') if tutor.domains else [],
-                    experience_years=tutor.experience_years,
+                    type=tutor.type,
+                    domain=tutor.domain,
+                    education=tutor.education,
+                    experience=tutor.experience,
                     rating=tutor.rating,
-                    review_count=tutor.review_count,
                     student_count=tutor.student_count,
-                    price_range=tutor.price_range,
-                    is_verified=tutor.is_verified,
-                    is_online=tutor.is_online,
-                    response_rate=tutor.response_rate,
-                    service_summary=tutor.service_summary,
-                    created_at=tutor.created_at,
-                    updated_at=tutor.updated_at
+                    success_rate=tutor.success_rate,
+                    monthly_guide_count=tutor.monthly_guide_count,
+                    min_price=price_stats.min_price if price_stats else None,
+                    max_price=price_stats.max_price if price_stats else None,
+                    review_count=review_count,
+                    create_time=tutor.create_time,
+                    update_time=tutor.update_time
                 ))
             
             return result
@@ -68,9 +87,8 @@ class TutorService:
         page: int = 1, 
         page_size: int = 20
     ) -> List[TutorSearchResponse]:
-        """按关键词模糊匹配导师（姓名/领域）"""
+        """按关键词搜索导师"""
         try:
-            # 执行搜索
             tutors = await self.crud_tutor.search_by_keyword(
                 self.db,
                 keyword=keyword,
@@ -83,17 +101,13 @@ class TutorService:
             for tutor in tutors:
                 result.append(TutorSearchResponse(
                     id=tutor.id,
-                    name=tutor.name,
+                    username=tutor.username,
                     avatar=tutor.avatar,
-                    title=tutor.title,
-                    tutor_type=tutor.tutor_type,
-                    domains=tutor.domains.split(',') if tutor.domains else [],
+                    domain=tutor.domain,
+                    education=tutor.education,
                     rating=tutor.rating,
-                    review_count=tutor.review_count,
-                    price_range=tutor.price_range,
-                    is_verified=tutor.is_verified,
-                    match_score=getattr(tutor, 'match_score', 1.0),  # 搜索相关性评分
-                    highlight_fields=getattr(tutor, 'highlight_fields', [])  # 高亮字段
+                    student_count=tutor.student_count,
+                    type=tutor.type
                 ))
             
             return result
@@ -103,7 +117,7 @@ class TutorService:
     async def get_tutor_domains(self) -> List[str]:
         """获取所有导师擅长领域列表"""
         try:
-            domains = await self.crud_tutor.get_all_domains(self.db)
+            domains = await self.crud_tutor.get_tutor_domains(self.db)
             return domains
         except Exception as e:
             raise Exception(f"获取导师领域失败: {str(e)}")
@@ -111,137 +125,60 @@ class TutorService:
     async def get_tutor_types(self) -> List[str]:
         """获取所有导师类型列表"""
         try:
-            types = await self.crud_tutor.get_all_types(self.db)
+            types = await self.crud_tutor.get_tutor_types(self.db)
             return types
         except Exception as e:
             raise Exception(f"获取导师类型失败: {str(e)}")
 
-    async def get_tutor_stats_summary(self) -> dict:
+    async def get_tutor_stats_summary(self) -> TutorStatsResponse:
         """获取导师统计摘要"""
         try:
-            # 获取总导师数
-            total_tutors = await self.crud_tutor.count_total_tutors(self.db)
-            
-            # 获取类型统计
-            type_stats = await self.crud_tutor.count_by_type(self.db)
-            
-            # 获取在线导师数
-            online_tutors = await self.crud_tutor.count_online_tutors(self.db)
-            
-            # 获取认证导师数
-            verified_tutors = await self.crud_tutor.count_verified_tutors(self.db)
-            
-            # 获取最近7天新增导师数
-            seven_days_ago = datetime.now() - timedelta(days=7)
-            recent_tutors = await self.crud_tutor.count_tutors_since(self.db, seven_days_ago)
-            
-            return {
-                "total_tutors": total_tutors,
-                "online_tutors": online_tutors,
-                "verified_tutors": verified_tutors,
-                "type_stats": type_stats,
-                "recent_tutors_7d": recent_tutors,
-                "last_updated": datetime.now()
-            }
+            stats = await self.crud_tutor.get_tutor_stats_summary(self.db)
+            return TutorStatsResponse(**stats)
         except Exception as e:
             raise Exception(f"获取导师统计失败: {str(e)}")
 
     async def get_popular_tutors(self, limit: int = 5) -> List[TutorListResponse]:
         """获取热门推荐导师"""
         try:
-            # 获取热门导师（按评分和学生数综合排序）
-            popular_tutors = await self.crud_tutor.get_popular_tutors(self.db, limit=limit)
+            tutors = await self.crud_tutor.get_popular_tutors(self.db, limit=limit)
             
             # 转换为响应模型
             result = []
-            for tutor in popular_tutors:
+            for tutor in tutors:
+                # 查询该导师的最低和最高服务价格
+                price_stats = self.db.query(
+                    func.min(TutorService.price).label('min_price'),
+                    func.max(TutorService.price).label('max_price')
+                ).filter(
+                    TutorService.tutor_id == tutor.id,
+                    TutorService.is_active == 1
+                ).first()
+                
+                # 查询评价数量
+                review_count = self.db.query(func.count(TutorReview.id)).filter(
+                    TutorReview.tutor_id == tutor.id
+                ).scalar() or 0
+                
                 result.append(TutorListResponse(
                     id=tutor.id,
-                    name=tutor.name,
+                    username=tutor.username,
                     avatar=tutor.avatar,
-                    title=tutor.title,
-                    tutor_type=tutor.tutor_type,
-                    domains=tutor.domains.split(',') if tutor.domains else [],
-                    experience_years=tutor.experience_years,
+                    type=tutor.type,
+                    domain=tutor.domain,
+                    education=tutor.education,
+                    experience=tutor.experience,
                     rating=tutor.rating,
-                    review_count=tutor.review_count,
                     student_count=tutor.student_count,
-                    price_range=tutor.price_range,
-                    is_verified=tutor.is_verified,
-                    is_online=tutor.is_online,
-                    response_rate=tutor.response_rate,
-                    service_summary=tutor.service_summary,
-                    created_at=tutor.created_at,
-                    updated_at=tutor.updated_at
+                    success_rate=tutor.success_rate,
+                    monthly_guide_count=tutor.monthly_guide_count,
+                    min_price=price_stats.min_price if price_stats else None,
+                    max_price=price_stats.max_price if price_stats else None,
+                    review_count=review_count,
+                    create_time=tutor.create_time,
+                    update_time=tutor.update_time
                 ))
             
             return result
         except Exception as e:
-            raise Exception(f"获取热门导师失败: {str(e)}")
-
-    async def parse_filters(self, filters: TutorFilterParams) -> dict:
-        """解析前端筛选参数，转换为数据库查询条件"""
-        parsed = {}
-        
-        if filters.tutor_type:
-            parsed['tutor_type'] = filters.tutor_type
-        
-        if filters.domain:
-            parsed['domain'] = filters.domain
-        
-        if filters.price_range:
-            # 解析价格区间（如"100-500"）
-            parsed['price_range'] = filters.price_range
-        
-        return parsed
-
-    async def get_tutor_service_price(self, tutor_id: int, service_id: int) -> Optional[dict]:
-        """获取服务价格信息（确保价格一致性，避免前端传参篡改）"""
-        try:
-            service = await self.crud_tutor.get_service_by_id(self.db, service_id)
-            if not service or service.tutor_id != tutor_id:
-                return None
-            
-            return {
-                "id": service.id,
-                "name": service.name,
-                "price": service.price,
-                "currency": service.currency,
-                "is_available": service.is_available
-            }
-        except Exception as e:
-            raise Exception(f"获取服务价格失败: {str(e)}")
-
-    async def check_tutor_exists(self, tutor_id: int) -> bool:
-        """校验导师是否存在"""
-        try:
-            tutor = await self.crud_tutor.get_by_id(self.db, tutor_id)
-            return tutor is not None and tutor.is_active
-        except Exception as e:
-            raise Exception(f"校验导师存在性失败: {str(e)}")
-
-    async def update_tutor_fan_count(self, tutor_id: int, increment: int) -> bool:
-        """更新导师粉丝数（通过调用导师服务的update_tutor_fan_count接口）"""
-        try:
-            success = await self.crud_tutor.update_fan_count(self.db, tutor_id, increment)
-            return success
-        except Exception as e:
-            raise Exception(f"更新导师粉丝数失败: {str(e)}")
-
-    async def get_tutor_basic_info(self, tutor_id: int) -> Optional[dict]:
-        """获取导师基础信息"""
-        try:
-            tutor = await self.crud_tutor.get_by_id(self.db, tutor_id)
-            if not tutor:
-                return None
-            
-            return {
-                "id": tutor.id,
-                "name": tutor.name,
-                "avatar": tutor.avatar,
-                "title": tutor.title,
-                "rating": tutor.rating,
-                "is_verified": tutor.is_verified
-            }
-        except Exception as e:
-            raise Exception(f"获取导师基础信息失败: {str(e)}") 
+            raise Exception(f"获取热门导师失败: {str(e)}") 

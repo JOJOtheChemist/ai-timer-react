@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from crud.tutor.crud_tutor import crud_tutor
-from models.tutor import Tutor, TutorService, TutorReview
+from models.tutor import Tutor, TutorService as TutorServiceModel, TutorReview
 from models.schemas.tutor import (
     TutorListResponse,
     TutorFilterParams,
@@ -46,11 +46,11 @@ class TutorService:
             for tutor in tutors:
                 # 查询该导师的最低和最高服务价格
                 price_stats = self.db.query(
-                    func.min(TutorService.price).label('min_price'),
-                    func.max(TutorService.price).label('max_price')
+                    func.min(TutorServiceModel.price).label('min_price'),
+                    func.max(TutorServiceModel.price).label('max_price')
                 ).filter(
-                    TutorService.tutor_id == tutor.id,
-                    TutorService.is_active == 1
+                    TutorServiceModel.tutor_id == tutor.id,
+                    TutorServiceModel.is_active == 1
                 ).first()
                 
                 # 查询评价数量
@@ -148,11 +148,11 @@ class TutorService:
             for tutor in tutors:
                 # 查询该导师的最低和最高服务价格
                 price_stats = self.db.query(
-                    func.min(TutorService.price).label('min_price'),
-                    func.max(TutorService.price).label('max_price')
+                    func.min(TutorServiceModel.price).label('min_price'),
+                    func.max(TutorServiceModel.price).label('max_price')
                 ).filter(
-                    TutorService.tutor_id == tutor.id,
-                    TutorService.is_active == 1
+                    TutorServiceModel.tutor_id == tutor.id,
+                    TutorServiceModel.is_active == 1
                 ).first()
                 
                 # 查询评价数量

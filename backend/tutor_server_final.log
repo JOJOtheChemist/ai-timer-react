@@ -1,4 +1,4 @@
-INFO:     Started server process [55851]
+INFO:     Started server process [60030]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
@@ -22,8 +22,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
    - OpenAPI:    http://localhost:8000/openapi.json
 ============================================================
 
-INFO:     127.0.0.1:62426 - "GET /api/v1/tutors/?user_id=1&page=1&page_size=10 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62438 - "GET /api/v1/tutors/domains?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62440 - "GET /api/v1/tutors/types?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62442 - "GET /api/v1/tutors/stats/summary?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62452 - "GET /api/v1/tutors/1?user_id=1 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63703 - "GET /api/v1/tutors/?user_id=1&page=1&page_size=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63710 - "GET /api/v1/tutors/1?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63712 - "GET /api/v1/tutors/1/services?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63714 - "GET /api/v1/tutors/1/reviews?user_id=1&page=1&page_size=10 HTTP/1.1" 200 OK

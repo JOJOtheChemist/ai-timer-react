@@ -1,0 +1,330 @@
+from sqlalchemy.orm import Session
+from typing import Optional, List, Dict, Any
+from datetime import datetime
+from decimal import Decimal
+
+class CRUDUserAsset:
+    def get_asset_by_user_id(self, db: Session, user_id: int):
+        """查询用户资产数据"""
+        try:
+            query = """
+            SELECT 
+                user_id,
+                diamond_count,
+                total_recharge,
+                total_consume,
+                create_time,
+                update_time
+            FROM user_assets 
+            WHERE user_id = :user_id
+            """
+            
+            result = db.execute(query, {"user_id": user_id}).fetchone()
+            
+            if result:
+                return UserAssetData(
+                    user_id=result.user_id,
+                    diamond_count=result.diamond_count,
+                    total_recharge=result.total_recharge,
+                    total_consume=result.total_consume,
+                    create_time=result.create_time,
+                    update_time=result.update_time
+                )
+            return None
+        except Exception as e:
+            print(f"查询用户资产失败: {e}")
+            return None
+    
+    def get_recent_consume(self, db: Session, user_id: int, limit: int = 1):
+        """查询用户最近消费记录"""
+        try:
+            query = """
+            SELECT 
+                id,
+                user_id,
+                record_type,
+                amount,
+                balance_after,
+                description,
+                create_time
+            FROM user_asset_records 
+            WHERE user_id = :user_id AND record_type = 'consume'
+            ORDER BY create_time DESC
+            LIMIT :limit
+            """
+            
+            results = db.execute(query, {"user_id": user_id, "limit": limit}).fetchall()
+            
+            records = []
+            for result in results:
+                records.append(AssetRecordData(
+                    id=result.id,
+                    user_id=result.user_id,
+                    record_type=result.record_type,
+                    amount=result.amount,
+                    balance_after=result.balance_after,
+                    description=result.description,
+                    create_time=result.create_time
+                ))
+            
+            return records
+        except Exception as e:
+            print(f"查询消费记录失败: {e}")
+            return []
+    
+    def create_asset(self, db: Session, asset_data: Dict[str, Any]):
+        """创建用户资产记录"""
+        try:
+            query = """
+            INSERT INTO user_assets (
+                user_id, diamond_count, total_recharge, total_consume, create_time, update_time
+            ) VALUES (
+                :user_id, :diamond_count, :total_recharge, :total_consume, :create_time, :update_time
+            )
+            """
+            
+            params = {
+                "user_id": asset_data["user_id"],
+                "diamond_count": asset_data.get("diamond_count", 0),
+                "total_recharge": asset_data.get("total_recharge", Decimal('0.00')),
+                "total_consume": asset_data.get("total_consume", 0),
+                "create_time": datetime.now(),
+                "update_time": datetime.now()
+            }
+            
+            db.execute(query, params)
+            db.commit()
+            
+            # 返回创建的资产数据
+            return UserAssetData(
+                user_id=params["user_id"],
+                diamond_count=params["diamond_count"],
+                total_recharge=params["total_recharge"],
+                total_consume=params["total_consume"],
+                create_time=params["create_time"],
+                update_time=params["update_time"]
+            )
+        except Exception as e:
+            print(f"创建用户资产失败: {e}")
+            db.rollback()
+            return None
+    
+    def create_recharge_order(self, db: Session, order_data: Dict[str, Any]):
+        """创建充值订单记录"""
+        try:
+            query = """
+            INSERT INTO recharge_orders (
+                user_id, order_id, amount, diamond_count, payment_method, 
+                status, expire_time, create_time, update_time
+            ) VALUES (
+                :user_id, :order_id, :amount, :diamond_count, :payment_method,
+                :status, :expire_time, :create_time, :update_time
+            )
+            """
+            
+            params = {
+                "user_id": order_data["user_id"],
+                "order_id": order_data["order_id"],
+                "amount": order_data["amount"],
+                "diamond_count": order_data["diamond_count"],
+                "payment_method": order_data["payment_method"],
+                "status": order_data["status"],
+                "expire_time": order_data["expire_time"],
+                "create_time": datetime.now(),
+                "update_time": datetime.now()
+            }
+            
+            db.execute(query, params)
+            db.commit()
+            
+            return RechargeOrderData(
+                user_id=params["user_id"],
+                order_id=params["order_id"],
+                amount=params["amount"],
+                diamond_count=params["diamond_count"],
+                payment_method=params["payment_method"],
+                status=params["status"],
+                expire_time=params["expire_time"],
+                create_time=params["create_time"],
+                update_time=params["update_time"]
+            )
+        except Exception as e:
+            print(f"创建充值订单失败: {e}")
+            db.rollback()
+            return None
+    
+    def get_asset_records(self, db: Session, user_id: int, limit: int = 10, offset: int = 0):
+        """获取用户资产变动记录"""
+        try:
+            query = """
+            SELECT 
+                id,
+                user_id,
+                record_type,
+                amount,
+                balance_after,
+                description,
+                create_time
+            FROM user_asset_records 
+            WHERE user_id = :user_id
+            ORDER BY create_time DESC
+            LIMIT :limit OFFSET :offset
+            """
+            
+            results = db.execute(query, {
+                "user_id": user_id, 
+                "limit": limit, 
+                "offset": offset
+            }).fetchall()
+            
+            records = []
+            for result in results:
+                records.append(AssetRecordData(
+                    id=result.id,
+                    user_id=result.user_id,
+                    record_type=result.record_type,
+                    amount=result.amount,
+                    balance_after=result.balance_after,
+                    description=result.description,
+                    create_time=result.create_time
+                ))
+            
+            return records
+        except Exception as e:
+            print(f"获取资产记录失败: {e}")
+            return []
+    
+    def get_recharge_order_by_id(self, db: Session, order_id: str):
+        """根据订单号查询充值订单"""
+        try:
+            query = """
+            SELECT 
+                user_id, order_id, amount, diamond_count, payment_method,
+                status, expire_time, create_time, update_time
+            FROM recharge_orders 
+            WHERE order_id = :order_id
+            """
+            
+            result = db.execute(query, {"order_id": order_id}).fetchone()
+            
+            if result:
+                return RechargeOrderData(
+                    user_id=result.user_id,
+                    order_id=result.order_id,
+                    amount=result.amount,
+                    diamond_count=result.diamond_count,
+                    payment_method=result.payment_method,
+                    status=result.status,
+                    expire_time=result.expire_time,
+                    create_time=result.create_time,
+                    update_time=result.update_time
+                )
+            return None
+        except Exception as e:
+            print(f"查询充值订单失败: {e}")
+            return None
+    
+    def update_recharge_order_status(self, db: Session, order_id: str, status: str) -> bool:
+        """更新充值订单状态"""
+        try:
+            query = """
+            UPDATE recharge_orders 
+            SET status = :status, update_time = :update_time
+            WHERE order_id = :order_id
+            """
+            
+            result = db.execute(query, {
+                "order_id": order_id,
+                "status": status,
+                "update_time": datetime.now()
+            })
+            db.commit()
+            
+            return result.rowcount > 0
+        except Exception as e:
+            print(f"更新订单状态失败: {e}")
+            db.rollback()
+            return False
+    
+    def add_diamonds(self, db: Session, user_id: int, diamond_count: int, description: str) -> bool:
+        """增加用户钻石并记录"""
+        try:
+            # 更新用户资产
+            update_query = """
+            UPDATE user_assets 
+            SET diamond_count = diamond_count + :diamond_count,
+                update_time = :update_time
+            WHERE user_id = :user_id
+            """
+            
+            db.execute(update_query, {
+                "user_id": user_id,
+                "diamond_count": diamond_count,
+                "update_time": datetime.now()
+            })
+            
+            # 获取更新后的余额
+            balance_query = """
+            SELECT diamond_count FROM user_assets WHERE user_id = :user_id
+            """
+            balance_result = db.execute(balance_query, {"user_id": user_id}).fetchone()
+            balance_after = balance_result.diamond_count if balance_result else diamond_count
+            
+            # 记录资产变动
+            record_query = """
+            INSERT INTO user_asset_records (
+                user_id, record_type, amount, balance_after, description, create_time
+            ) VALUES (
+                :user_id, :record_type, :amount, :balance_after, :description, :create_time
+            )
+            """
+            
+            db.execute(record_query, {
+                "user_id": user_id,
+                "record_type": "recharge",
+                "amount": diamond_count,
+                "balance_after": balance_after,
+                "description": description,
+                "create_time": datetime.now()
+            })
+            
+            db.commit()
+            return True
+        except Exception as e:
+            print(f"增加钻石失败: {e}")
+            db.rollback()
+            return False
+
+class UserAssetData:
+    """用户资产数据类"""
+    def __init__(self, **kwargs):
+        self.user_id = kwargs.get('user_id')
+        self.diamond_count = kwargs.get('diamond_count', 0)
+        self.total_recharge = kwargs.get('total_recharge', Decimal('0.00'))
+        self.total_consume = kwargs.get('total_consume', 0)
+        self.create_time = kwargs.get('create_time')
+        self.update_time = kwargs.get('update_time')
+
+class AssetRecordData:
+    """资产记录数据类"""
+    def __init__(self, **kwargs):
+        self.id = kwargs.get('id')
+        self.user_id = kwargs.get('user_id')
+        self.record_type = kwargs.get('record_type')
+        self.amount = kwargs.get('amount')
+        self.balance_after = kwargs.get('balance_after')
+        self.description = kwargs.get('description')
+        self.create_time = kwargs.get('create_time')
+
+class RechargeOrderData:
+    """充值订单数据类"""
+    def __init__(self, **kwargs):
+        self.user_id = kwargs.get('user_id')
+        self.order_id = kwargs.get('order_id')
+        self.amount = kwargs.get('amount')
+        self.diamond_count = kwargs.get('diamond_count')
+        self.payment_method = kwargs.get('payment_method')
+        self.status = kwargs.get('status')
+        self.expire_time = kwargs.get('expire_time')
+        self.create_time = kwargs.get('create_time')
+        self.update_time = kwargs.get('update_time') 

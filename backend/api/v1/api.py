@@ -5,8 +5,10 @@ from api.v1.endpoints.task import tasks
 from api.v1.endpoints.schedule import time_slots
 from api.v1.endpoints.statistic import statistics
 from api.v1.endpoints.message import messages, message_details, message_interactions, message_stats
-from api.v1.endpoints.user import user_message_settings
+from api.v1.endpoints.user import user_message_settings, user_profiles, user_assets, user_relations, personal_page
 from api.v1.endpoints.moment import moments, moment_interactions
+from api.v1.endpoints.badge import badges
+from api.v1.endpoints.method import methods, checkins
 
 api_router = APIRouter()
 
@@ -74,6 +76,50 @@ api_router.include_router(
     user_message_settings.router,
     prefix="/users",
     tags=["用户设置"]
+)
+
+api_router.include_router(
+    user_profiles.router,
+    prefix="/users",
+    tags=["用户个人信息"]
+)
+
+api_router.include_router(
+    user_assets.router,
+    prefix="/users",
+    tags=["用户资产"]
+)
+
+api_router.include_router(
+    user_relations.router,
+    prefix="/users",
+    tags=["用户关系"]
+)
+
+api_router.include_router(
+    personal_page.router,
+    prefix="/users",
+    tags=["个人主页"]
+)
+
+# 徽章相关路由
+api_router.include_router(
+    badges.router,
+    prefix="/badges",
+    tags=["徽章系统"]
+)
+
+# 学习方法相关路由
+api_router.include_router(
+    methods.router,
+    prefix="/methods",
+    tags=["学习方法"]
+)
+
+api_router.include_router(
+    checkins.router,
+    prefix="/methods",
+    tags=["方法打卡"]
 )
 
 # 动态相关路由

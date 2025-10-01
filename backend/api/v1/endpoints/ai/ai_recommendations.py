@@ -141,4 +141,4 @@ async def get_user_behavior_analysis(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"获取行为分析失败: {str(e)}"
-        ) 
+    ) 

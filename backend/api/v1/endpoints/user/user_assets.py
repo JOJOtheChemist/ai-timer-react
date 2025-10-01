@@ -8,7 +8,9 @@ from models.schemas.user import (
     RechargeRequest, 
     RechargeResponse,
     AssetRecordResponse,
-    UserOperationResponse
+    UserOperationResponse,
+    TutorServicePurchaseCreate,
+    TutorServiceOrderResponse
 )
 from services.user.user_asset_service import UserAssetService
 
@@ -84,4 +86,51 @@ async def get_asset_records(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"获取资产记录失败: {str(e)}"
+        )
+
+@router.post("/me/assets/purchase", response_model=TutorServiceOrderResponse)
+async def purchase_tutor_service(
+    purchase_data: TutorServicePurchaseCreate,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """提交导师服务购买请求（含tutor_id、service_id）"""
+    try:
+        user_asset_service = UserAssetService(db)
+        order = await user_asset_service.purchase_tutor_service(
+            user_id=current_user["id"],
+            tutor_id=purchase_data.tutor_id,
+            service_id=purchase_data.service_id
+        )
+        
+        return order
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"购买导师服务失败: {str(e)}"
+        )
+
+@router.get("/me/orders/tutor", response_model=List[TutorServiceOrderResponse])
+async def get_tutor_service_orders(
+    page: int = 1,
+    page_size: int = 20,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """查询用户的导师服务订单历史"""
+    try:
+        user_asset_service = UserAssetService(db)
+        orders = await user_asset_service.get_tutor_service_orders(
+            user_id=current_user["id"],
+            page=page,
+            page_size=page_size
+        )
+        
+        return orders
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"获取导师服务订单失败: {str(e)}"
         ) 

@@ -7,7 +7,10 @@ from models.schemas.user import (
     RelationStatsResponse,
     FollowedTutorResponse,
     RecentFanResponse,
-    UserOperationResponse
+    UserOperationResponse,
+    PrivateMessageCreate,
+    PrivateMessageResponse,
+    FollowResponse
 )
 from services.user.user_relation_service import UserRelationService
 
@@ -140,4 +143,98 @@ async def unfollow_user(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"取消关注操作失败: {str(e)}"
+        )
+
+@router.post("/me/relations/message/tutor/{tutor_id}", response_model=PrivateMessageResponse)
+async def send_tutor_message(
+    tutor_id: int,
+    message_data: PrivateMessageCreate,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """向指定导师发送私信"""
+    try:
+        user_relation_service = UserRelationService(db)
+        message = await user_relation_service.send_tutor_message(
+            user_id=current_user["id"],
+            tutor_id=tutor_id,
+            content=message_data.content
+        )
+        
+        return message
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"发送私信失败: {str(e)}"
+        )
+
+@router.post("/me/relations/follow/tutor/{tutor_id}", response_model=FollowResponse)
+async def follow_tutor(
+    tutor_id: int,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """关注指定导师"""
+    try:
+        user_relation_service = UserRelationService(db)
+        follow_result = await user_relation_service.follow_tutor(
+            user_id=current_user["id"],
+            tutor_id=tutor_id
+        )
+        
+        return follow_result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"关注导师失败: {str(e)}"
+        )
+
+@router.delete("/me/relations/follow/tutor/{tutor_id}", response_model=FollowResponse)
+async def unfollow_tutor(
+    tutor_id: int,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """取消关注导师"""
+    try:
+        user_relation_service = UserRelationService(db)
+        unfollow_result = await user_relation_service.unfollow_tutor(
+            user_id=current_user["id"],
+            tutor_id=tutor_id
+        )
+        
+        return unfollow_result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"取消关注导师失败: {str(e)}"
+        )
+
+@router.get("/me/relations/follow/tutors", response_model=List[FollowedTutorResponse])
+async def get_user_followed_tutors(
+    page: int = 1,
+    page_size: int = 20,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """查询用户关注的导师列表"""
+    try:
+        user_relation_service = UserRelationService(db)
+        tutors = await user_relation_service.get_user_followed_tutors(
+            user_id=current_user["id"],
+            page=page,
+            page_size=page_size
+        )
+        
+        return tutors
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"获取关注导师列表失败: {str(e)}"
         ) 

@@ -225,6 +225,135 @@ class CRUDUserRelation:
             db.rollback()
             return False
 
+    def create_tutor_follow(self, db: Session, user_id: int, tutor_id: int):
+        """创建用户-导师关注关系（唯一约束：user_id+tutor_id）"""
+        try:
+            query = """
+            INSERT INTO user_relations 
+            (follower_id, target_id, relation_type, create_time)
+            VALUES (:follower_id, :target_id, 'tutor', :create_time)
+            """
+            
+            db.execute(query, {
+                "follower_id": user_id,
+                "target_id": tutor_id,
+                "create_time": datetime.now()
+            })
+            db.commit()
+            
+            # 返回关系数据
+            return UserRelationData(
+                follower_id=user_id,
+                target_id=tutor_id,
+                relation_type='tutor',
+                create_time=datetime.now()
+            )
+        except Exception as e:
+            print(f"创建导师关注关系失败: {e}")
+            db.rollback()
+            return None
+
+    def delete_tutor_follow(self, db: Session, user_id: int, tutor_id: int) -> bool:
+        """删除关注关系"""
+        try:
+            query = """
+            DELETE FROM user_relations 
+            WHERE follower_id = :follower_id 
+            AND target_id = :target_id 
+            AND relation_type = 'tutor'
+            """
+            
+            result = db.execute(query, {
+                "follower_id": user_id,
+                "target_id": tutor_id
+            })
+            db.commit()
+            
+            return result.rowcount > 0
+        except Exception as e:
+            print(f"删除导师关注关系失败: {e}")
+            db.rollback()
+            return False
+
+    def get_followed_tutors(
+        self, 
+        db: Session, 
+        user_id: int, 
+        skip: int = 0, 
+        limit: int = 20
+    ):
+        """查询用户关注的导师列表"""
+        try:
+            query = """
+            SELECT 
+                id,
+                follower_id,
+                target_id,
+                relation_type,
+                create_time
+            FROM user_relations 
+            WHERE follower_id = :user_id 
+            AND relation_type = 'tutor'
+            ORDER BY create_time DESC
+            LIMIT :limit OFFSET :offset
+            """
+            
+            results = db.execute(query, {
+                "user_id": user_id,
+                "limit": limit,
+                "offset": skip
+            }).fetchall()
+            
+            relations = []
+            for result in results:
+                relations.append(UserRelationData(
+                    id=result.id,
+                    follower_id=result.follower_id,
+                    target_id=result.target_id,
+                    relation_type=result.relation_type,
+                    create_time=result.create_time
+                ))
+            
+            return relations
+        except Exception as e:
+            print(f"查询关注导师列表失败: {e}")
+            return []
+
+    def get_relation(self, db: Session, user_id: int, target_id: int, relation_type: str):
+        """查询特定关系是否存在"""
+        try:
+            query = """
+            SELECT 
+                id,
+                follower_id,
+                target_id,
+                relation_type,
+                create_time
+            FROM user_relations 
+            WHERE follower_id = :user_id 
+            AND target_id = :target_id 
+            AND relation_type = :relation_type
+            """
+            
+            result = db.execute(query, {
+                "user_id": user_id,
+                "target_id": target_id,
+                "relation_type": relation_type
+            }).fetchone()
+            
+            if result:
+                return UserRelationData(
+                    id=result.id,
+                    follower_id=result.follower_id,
+                    target_id=result.target_id,
+                    relation_type=result.relation_type,
+                    create_time=result.create_time
+                )
+            return None
+        except Exception as e:
+            print(f"查询关系失败: {e}")
+            return None
+
 class UserRelationData:
     """用户关系数据类"""
     def __init__(self, **kwargs):
@@ -232,4 +361,5 @@ class UserRelationData:
         self.follower_id = kwargs.get('follower_id')
         self.target_id = kwargs.get('target_id')
         self.relation_type = kwargs.get('relation_type')
-        self.create_time = kwargs.get('create_time') 
+        self.create_time = kwargs.get('create_time')
+        self.created_at = kwargs.get('create_time')  # 兼容性别名 

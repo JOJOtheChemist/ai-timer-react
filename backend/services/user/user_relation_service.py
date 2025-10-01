@@ -7,13 +7,19 @@ from models.schemas.user import (
     FollowedTutorResponse,
     RecentFanResponse,
     TutorInfo,
-    UserInfo
+    UserInfo,
+    PrivateMessageResponse,
+    FollowResponse
 )
+from crud.user.crud_user_message import CRUDUserMessage
+from services.tutor.tutor_service import TutorService
 
 class UserRelationService:
     def __init__(self, db: Session):
         self.db = db
         self.crud_user_relation = CRUDUserRelation()
+        self.crud_user_message = CRUDUserMessage()
+        self.tutor_service = TutorService(db)
     
     async def get_relation_stats(self, user_id: int) -> RelationStatsResponse:
         """统计用户的关注导师数、粉丝数"""
@@ -176,4 +182,166 @@ class UserRelationService:
             )
         except Exception as e:
             print(f"获取用户信息失败: {e}")
+            return None
+
+    async def send_tutor_message(
+        self, 
+        user_id: int, 
+        tutor_id: int, 
+        content: str
+    ) -> PrivateMessageResponse:
+        """校验导师状态（是否存在），创建私信记录（接收方为导师）"""
+        try:
+            # 校验导师是否存在
+            tutor_exists = await self.tutor_service.check_tutor_exists(tutor_id)
+            if not tutor_exists:
+                raise Exception("导师不存在")
+            
+            # 创建私信记录
+            message = await self.crud_user_message.create_private_message(
+                self.db,
+                sender_id=user_id,
+                receiver_id=tutor_id,
+                content=content,
+                message_type="tutor"
+            )
+            
+            # 触发私信提醒（导师的消息中心未读计数+1）
+            await self._trigger_message_notification(tutor_id)
+            
+            return PrivateMessageResponse(
+                id=message.id,
+                sender_id=message.sender_id,
+                receiver_id=message.receiver_id,
+                content=message.content,
+                message_type=message.message_type,
+                is_read=False,
+                created_at=message.created_at
+            )
+        except Exception as e:
+            raise Exception(f"发送私信失败: {str(e)}")
+
+    async def follow_tutor(self, user_id: int, tutor_id: int) -> FollowResponse:
+        """关注指定导师"""
+        try:
+            # 校验导师是否存在
+            tutor_exists = await self.tutor_service.check_tutor_exists(tutor_id)
+            if not tutor_exists:
+                raise Exception("导师不存在")
+            
+            # 检查是否已关注
+            existing_relation = self.crud_user_relation.get_relation(
+                self.db, user_id, tutor_id, "tutor"
+            )
+            
+            if existing_relation:
+                return FollowResponse(
+                    is_followed=True,
+                    message="已关注此导师",
+                    follow_time=existing_relation.created_at
+                )
+            
+            # 创建关注关系
+            relation = self.crud_user_relation.create_tutor_follow(
+                self.db, user_id, tutor_id
+            )
+            
+            # 同步更新导师粉丝数
+            await self.tutor_service.update_tutor_fan_count(tutor_id, increment=1)
+            
+            return FollowResponse(
+                is_followed=True,
+                message="关注成功",
+                follow_time=relation.created_at
+            )
+        except Exception as e:
+            raise Exception(f"关注导师失败: {str(e)}")
+
+    async def unfollow_tutor(self, user_id: int, tutor_id: int) -> FollowResponse:
+        """取消关注导师"""
+        try:
+            # 检查关注关系是否存在
+            existing_relation = self.crud_user_relation.get_relation(
+                self.db, user_id, tutor_id, "tutor"
+            )
+            
+            if not existing_relation:
+                return FollowResponse(
+                    is_followed=False,
+                    message="未关注此导师",
+                    follow_time=None
+                )
+            
+            # 删除关注关系
+            success = self.crud_user_relation.delete_tutor_follow(
+                self.db, user_id, tutor_id
+            )
+            
+            if success:
+                # 同步更新导师粉丝数
+                await self.tutor_service.update_tutor_fan_count(tutor_id, increment=-1)
+                
+                return FollowResponse(
+                    is_followed=False,
+                    message="取消关注成功",
+                    follow_time=None
+                )
+            else:
+                raise Exception("取消关注失败")
+                
+        except Exception as e:
+            raise Exception(f"取消关注导师失败: {str(e)}")
+
+    async def get_user_followed_tutors(
+        self, 
+        user_id: int, 
+        page: int = 1, 
+        page_size: int = 20
+    ) -> List[FollowedTutorResponse]:
+        """查询用户关注的导师列表"""
+        try:
+            tutors = self.crud_user_relation.get_followed_tutors(
+                self.db, 
+                user_id,
+                skip=(page - 1) * page_size,
+                limit=page_size
+            )
+            
+            result = []
+            for tutor_relation in tutors:
+                tutor_info = await self._get_tutor_info(tutor_relation.target_id)
+                if tutor_info:
+                    result.append(FollowedTutorResponse(
+                        tutor=tutor_info,
+                        follow_time=tutor_relation.created_at
+                    ))
+            
+            return result
+        except Exception as e:
+            raise Exception(f"获取关注导师列表失败: {str(e)}")
+
+    async def _trigger_message_notification(self, tutor_id: int):
+        """触发私信提醒（如导师的消息中心未读计数+1）"""
+        try:
+            # 这里可以实现消息提醒逻辑
+            # 例如：更新未读消息计数、发送推送通知等
+            pass
+        except Exception:
+            pass
+
+    async def _get_tutor_info(self, tutor_id: int) -> Optional[TutorInfo]:
+        """获取导师基础信息"""
+        try:
+            tutor = await self.tutor_service.get_tutor_basic_info(tutor_id)
+            if tutor:
+                return TutorInfo(
+                    tutor_id=tutor["id"],
+                    name=tutor["name"],
+                    avatar=tutor["avatar"],
+                    title=tutor["title"],
+                    rating=tutor["rating"],
+                    is_verified=tutor["is_verified"]
+                )
+            return None
+        except Exception:
             return None 

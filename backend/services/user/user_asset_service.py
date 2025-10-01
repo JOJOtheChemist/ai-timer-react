@@ -8,13 +8,18 @@ from crud.user.crud_user_asset import CRUDUserAsset
 from models.schemas.user import (
     UserAssetResponse, 
     RechargeResponse, 
-    AssetRecordResponse
+    AssetRecordResponse,
+    TutorServiceOrderResponse
 )
+from crud.tutor.crud_tutor_service_order import CRUDTutorServiceOrder
+from services.tutor.tutor_service import TutorService
 
 class UserAssetService:
     def __init__(self, db: Session):
         self.db = db
         self.crud_user_asset = CRUDUserAsset()
+        self.crud_tutor_service_order = CRUDTutorServiceOrder()
+        self.tutor_service = TutorService(db)
     
     async def get_user_assets(self, user_id: int) -> Optional[UserAssetResponse]:
         """查询用户资产及最近消费记录"""
@@ -192,4 +197,101 @@ class UserAssetService:
             return success
         except Exception as e:
             print(f"处理支付回调失败: {e}")
-            return False 
+            return False
+
+    async def purchase_tutor_service(
+        self, 
+        user_id: int, 
+        tutor_id: int, 
+        service_id: int
+    ) -> TutorServiceOrderResponse:
+        """处理服务购买逻辑（校验钻石余额、扣减钻石、生成订单）"""
+        try:
+            # 获取服务价格信息
+            service_price = await self.tutor_service.get_tutor_service_price(tutor_id, service_id)
+            if not service_price:
+                raise Exception("服务不存在或不可用")
+            
+            # 检查用户钻石余额
+            user_asset = self.crud_user_asset.get_asset_by_user_id(self.db, user_id)
+            if not user_asset or user_asset.diamond_count < service_price["price"]:
+                raise Exception("钻石余额不足")
+            
+            # 开始数据库事务
+            try:
+                # 扣减钻石
+                deduct_success = self.crud_user_asset.deduct_diamonds(
+                    self.db, 
+                    user_id, 
+                    service_price["price"]
+                )
+                
+                if not deduct_success:
+                    raise Exception("钻石扣减失败")
+                
+                # 创建订单
+                order_id = await self.crud_tutor_service_order.create_order(
+                    self.db,
+                    user_id=user_id,
+                    tutor_id=tutor_id,
+                    service_id=service_id,
+                    amount=service_price["price"],
+                    currency="diamonds",
+                    service_name=service_price["name"]
+                )
+                
+                # 提交事务
+                self.db.commit()
+                
+                return TutorServiceOrderResponse(
+                    order_id=order_id,
+                    user_id=user_id,
+                    tutor_id=tutor_id,
+                    service_id=service_id,
+                    service_name=service_price["name"],
+                    amount=service_price["price"],
+                    currency="diamonds",
+                    status="completed",
+                    created_at=datetime.now()
+                )
+                
+            except Exception as e:
+                # 回滚事务
+                self.db.rollback()
+                raise e
+                
+        except Exception as e:
+            raise Exception(f"购买导师服务失败: {str(e)}")
+
+    async def get_tutor_service_orders(
+        self, 
+        user_id: int, 
+        page: int = 1, 
+        page_size: int = 20
+    ) -> List[TutorServiceOrderResponse]:
+        """查询用户的导师服务订单历史"""
+        try:
+            orders = await self.crud_tutor_service_order.get_orders_by_user(
+                self.db,
+                user_id=user_id,
+                skip=(page - 1) * page_size,
+                limit=page_size
+            )
+            
+            result = []
+            for order in orders:
+                result.append(TutorServiceOrderResponse(
+                    order_id=order.order_id,
+                    user_id=order.user_id,
+                    tutor_id=order.tutor_id,
+                    service_id=order.service_id,
+                    service_name=order.service_name,
+                    amount=order.amount,
+                    currency=order.currency,
+                    status=order.status,
+                    created_at=order.created_at
+                ))
+            
+            return result
+        except Exception as e:
+            raise Exception(f"获取导师服务订单失败: {str(e)}") 

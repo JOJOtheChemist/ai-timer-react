@@ -327,4 +327,65 @@ class RechargeOrderData:
         self.status = kwargs.get('status')
         self.expire_time = kwargs.get('expire_time')
         self.create_time = kwargs.get('create_time')
-        self.update_time = kwargs.get('update_time') 
+        self.update_time = kwargs.get('update_time')
+
+    def deduct_diamonds(self, db: Session, user_id: int, amount: float) -> bool:
+        """扣减用户钻石（需加事务，确保原子性）"""
+        try:
+            # 查询当前余额
+            current_asset = self.get_asset_by_user_id(db, user_id)
+            if not current_asset or current_asset.diamond_count < amount:
+                return False
+            
+            # 扣减钻石
+            new_balance = current_asset.diamond_count - amount
+            
+            update_query = """
+            UPDATE user_assets 
+            SET diamond_count = :new_balance,
+                total_consume = total_consume + :amount,
+                update_time = :update_time
+            WHERE user_id = :user_id
+            """
+            
+            db.execute(update_query, {
+                "new_balance": new_balance,
+                "amount": amount,
+                "update_time": datetime.now(),
+                "user_id": user_id
+            })
+            
+            # 记录消费记录
+            record_query = """
+            INSERT INTO user_asset_records 
+            (user_id, record_type, amount, balance_after, description, create_time)
+            VALUES (:user_id, 'consume', :amount, :balance_after, :description, :create_time)
+            """
+            
+            db.execute(record_query, {
+                "user_id": user_id,
+                "amount": amount,
+                "balance_after": new_balance,
+                "description": "购买导师服务",
+                "create_time": datetime.now()
+            })
+            
+            return True
+        except Exception as e:
+            print(f"扣减钻石失败: {e}")
+            return False
+
+    def get_asset_balance(self, db: Session, user_id: int) -> float:
+        """查询用户当前钻石余额"""
+        try:
+            query = """
+            SELECT diamond_count 
+            FROM user_assets 
+            WHERE user_id = :user_id
+            """
+            
+            result = db.execute(query, {"user_id": user_id}).fetchone()
+            return float(result.diamond_count) if result else 0.0
+        except Exception as e:
+            print(f"查询钻石余额失败: {e}")
+            return 0.0 

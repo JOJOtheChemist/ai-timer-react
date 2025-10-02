@@ -1,0 +1,77 @@
+/* MyBadges.css - 我的徽章组件样式 */
+
+.badges-container {
+  margin-bottom: 80px;
+}
+
+.badge-wall {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.badge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.badge-title {
+  font-size: 14px;
+  color: #666;
+}
+
+.badge-more {
+  font-size: 13px;
+  color: #667eea;
+  cursor: pointer;
+}
+
+.badge-more:hover {
+  text-decoration: underline;
+}
+
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.badge-item {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.badge-item:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.badge-icon {
+  font-size: 32px;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.badge-icon.locked {
+  filter: grayscale(100%) opacity(0.4);
+}
+
+.badge-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.badge-desc {
+  font-size: 10px;
+  color: #999;
+  line-height: 1.3;
+} 

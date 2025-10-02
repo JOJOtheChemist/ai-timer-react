@@ -184,9 +184,9 @@ class UserRelationService:
                     tutor_id=result[0],
                     name=result[1],
                     avatar=result[2],
-                    title="资深导师",
-                    is_verified=True
-                )
+                title="资深导师",
+                is_verified=True
+            )
                 print(f"DEBUG _get_tutor_info: returning {tutor_info}", flush=True)
                 sys.stdout.flush()
                 return tutor_info
@@ -213,7 +213,7 @@ class UserRelationService:
             result = self.db.execute(text(query), {"user_id": user_id}).fetchone()
             
             if result:
-                return UserInfo(
+            return UserInfo(
                     user_id=result[0],
                     username=result[1],
                     nickname=result[1],  # Use username as nickname if no separate nickname field

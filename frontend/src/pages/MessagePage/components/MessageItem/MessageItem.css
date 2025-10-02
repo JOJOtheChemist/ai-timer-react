@@ -1,0 +1,111 @@
+/* MessageItem.css - 单条消息组件样式 */
+
+.msg-item {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 1px 4px rgba(221, 194, 230, 0.15);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.msg-item:hover {
+  background-color: #f9f7f9;
+}
+
+.msg-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.msg-avatar.tutor {
+  background-color: #e6f5f0;
+  color: #65c985;
+}
+
+.msg-avatar.system {
+  background-color: #f5e6f0;
+  color: #c9659d;
+}
+
+.msg-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.msg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.msg-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.msg-time {
+  font-size: 12px;
+  color: #a88cb8;
+}
+
+.msg-text {
+  font-size: 13px;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.msg-text.highlight {
+  color: #9d65c9;
+  font-weight: 500;
+}
+
+.msg-badge {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ff6b8b;
+  display: inline-block;
+}
+
+.msg-tag {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background-color: #e6f5f0;
+  color: #65c985;
+  margin-left: 5px;
+}
+
+@media (max-width: 500px) {
+  .msg-item {
+    padding: 10px 12px;
+  }
+  
+  .msg-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+} 

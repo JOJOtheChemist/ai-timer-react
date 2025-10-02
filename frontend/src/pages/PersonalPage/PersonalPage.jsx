@@ -3,6 +3,14 @@ import BottomNavBar from '../../components/Navbar/BottomNavBar';
 import './PersonalPage.css';
 import userService from '../../services/userService';
 
+// 导入子组件
+import UserInfoCard from './components/UserInfoCard/UserInfoCard';
+import MyDiamonds from './components/MyDiamonds/MyDiamonds';
+import MyRelationship from './components/MyRelationship/MyRelationship';
+import FunctionEntrance from './components/FunctionEntrance/FunctionEntrance';
+import MyBadges from './components/MyBadges/MyBadges';
+import BadgeModal from './components/BadgeModal/BadgeModal';
+
 const PersonalPage = () => {
   const [showBadgeModal, setShowBadgeModal] = useState(false);
   const [selectedBadge, setSelectedBadge] = useState(null);
@@ -57,6 +65,7 @@ const PersonalPage = () => {
     }
   };
 
+  // 事件处理函数
   const handleBadgeClick = (badgeId) => {
     setSelectedBadge(badgeData[badgeId]);
     setShowBadgeModal(true);
@@ -115,206 +124,33 @@ const PersonalPage = () => {
       {/* 页面容器 */}
       <div className="container">
         {/* 1. 个人信息卡 */}
-        <div className="profile-card">
-          <div className="profile-avatar">
-            {profile?.avatar ? (
-              <img src={profile.avatar} alt="avatar" style={{width: '100%', height: '100%', borderRadius: '50%'}} />
-            ) : '👩'}
-          </div>
-          <div className="profile-name">{profile?.username || '用户'}</div>
-          <div className="profile-meta">
-            <span>Goal：{profile?.goal || '暂无目标'}</span>
-            <span>Major：{profile?.major || '暂无专业'}</span>
-          </div>
-          <div className="profile-stats">
-            <div className="stat-item">
-              <div className="stat-value">{profile?.total_study_hours || '0'}h</div>
-              <div className="stat-label">总学习时长</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-value">{profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : '-'}</div>
-              <div className="stat-label">加入日期</div>
-            </div>
-          </div>
-        </div>
+        <UserInfoCard profile={profile} onEdit={handleEditProfile} />
 
         {/* 2. 资产区 */}
-        <div className="asset-section">
-          <div>
-            <div className="asset-info">
-              <div className="asset-icon">💎</div>
-              <div className="asset-detail">
-                <div className="asset-title">我的钻石</div>
-                <div className="asset-value">{assets?.diamond_count || 0}</div>
-                <div className="consume-record">
-                  {assets?.recent_consume ? 
-                    `最近：${assets.recent_consume.description} ${Math.abs(assets.recent_consume.amount)}钻石` :
-                    '暂无消费记录'
-                  }
-                </div>
-              </div>
-            </div>
-          </div>
-          <button className="recharge-btn" onClick={handleRecharge}>充值</button>
-        </div>
+        <MyDiamonds assets={assets} onRecharge={handleRecharge} />
 
-        {/* 3. 关系链区（紧凑版）- 暂时保留硬编码 */}
-        <div className="relation-section">
-          <div className="relation-header">
-            <div className="relation-title">我的关系</div>
-            <div className="relation-edit" onClick={handleRelationEdit}>管理</div>
-          </div>
-          <div className="relation-stats">
-            <div className="relation-item">
-              <div className="relation-value">{relationStats.tutor_count}</div>
-              <div className="relation-label">关注导师</div>
-            </div>
-            <div className="relation-item">
-              <div className="relation-value">{relationStats.following_count}</div>
-              <div className="relation-label">我的学员</div>
-            </div>
-            <div className="relation-item">
-              <div className="relation-value">{relationStats.fan_count}</div>
-              <div className="relation-label">粉丝</div>
-            </div>
-          </div>
-          <div className="relation-categories">
-            <div className="relation-category">
-              <div className="category-title">关注的导师</div>
-              <div className="relation-list">
-                {followedTutors.length > 0 ? followedTutors.map((tutor) => (
-                  <div 
-                    key={tutor.tutor_id} 
-                    className="relation-avatar tutor" 
-                    onClick={() => handleRelationAvatarClick(tutor.tutor_name, '导师')}
-                  >
-                    {tutor.tutor_avatar ? (
-                      <img src={tutor.tutor_avatar} alt={tutor.tutor_name} style={{width: '100%', height: '100%', borderRadius: '50%'}} />
-                    ) : tutor.tutor_name.charAt(0)}
-                    <div className="relation-name">{tutor.tutor_name}</div>
-                </div>
-                )) : (
-                  <div style={{color: '#999', fontSize: '12px'}}>暂无关注的导师</div>
-                )}
-              </div>
-            </div>
-            <div className="relation-category">
-              <div className="category-title">最近粉丝</div>
-              <div className="relation-list">
-                {recentFans.length > 0 ? recentFans.map((fan, index) => (
-                  <div 
-                    key={fan.user_id} 
-                    className="relation-avatar fan" 
-                    onClick={() => handleRelationAvatarClick(fan.username, '粉丝')}
-                  >
-                    {fan.avatar ? (
-                      <img src={fan.avatar} alt={fan.username} style={{width: '100%', height: '100%', borderRadius: '50%'}} />
-                    ) : fan.username.charAt(0)}
-                    <div className="relation-name">{fan.username}</div>
-                    {index === 0 && <div className="relation-tag">新</div>}
-                </div>
-                )) : (
-                  <div style={{color: '#999', fontSize: '12px'}}>暂无粉丝</div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* 3. 关系链区 */}
+        <MyRelationship 
+          relationStats={relationStats}
+          followedTutors={followedTutors}
+          recentFans={recentFans}
+          onManageClick={handleRelationEdit}
+          onAvatarClick={handleRelationAvatarClick}
+        />
 
-        {/* 4. 核心入口区（紧凑网格） */}
-        <div className="section-title">功能入口</div>
-        <div className="entry-grid">
-          <div className="entry-card" onClick={() => handleEntryClick('时间表')}>
-            <div className="entry-icon schedule">📅</div>
-            <div className="entry-name">时间表</div>
-          </div>
-          <div className="entry-card" onClick={() => handleEntryClick('动态')}>
-            <div className="entry-icon post">📝</div>
-            <div className="entry-name">动态</div>
-          </div>
-          <div className="entry-card" onClick={() => handleEntryClick('更多')}>
-            <div className="entry-icon more">🔧</div>
-            <div className="entry-name">更多</div>
-          </div>
-        </div>
+        {/* 4. 核心入口区 */}
+        <FunctionEntrance onEntryClick={handleEntryClick} />
 
-        {/* 5. 徽章墙（完整展示） */}
-        <div className="section-title">我的徽章</div>
-        <div className="badge-wall">
-          <div className="badge-header">
-            <div className="badge-title">已获得6枚徽章（共8枚）</div>
-            <div className="badge-more" onClick={handleBadgeMore}>查看全部</div>
-          </div>
-          <div className="badge-grid">
-            <div className="badge-item" onClick={() => handleBadgeClick('1')}>
-              <div className="badge-icon">🔥</div>
-              <div className="badge-name">坚持之星</div>
-              <div className="badge-desc">连续打卡7天</div>
-            </div>
-            <div className="badge-item" onClick={() => handleBadgeClick('2')}>
-              <div className="badge-icon">📚</div>
-              <div className="badge-name">复习王者</div>
-              <div className="badge-desc">复习频率达标</div>
-            </div>
-            <div className="badge-item" onClick={() => handleBadgeClick('3')}>
-              <div className="badge-icon">🎯</div>
-              <div className="badge-name">目标达成</div>
-              <div className="badge-desc">周时长超计划</div>
-            </div>
-            <div className="badge-item" onClick={() => handleBadgeClick('4')}>
-              <div className="badge-icon">👥</div>
-              <div className="badge-name">分享达人</div>
-              <div className="badge-desc">发布5条动态</div>
-            </div>
-            <div className="badge-item" onClick={() => handleBadgeClick('5')}>
-              <div className="badge-icon">💎</div>
-              <div className="badge-name">首次充值</div>
-              <div className="badge-desc">充值任意金额</div>
-            </div>
-            <div className="badge-item" onClick={() => handleBadgeClick('6')}>
-              <div className="badge-icon">📈</div>
-              <div className="badge-name">进步神速</div>
-              <div className="badge-desc">周时长增50%</div>
-            </div>
-            <div className="badge-item" onClick={() => handleBadgeClick('7')}>
-              <div className="badge-icon locked">🔒</div>
-              <div className="badge-name">上岸先锋</div>
-              <div className="badge-desc">待解锁</div>
-            </div>
-            <div className="badge-item" onClick={() => handleBadgeClick('8')}>
-              <div className="badge-icon locked">🔒</div>
-              <div className="badge-name">学霸认证</div>
-              <div className="badge-desc">待解锁</div>
-            </div>
-          </div>
-        </div>
+        {/* 5. 徽章墙 */}
+        <MyBadges 
+          onBadgeClick={handleBadgeClick}
+          onViewMore={handleBadgeMore}
+        />
       </div>
 
       {/* 徽章详情弹窗 */}
-      {showBadgeModal && selectedBadge && (
-        <div className="badge-modal show" onClick={(e) => e.target.className.includes('badge-modal') && closeBadgeModal()}>
-          <div className="modal-content">
-            <div className="modal-header">
-              <div className="modal-title">徽章详情</div>
-              <div className="close-modal" onClick={closeBadgeModal}>×</div>
-            </div>
-            <div className="badge-detail">
-              <div className="badge-detail-content">
-                <div className={`badge-detail-icon ${selectedBadge.getDate === '未获得' ? 'locked' : ''}`}>
-                  {selectedBadge.icon}
-                </div>
-                <h3 className="badge-detail-name">{selectedBadge.name}</h3>
-                <p className="badge-detail-desc">{selectedBadge.desc}</p>
-                <p className="badge-detail-date">
-                  {selectedBadge.getDate !== '未获得' 
-                    ? `获得时间: ${selectedBadge.getDate}` 
-                    : '解锁条件: 完成对应学习任务'
-                  }
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+      {showBadgeModal && (
+        <BadgeModal badge={selectedBadge} onClose={closeBadgeModal} />
       )}
 
       <BottomNavBar />

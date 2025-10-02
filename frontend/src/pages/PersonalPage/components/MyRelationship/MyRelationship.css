@@ -1,0 +1,142 @@
+/* MyRelationship.css - 我的关系组件样式 */
+
+.relation-section {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.relation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.relation-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.relation-edit {
+  font-size: 13px;
+  color: #667eea;
+  cursor: pointer;
+}
+
+.relation-edit:hover {
+  text-decoration: underline;
+}
+
+.relation-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 12px;
+}
+
+.relation-item {
+  text-align: center;
+}
+
+.relation-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 4px;
+}
+
+.relation-label {
+  font-size: 12px;
+  color: #999;
+}
+
+.relation-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.relation-category {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.category-title {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.relation-list {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.relation-list::-webkit-scrollbar {
+  height: 4px;
+}
+
+.relation-list::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 2px;
+}
+
+.relation-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 60px;
+  cursor: pointer;
+  position: relative;
+}
+
+.relation-avatar > div:first-child {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+  transition: transform 0.2s;
+  overflow: hidden;
+}
+
+.relation-avatar:hover > div:first-child {
+  transform: scale(1.1);
+}
+
+.relation-name {
+  font-size: 11px;
+  color: #666;
+  text-align: center;
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.relation-tag {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  background: #ff4d4f;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-weight: bold;
+} 

@@ -62,29 +62,24 @@ def add_schedule_test_data():
         conn.commit()
         print(f"✅ 创建了 {len(tasks_data)} 个任务")
         
-        # 创建子任务
+        # 创建子任务（不指定ID，让数据库自动生成）
         print("\n创建子任务...")
         subtasks_data = [
-            (11, 1, 1, '单词记忆', 7.0, 1, 0),
-            (12, 1, 1, '阅读理解', 5.0, 0, 0),
-            (13, 1, 1, '写作练习', 2.0, 0, 1),
-            (21, 2, 1, '高数刷题', 6.0, 0, 0),
-            (22, 2, 1, '线代复习', 4.0, 0, 0),
-            (23, 2, 1, '概率统计', 2.0, 0, 1),
-            (31, 3, 1, '教材通读', 5.0, 0, 0),
-            (32, 3, 1, '真题练习', 3.0, 0, 0),
-            (33, 3, 1, '笔记整理', 2.0, 0, 0),
+            (1, 1, '单词记忆', 7.0, 1, 0),
+            (1, 1, '阅读理解', 5.0, 0, 0),
+            (1, 1, '写作练习', 2.0, 0, 1),
+            (2, 1, '高数刷题', 6.0, 0, 0),
+            (2, 1, '线代复习', 4.0, 0, 0),
+            (2, 1, '概率统计', 2.0, 0, 1),
+            (3, 1, '教材通读', 5.0, 0, 0),
+            (3, 1, '真题练习', 3.0, 0, 0),
+            (3, 1, '笔记整理', 2.0, 0, 0),
         ]
         
         for subtask in subtasks_data:
             cur.execute('''
-                INSERT INTO subtask (id, task_id, user_id, name, hours, is_high_frequency, is_overcome, create_time, update_time)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, NOW(), NOW())
-                ON CONFLICT (id) DO UPDATE SET
-                    name = EXCLUDED.name,
-                    hours = EXCLUDED.hours,
-                    is_high_frequency = EXCLUDED.is_high_frequency,
-                    is_overcome = EXCLUDED.is_overcome
+                INSERT INTO subtask (task_id, user_id, name, hours, is_high_frequency, is_overcome, create_time, update_time)
+                VALUES (%s, %s, %s, %s, %s, %s, NOW(), NOW())
             ''', subtask)
         conn.commit()
         print(f"✅ 创建了 {len(subtasks_data)} 个子任务")
@@ -96,22 +91,36 @@ def add_schedule_test_data():
         # 先删除今天的旧数据
         cur.execute('DELETE FROM time_slot WHERE user_id = 1 AND date = %s', (today,))
         
-        # 创建时间槽
+        # 获取刚创建的子任务ID
+        cur.execute('''
+            SELECT st.id, st.task_id, st.name 
+            FROM subtask st 
+            WHERE st.user_id = 1 
+            ORDER BY st.task_id, st.id
+        ''')
+        subtasks = cur.fetchall()
+        
+        # 构建子任务映射 {(task_id, subtask_name): subtask_id}
+        subtask_map = {}
+        for st_id, task_id, st_name in subtasks:
+            subtask_map[(task_id, st_name)] = st_id
+        
+        # 创建时间槽（使用实际的子任务ID）
         time_slots_data = [
-            (today, '06:00-07:00', 1, 11, 'completed', 0, '完成了200个单词记忆', None),
+            (today, '06:00-07:00', 1, subtask_map.get((1, '单词记忆')), 'completed', 0, '完成了200个单词记忆', None),
             (today, '07:00-08:00', 5, None, 'completed', 0, '早餐+晨练', None),
-            (today, '08:00-09:30', 2, 21, 'in-progress', 1, '正在刷高数题', '建议先复习昨天错题，再做新题'),
+            (today, '08:00-09:30', 2, subtask_map.get((2, '高数刷题')), 'in-progress', 1, '正在刷高数题', '建议先复习昨天错题，再做新题'),
             (today, '09:30-10:00', 4, None, 'pending', 0, '休息', None),
-            (today, '10:00-12:00', 3, 31, 'pending', 0, None, None),
+            (today, '10:00-12:00', 3, subtask_map.get((3, '教材通读')), 'pending', 0, None, None),
             (today, '12:00-13:00', 5, None, 'pending', 0, '午餐+午休', None),
-            (today, '13:00-14:30', 1, 12, 'pending', 0, None, None),
+            (today, '13:00-14:30', 1, subtask_map.get((1, '阅读理解')), 'pending', 0, None, None),
             (today, '14:30-15:00', 4, None, 'pending', 0, '休息', None),
-            (today, '15:00-17:00', 2, 22, 'pending', 0, None, None),
+            (today, '15:00-17:00', 2, subtask_map.get((2, '线代复习')), 'pending', 0, None, None),
             (today, '17:00-18:00', 5, None, 'pending', 0, '晚餐+散步', None),
-            (today, '18:00-19:30', 3, 32, 'pending', 1, None, '建议先复习知识点，再做真题'),
+            (today, '18:00-19:30', 3, subtask_map.get((3, '真题练习')), 'pending', 1, None, '建议先复习知识点，再做真题'),
             (today, '19:30-20:00', 4, None, 'pending', 0, '休息', None),
-            (today, '20:00-21:00', 1, 11, 'pending', 0, None, None),
-            (today, '21:00-22:00', 3, 33, 'pending', 0, '复习总结', None),
+            (today, '20:00-21:00', 1, subtask_map.get((1, '单词记忆')), 'pending', 0, None, None),
+            (today, '21:00-22:00', 3, subtask_map.get((3, '笔记整理')), 'pending', 0, '复习总结', None),
             (today, '22:00-23:00', 5, None, 'pending', 0, '洗漱+放松', None),
         ]
         

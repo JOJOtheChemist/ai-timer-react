@@ -13,8 +13,12 @@ const TaskList = ({ tasks, activeFilter, expandedTasks, onToggleTaskExpansion })
     return colorMap[type] || 'gray';
   };
 
-  // 根据筛选条件过滤任务
+  // 根据筛选条件过滤任务，并且只显示有子任务的项目任务
   const filteredTasks = tasks.filter(task => {
+    // 只显示有子任务的任务（项目任务）
+    if (!task.subTasks || task.subTasks.length === 0) return false;
+    
+    // 根据筛选条件过滤
     if (activeFilter === '全部') return true;
     return task.type === activeFilter;
   });

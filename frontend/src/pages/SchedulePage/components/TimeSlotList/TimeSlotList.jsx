@@ -20,27 +20,22 @@ const TimeSlotList = ({
   };
 
   return (
-    <div className="time-slot-list-container">
+    <div className="bg-white rounded-xl shadow-sm p-3 h-full">
       {/* 时间表标题和操作 */}
-      <div className="time-slot-list-header">
-        <div>
-          <h2 className="font-medium text-sm">今日时间表</h2>
-          <div className="text-xs text-gray-500">
-            实时跟踪 · AI智能推荐
-          </div>
-        </div>
-        <div className="header-actions">
-          <button className="action-btn reset">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="font-medium text-sm">今日时间表</h2>
+        <div className="flex gap-2">
+          <button className="text-xs text-gray-500 hover:text-primary">
             <i className="fa fa-refresh mr-1"></i> 重置
           </button>
-          <button className="action-btn ai">
+          <button className="text-xs bg-ai/10 text-ai">
             <i className="fa fa-magic mr-1"></i> AI规划
           </button>
         </div>
       </div>
 
       {/* 时间表内容 */}
-      <div className="time-slot-list-scroll">
+      <div className="space-y-2 max-h-[400px] overflow-y-auto scrollbar-thin pr-1">
         {timeSlots.map(slot => (
           <TimeSlot
             key={slot.id}

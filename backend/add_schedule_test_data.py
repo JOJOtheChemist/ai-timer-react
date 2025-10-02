@@ -1,165 +1,184 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-为用户101添加任务和时间表测试数据
+向数据库添加时间表测试数据
 """
 
-from sqlalchemy import text
-from core.database import SessionLocal
-from datetime import datetime, time
+import psycopg2
+from datetime import datetime, date
 
-def add_schedule_data():
-    db = SessionLocal()
-    
+# 数据库连接配置
+DB_CONFIG = {
+    'host': 'localhost',
+    'port': 5432,
+    'database': 'ai_time_management',
+    'user': 'yeya',
+    'password': ''
+}
+
+def add_schedule_test_data():
+    """添加时间表测试数据"""
+    conn = None
     try:
-        print("=" * 50)
-        print("开始为用户101创建任务和时间表数据...")
-        print("=" * 50)
+        # 连接数据库
+        print("正在连接数据库...")
+        conn = psycopg2.connect(**DB_CONFIG)
+        conn.autocommit = False
+        cur = conn.cursor()
         
-        # 1. 创建任务（主任务）
-        print("\n📝 1. 创建主任务...")
+        # 确保用户ID=1存在
+        cur.execute('SELECT id FROM "user" WHERE id = 1')
+        if not cur.fetchone():
+            print("创建测试用户 (ID=1)...")
+            cur.execute('''
+                INSERT INTO "user" (id, username, email, phone, password_hash, created_at)
+                VALUES (1, '测试用户', 'test@example.com', '13800138000', 'test_hash', NOW())
+                ON CONFLICT (id) DO NOTHING
+            ''')
+            conn.commit()
         
+        # 创建一些任务
+        print("\n创建测试任务...")
         tasks_data = [
-            {
-                'user_id': 101,
-                'name': '英语学习',
-                'type': 'study',
-                'category': '学习',
-                'weekly_hours': 14.0,
-                'is_high_frequency': 1,
-                'is_overcome': 0
-            },
-            {
-                'user_id': 101,
-                'name': '数学学习',
-                'type': 'study',
-                'category': '学习',
-                'weekly_hours': 12.0,
-                'is_high_frequency': 0,
-                'is_overcome': 0
-            },
-            {
-                'user_id': 101,
-                'name': '专业课',
-                'type': 'study',
-                'category': '学习',
-                'weekly_hours': 10.0,
-                'is_high_frequency': 0,
-                'is_overcome': 0
-            }
+            (1, 1, '英语学习', 'study', '学习', 1, 0, 14.0),
+            (2, 1, '数学学习', 'study', '学习', 0, 0, 12.0),
+            (3, 1, '专业课', 'study', '学习', 0, 0, 10.0),
+            (4, 1, '休息放松', 'life', '休息', 0, 0, 3.0),
+            (5, 1, '日常生活', 'life', '生活', 0, 0, 5.0),
         ]
         
-        task_ids = []
         for task in tasks_data:
-            query = text("""
-                INSERT INTO task (user_id, name, type, category, weekly_hours, is_high_frequency, is_overcome, create_time, update_time)
-                VALUES (:user_id, :name, :type, :category, :weekly_hours, :is_high_frequency, :is_overcome, NOW(), NOW())
-                RETURNING id
-            """)
-            result = db.execute(query, task)
-            task_id = result.fetchone()[0]
-            task_ids.append(task_id)
-            print(f"  ✓ 创建任务: {task['name']} (ID: {task_id})")
+            cur.execute('''
+                INSERT INTO task (id, user_id, name, type, category, is_high_frequency, is_overcome, weekly_hours, create_time, update_time)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NOW(), NOW())
+                ON CONFLICT (id) DO UPDATE SET
+                    name = EXCLUDED.name,
+                    type = EXCLUDED.type,
+                    category = EXCLUDED.category,
+                    is_high_frequency = EXCLUDED.is_high_frequency,
+                    is_overcome = EXCLUDED.is_overcome,
+                    weekly_hours = EXCLUDED.weekly_hours
+            ''', task)
+        conn.commit()
+        print(f"✅ 创建了 {len(tasks_data)} 个任务")
         
-        db.commit()
-        
-        # 2. 创建子任务
-        print("\n📋 2. 创建子任务...")
-        
+        # 创建子任务
+        print("\n创建子任务...")
         subtasks_data = [
-            # 英语学习的子任务
-            {'task_id': task_ids[0], 'user_id': 101, 'name': '单词记忆', 'hours': 7.0, 'is_high_frequency': 1, 'is_overcome': 0},
-            {'task_id': task_ids[0], 'user_id': 101, 'name': '阅读理解', 'hours': 5.0, 'is_high_frequency': 0, 'is_overcome': 0},
-            {'task_id': task_ids[0], 'user_id': 101, 'name': '写作练习', 'hours': 2.0, 'is_high_frequency': 0, 'is_overcome': 1},
-            # 数学学习的子任务
-            {'task_id': task_ids[1], 'user_id': 101, 'name': '高数刷题', 'hours': 6.0, 'is_high_frequency': 0, 'is_overcome': 0},
-            {'task_id': task_ids[1], 'user_id': 101, 'name': '线代复习', 'hours': 4.0, 'is_high_frequency': 0, 'is_overcome': 0},
-            {'task_id': task_ids[1], 'user_id': 101, 'name': '概率统计', 'hours': 2.0, 'is_high_frequency': 0, 'is_overcome': 1},
-            # 专业课的子任务
-            {'task_id': task_ids[2], 'user_id': 101, 'name': '教材通读', 'hours': 5.0, 'is_high_frequency': 0, 'is_overcome': 0},
-            {'task_id': task_ids[2], 'user_id': 101, 'name': '真题练习', 'hours': 3.0, 'is_high_frequency': 0, 'is_overcome': 0},
-            {'task_id': task_ids[2], 'user_id': 101, 'name': '笔记整理', 'hours': 2.0, 'is_high_frequency': 0, 'is_overcome': 0}
+            (11, 1, 1, '单词记忆', 7.0, 1, 0),
+            (12, 1, 1, '阅读理解', 5.0, 0, 0),
+            (13, 1, 1, '写作练习', 2.0, 0, 1),
+            (21, 2, 1, '高数刷题', 6.0, 0, 0),
+            (22, 2, 1, '线代复习', 4.0, 0, 0),
+            (23, 2, 1, '概率统计', 2.0, 0, 1),
+            (31, 3, 1, '教材通读', 5.0, 0, 0),
+            (32, 3, 1, '真题练习', 3.0, 0, 0),
+            (33, 3, 1, '笔记整理', 2.0, 0, 0),
         ]
         
-        subtask_ids = []
         for subtask in subtasks_data:
-            query = text("""
-                INSERT INTO subtask (task_id, user_id, name, hours, is_high_frequency, is_overcome, create_time, update_time)
-                VALUES (:task_id, :user_id, :name, :hours, :is_high_frequency, :is_overcome, NOW(), NOW())
-                RETURNING id
-            """)
-            result = db.execute(query, subtask)
-            subtask_id = result.fetchone()[0]
-            subtask_ids.append(subtask_id)
-            print(f"  ✓ 创建子任务: {subtask['name']} (ID: {subtask_id})")
+            cur.execute('''
+                INSERT INTO subtask (id, task_id, user_id, name, hours, is_high_frequency, is_overcome, create_time, update_time)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, NOW(), NOW())
+                ON CONFLICT (id) DO UPDATE SET
+                    name = EXCLUDED.name,
+                    hours = EXCLUDED.hours,
+                    is_high_frequency = EXCLUDED.is_high_frequency,
+                    is_overcome = EXCLUDED.is_overcome
+            ''', subtask)
+        conn.commit()
+        print(f"✅ 创建了 {len(subtasks_data)} 个子任务")
         
-        db.commit()
+        # 获取今天的日期
+        today = date.today()
+        print(f"\n为日期 {today} 创建时间槽...")
         
-        # 3. 创建今日时间表
-        print("\n⏰ 3. 创建今日时间表...")
+        # 先删除今天的旧数据
+        cur.execute('DELETE FROM time_slot WHERE user_id = 1 AND date = %s', (today,))
         
+        # 创建时间槽
         time_slots_data = [
-            {'time_range': '06:00-07:00', 'task_id': task_ids[0], 'subtask_id': subtask_ids[0], 'status': 'completed'},
-            {'time_range': '07:00-08:00', 'task_id': None, 'subtask_id': None, 'status': 'completed', 'note': '早餐+晨练'},
-            {'time_range': '08:00-09:30', 'task_id': task_ids[1], 'subtask_id': subtask_ids[3], 'status': 'in_progress', 'ai_tip': '建议先复习昨天错题，再做新题', 'is_ai_recommended': 1},
-            {'time_range': '09:30-10:00', 'task_id': None, 'subtask_id': None, 'status': 'pending', 'note': '休息'},
-            {'time_range': '10:00-12:00', 'task_id': task_ids[2], 'subtask_id': subtask_ids[6], 'status': 'pending'},
-            {'time_range': '12:00-13:00', 'task_id': None, 'subtask_id': None, 'status': 'pending', 'note': '午餐+午休'},
-            {'time_range': '13:00-14:30', 'task_id': task_ids[0], 'subtask_id': subtask_ids[1], 'status': 'pending'},
-            {'time_range': '14:30-15:00', 'task_id': None, 'subtask_id': None, 'status': 'pending', 'note': '休息'},
-            {'time_range': '15:00-17:00', 'task_id': task_ids[1], 'subtask_id': subtask_ids[4], 'status': 'pending'},
-            {'time_range': '17:00-18:00', 'task_id': None, 'subtask_id': None, 'status': 'pending', 'note': '晚餐+散步'},
-            {'time_range': '18:00-19:30', 'task_id': task_ids[2], 'subtask_id': subtask_ids[7], 'status': 'pending'},
-            {'time_range': '19:30-20:00', 'task_id': None, 'subtask_id': None, 'status': 'pending', 'note': '休息'},
-            {'time_range': '20:00-21:00', 'task_id': task_ids[0], 'subtask_id': subtask_ids[0], 'status': 'pending'},
-            {'time_range': '21:00-22:00', 'task_id': None, 'subtask_id': None, 'status': 'pending', 'note': '复习总结'},
-            {'time_range': '22:00-23:00', 'task_id': None, 'subtask_id': None, 'status': 'pending', 'note': '洗漱+放松'}
+            (today, '06:00-07:00', 1, 11, 'completed', 0, '完成了200个单词记忆', None),
+            (today, '07:00-08:00', 5, None, 'completed', 0, '早餐+晨练', None),
+            (today, '08:00-09:30', 2, 21, 'in-progress', 1, '正在刷高数题', '建议先复习昨天错题，再做新题'),
+            (today, '09:30-10:00', 4, None, 'pending', 0, '休息', None),
+            (today, '10:00-12:00', 3, 31, 'pending', 0, None, None),
+            (today, '12:00-13:00', 5, None, 'pending', 0, '午餐+午休', None),
+            (today, '13:00-14:30', 1, 12, 'pending', 0, None, None),
+            (today, '14:30-15:00', 4, None, 'pending', 0, '休息', None),
+            (today, '15:00-17:00', 2, 22, 'pending', 0, None, None),
+            (today, '17:00-18:00', 5, None, 'pending', 0, '晚餐+散步', None),
+            (today, '18:00-19:30', 3, 32, 'pending', 1, None, '建议先复习知识点，再做真题'),
+            (today, '19:30-20:00', 4, None, 'pending', 0, '休息', None),
+            (today, '20:00-21:00', 1, 11, 'pending', 0, None, None),
+            (today, '21:00-22:00', 3, 33, 'pending', 0, '复习总结', None),
+            (today, '22:00-23:00', 5, None, 'pending', 0, '洗漱+放松', None),
         ]
         
-        today = datetime.now().date()
-        for slot in time_slots_data:
-            query = text("""
+        for slot_data in time_slots_data:
+            cur.execute('''
                 INSERT INTO time_slot (
-                    user_id, date, time_range, task_id, subtask_id, 
-                    status, note, ai_tip, is_ai_recommended, 
-                    create_time, update_time
+                    user_id, date, time_range, task_id, subtask_id,
+                    status, is_ai_recommended, note, ai_tip, create_time, update_time
+                ) VALUES (
+                    1, %s, %s, %s, %s, %s, %s, %s, %s, NOW(), NOW()
                 )
-                VALUES (
-                    :user_id, :date, :time_range, :task_id, :subtask_id,
-                    :status, :note, :ai_tip, :is_ai_recommended,
-                    NOW(), NOW()
-                )
-            """)
-            db.execute(query, {
-                'user_id': 101,
-                'date': today,
-                'time_range': slot['time_range'],
-                'task_id': slot.get('task_id'),
-                'subtask_id': slot.get('subtask_id'),
-                'status': slot['status'],
-                'note': slot.get('note'),
-                'ai_tip': slot.get('ai_tip'),
-                'is_ai_recommended': slot.get('is_ai_recommended', 0)
-            })
-            print(f"  ✓ 创建时间段: {slot['time_range']} - {slot.get('note', '学习任务')}")
+            ''', slot_data)
         
-        db.commit()
+        conn.commit()
+        print(f"✅ 创建了 {len(time_slots_data)} 个时间槽")
         
-        print("\n" + "=" * 50)
-        print("✅ 任务和时间表数据创建成功！")
-        print("=" * 50)
-        print(f"\n📊 统计信息:")
-        print(f"  • 主任务数: {len(tasks_data)}")
-        print(f"  • 子任务数: {len(subtasks_data)}")
-        print(f"  • 时间段数: {len(time_slots_data)}")
-        print(f"  • 用户ID: 101 (考研的小艾)")
+        # 验证数据
+        cur.execute('''
+            SELECT COUNT(*) FROM time_slot 
+            WHERE user_id = 1 AND date = %s
+        ''', (today,))
+        count = cur.fetchone()[0]
+        
+        print(f"\n🎉 成功！数据库中现在有 {count} 个时间槽")
+        print(f"📅 日期: {today}")
+        print(f"👤 用户ID: 1")
+        
+        # 显示部分数据
+        cur.execute('''
+            SELECT 
+                ts.time_range,
+                t.name as task_name,
+                st.name as subtask_name,
+                ts.status,
+                ts.note
+            FROM time_slot ts
+            LEFT JOIN task t ON ts.task_id = t.id
+            LEFT JOIN subtask st ON ts.subtask_id = st.id
+            WHERE ts.user_id = 1 AND ts.date = %s
+            ORDER BY ts.time_range
+            LIMIT 5
+        ''', (today,))
+        
+        print("\n前5个时间槽示例:")
+        print("-" * 80)
+        for row in cur.fetchall():
+            time_range, task_name, subtask_name, status, note = row
+            task_display = f"{task_name} - {subtask_name}" if subtask_name else (task_name or note or '空闲')
+            print(f"⏰ {time_range:15} | {task_display:30} | {status:12}")
+        print("-" * 80)
+        
+        cur.close()
         
     except Exception as e:
+        if conn:
+            conn.rollback()
         print(f"\n❌ 错误: {e}")
-        db.rollback()
-        raise
+        import traceback
+        traceback.print_exc()
     finally:
-        db.close()
+        if conn:
+            conn.close()
+            print("\n数据库连接已关闭")
 
-if __name__ == "__main__":
-    add_schedule_data() 
+if __name__ == '__main__':
+    print("=" * 80)
+    print("  📊 向数据库添加时间表测试数据")
+    print("=" * 80)
+    add_schedule_test_data()
+    print("\n✅ 完成！现在可以刷新前端页面查看数据") 

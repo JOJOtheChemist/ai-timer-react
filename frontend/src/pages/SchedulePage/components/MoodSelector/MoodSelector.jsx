@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MoodSelector = ({ slotId, selectedMood, onMoodSelect }) => {
+const MoodSelector = ({ slotId, selectedMood, onMoodSelect, hasTask }) => {
   const moods = ['happy', 'focused', 'tired'];
 
   const getMoodIcon = (mood) => {
@@ -47,12 +47,14 @@ const MoodSelector = ({ slotId, selectedMood, onMoodSelect }) => {
           <i className={`fa ${getMoodIcon(mood)}`}></i>
         </button>
       ))}
-      <button 
-        className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center text-xs text-gray-500 hover:bg-gray-200" 
-        title="添加心情"
-      >
-        <i className="fa fa-plus"></i>
-      </button>
+      {!hasTask && (
+        <button 
+          className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center text-xs text-gray-500 hover:bg-gray-200" 
+          title="添加心情"
+        >
+          <i className="fa fa-plus"></i>
+        </button>
+      )}
     </div>
   );
 };

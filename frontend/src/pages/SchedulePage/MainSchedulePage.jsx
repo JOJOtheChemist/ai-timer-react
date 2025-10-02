@@ -104,20 +104,31 @@ const MainSchedulePage = () => {
       const apiSlots = response.time_slots || [];
       
       // 转换API数据格式
-      const formattedSlots = apiSlots.map(slot => ({
-        id: slot.id,
-        time: slot.time_range,
-        task: slot.task_name || '空闲时间',
-        type: slot.task_type || 'life',
-        category: slot.task_type || '空闲',
-        status: slot.status,
-        isHighFrequency: slot.is_high_frequency || false,
-        isOvercome: slot.is_overcome || false,
-        isAIRecommended: slot.is_ai_recommended,
-        note: slot.note,
-        aiTip: slot.ai_tip,
-        mood: slot.mood
-      }));
+      const formattedSlots = apiSlots.map(slot => {
+        // 构建显示名称：如果有子任务，显示"项目 - 子任务"，否则只显示项目名
+        let displayName = '空闲时间';
+        if (slot.task_name) {
+          displayName = slot.task_name;
+          if (slot.subtask_name) {
+            displayName = `${slot.task_name} - ${slot.subtask_name}`;
+          }
+        }
+        
+        return {
+          id: slot.id,
+          time: slot.time_range,
+          task: displayName,
+          type: slot.task_type || 'life',
+          category: slot.task_type || '空闲',
+          status: slot.status,
+          isHighFrequency: slot.is_high_frequency || false,
+          isOvercome: slot.is_overcome || false,
+          isAIRecommended: slot.is_ai_recommended,
+          note: slot.note,
+          aiTip: slot.ai_tip,
+          mood: slot.mood
+        };
+      });
       
       setTimeSlots(formattedSlots);
       setScheduleOverview(response.overview);

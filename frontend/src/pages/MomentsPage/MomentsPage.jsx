@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomNavBar from '../../components/Navbar/BottomNavBar';
 import './MomentsPage.css';
+import momentService from '../../services/momentService';
 
 const MomentsPage = () => {
   const navigate = useNavigate();
@@ -13,9 +14,15 @@ const MomentsPage = () => {
   const [selectedTags, setSelectedTags] = useState(['全部标签']);
   const [selectedTime, setSelectedTime] = useState(['全部时间']);
   const [selectedHot, setSelectedHot] = useState(['推荐']);
+  
+  // 真实数据状态
+  const [dynamicPosts, setDynamicPosts] = useState([]);
+  const [dryGoodsPosts, setDryGoodsPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const USER_ID = 1; // TODO: 从认证系统获取
 
-  // 动态内容数据
-  const dynamicPosts = [
+  // 旧的硬编码数据（已废弃，仅作参考）
+  const _oldDynamicPosts = [
     {
       id: 1,
       type: 'ad',
@@ -47,8 +54,8 @@ const MomentsPage = () => {
     }
   ];
 
-  // 干货内容数据
-  const dryGoodsPosts = [
+  // 干货内容数据（已废弃，仅作参考）
+  const _oldDryGoodsPosts = [
     {
       id: 4,
       user: { name: '考研的小艾', avatar: '艾' },
@@ -84,7 +91,64 @@ const MomentsPage = () => {
   // 筛选标签
   const filterTags = ['#全部标签', '#考研英语', '#财务管理', '#时间表', '#记忆方法', '#学习经验', '#图书馆', '#每日复盘'];
   const timeFilters = ['全部时间', '今天', '本周', '本月'];
-  const hotFilters = ['推荐', '最新', '最热'];
+  const hotFilters = ['推荐', '最新', '最热'  ];
+
+  // 加载动态数据
+  const loadPosts = async (type = 'dynamic') => {
+    try {
+      setLoading(true);
+      const params = {
+        moment_type: type,
+        user_id: USER_ID,
+        page: 1,
+        page_size: 20
+      };
+      
+      const response = await momentService.getMomentList(params);
+      
+      // 转换数据格式
+      const formatted = response.moments.map(moment => ({
+        id: moment.id,
+        type: moment.type === 2 ? 'ad' : (moment.type === 1 ? 'dryGoods' : 'dynamic'),
+        user: {
+          name: moment.user?.nickname || moment.user?.username || '用户',
+          avatar: moment.user?.avatar || '👤'
+        },
+        time: moment.time_ago || '刚刚',
+        title: moment.title,
+        content: moment.content,
+        tags: moment.tags || [],
+        stats: {
+          likes: moment.stats?.likes || 0,
+          comments: moment.stats?.comments || 0,
+          shares: moment.stats?.shares || 0
+        },
+        image: moment.image_url,
+        isAd: moment.type === 2,
+        adInfo: moment.ad_info
+      }));
+      
+      if (type === 'dynamic') {
+        setDynamicPosts(formatted);
+      } else {
+        setDryGoodsPosts(formatted);
+      }
+    } catch (error) {
+      console.error('加载动态失败:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 初始加载
+  useEffect(() => {
+    loadPosts(activeMode === 'dynamic' ? 'dynamic' : 'dryGoods');
+  }, []);
+
+  // 模式切换时重新加载
+  useEffect(() => {
+    loadPosts(activeMode === 'dynamic' ? 'dynamic' : 'dryGoods');
+  }, [activeMode]);
 
   // 处理模式切换
   const handleModeSwitch = (mode) => {
@@ -163,7 +227,22 @@ const MomentsPage = () => {
       )}
       
       <div className="post-user">
-        <div className="user-avatar">{post.user.avatar}</div>
+        <div className="user-avatar">
+          {post.user.avatar && (post.user.avatar.startsWith('http') || post.user.avatar.startsWith('/')) ? (
+            <img 
+              src={post.user.avatar} 
+              alt={post.user.name}
+              onError={(e) => {
+                // 图片加载失败时使用默认头像
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+          ) : null}
+          <span style={{ display: post.user.avatar && (post.user.avatar.startsWith('http') || post.user.avatar.startsWith('/')) ? 'none' : 'flex' }}>
+            {post.user.avatar && !post.user.avatar.startsWith('http') && !post.user.avatar.startsWith('/') ? post.user.avatar : '👤'}
+          </span>
+        </div>
         <div className="user-info">
           <div className="user-name">{post.user.name}</div>
           <div className="post-time">{post.time}</div>
@@ -225,6 +304,25 @@ const MomentsPage = () => {
       </div>
     </div>
   );
+
+  // 加载状态UI
+  if (loading) {
+    return (
+      <div className="moments-page">
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh',
+          fontSize: '18px',
+          color: '#666'
+        }}>
+          加载中...
+        </div>
+        <BottomNavBar />
+      </div>
+    );
+  }
 
   return (
     <div className="moments-page">

@@ -22,7 +22,7 @@ async def get_moments(
     tags: Optional[List[str]] = Query(None, description="标签筛选"),
     time_range: Optional[str] = Query(None, description="时间范围：today/week/month/all"),
     hot_type: Optional[HotTypeEnum] = Query(None, description="热度排序类型"),
-    user_id: Optional[int] = Query(None, description="用户筛选"),
+    filter_user_id: Optional[int] = Query(None, description="按发布用户筛选", alias="filter_user_id"),
     db: Session = Depends(get_db),
     current_user_id: int = Depends(get_current_user_dev)
 ):
@@ -30,10 +30,11 @@ async def get_moments(
     获取内容列表（支持type参数：dynamic/dryGoods，默认dynamic）
     支持分页参数（page、page_size）
     复用GET /api/v1/moments接口，通过query参数传递筛选条件（tags、time_range、hot_type）
+    注意：user_id 用于身份验证，filter_user_id 用于筛选特定用户的动态
     """
     try:
         # 如果没有筛选条件，使用基础列表查询
-        if not any([tags, time_range, hot_type, user_id]):
+        if not any([tags, time_range, hot_type, filter_user_id]):
             moment_list = moment_service.get_moment_list(
                 db=db,
                 moment_type=moment_type,
@@ -47,7 +48,7 @@ async def get_moments(
                 tags=tags,
                 time_range=time_range,
                 hot_type=hot_type,
-                user_id=user_id
+                user_id=filter_user_id
             )
             moment_list = moment_service.get_filtered_moments(
                 db=db,

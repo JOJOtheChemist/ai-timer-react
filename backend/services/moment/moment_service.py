@@ -22,14 +22,8 @@ class MomentService:
         current_user_id: Optional[int] = None
     ) -> MomentListResponse:
         """按类型查询内容列表（动态/干货），包含置顶广告"""
-        # 获取动态列表
+        # 获取动态列表（已按is_top排序，置顶内容会自动排在前面）
         moments, total = crud_moment.get_multi_by_type(db, moment_type, page, page_size)
-        
-        # 如果是第一页且类型为动态，添加置顶广告
-        if page == 1 and (moment_type is None or moment_type == MomentTypeEnum.DYNAMIC):
-            top_ad = crud_moment.get_top_ad(db)
-            if top_ad:
-                moments.insert(0, top_ad)
         
         # 转换为响应模型
         moment_responses = []
@@ -317,14 +311,43 @@ class MomentService:
     
     def _get_user_info(self, db: Session, user_id: int) -> UserInfo:
         """自动拼接用户基础信息（头像、名称）"""
-        # 这里应该调用用户服务获取用户信息
-        # 目前返回模拟数据
-        return UserInfo(
-            user_id=user_id,
-            username=f"user_{user_id}",
-            nickname=f"用户{user_id}",
-            avatar=f"/avatars/user_{user_id}.png"
-        )
+        # 从数据库查询用户信息
+        from sqlalchemy import text
+        
+        query = text("""
+            SELECT id, username, avatar 
+            FROM "user" 
+            WHERE id = :user_id
+        """)
+        result = db.execute(query, {"user_id": user_id}).fetchone()
+        
+        # 为用户分配本地头像（循环使用5个头像）
+        def get_default_avatar(uid: int) -> str:
+            avatar_files = [
+                "/avatars/avatar1.png",
+                "/avatars/avatar2.png", 
+                "/avatars/avatar3.png",
+                "/avatars/avatar4.jpg",
+                "/avatars/avatar5.png"
+            ]
+            # 根据用户ID循环分配头像
+            return avatar_files[(uid - 1) % 5]
+        
+        if result:
+            return UserInfo(
+                user_id=result[0],
+                username=result[1] or f"user_{user_id}",
+                nickname=result[1] or f"用户{user_id}",
+                avatar=result[2] or get_default_avatar(user_id)
+            )
+        else:
+            # 用户不存在时返回默认信息
+            return UserInfo(
+                user_id=user_id,
+                username=f"user_{user_id}",
+                nickname=f"用户{user_id}",
+                avatar=get_default_avatar(user_id)
+            )
     
     def _get_attachment_info(self, db: Session, moment_id: int) -> List[AttachmentInfo]:
         """获取附件信息（从 moment_attachment 表查询）"""

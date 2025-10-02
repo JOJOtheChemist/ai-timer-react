@@ -56,9 +56,9 @@ class MomentAttachment(Base):
     
     id = Column(BigInteger, primary_key=True, index=True)
     moment_id = Column(BigInteger, nullable=False, index=True)
-    attachment_type = Column(String(20), nullable=False)  # 'schedule', 'file', 'image', 'link'
-    attachment_id = Column(BigInteger, nullable=True)  # 关联资源ID（如schedule_id）
-    attachment_url = Column(String(500), nullable=True)  # 文件/图片URL
-    attachment_name = Column(String(200), nullable=True)  # 附件名称
-    attachment_size = Column(BigInteger, nullable=True)  # 文件大小（字节）
+    type = Column(String(20), nullable=False)  # 'schedule', 'file', 'image', 'link'
+    related_id = Column(BigInteger, nullable=True)  # 关联资源ID（如schedule_id）
+    file_url = Column(String(500), nullable=True)  # 文件/图片URL
+    name = Column(String(200), nullable=True)  # 附件名称
+    file_size = Column(Integer, nullable=True)  # 文件大小（字节）
     create_time = Column(DateTime(timezone=True), server_default=func.now()) 

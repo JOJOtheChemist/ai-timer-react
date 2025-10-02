@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserTopNav from '../../components/Navbar/UserTopNav';
 import BottomNavBar from '../../components/Navbar/BottomNavBar';
 import './TutorPage.css';
+import tutorService from '../../services/tutorService';
 
 const TutorPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,9 +15,14 @@ const TutorPage = () => {
     priceRange: ['全部']
   });
   const [sortBy, setSortBy] = useState('好评优先');
+  
+  // 真实数据状态
+  const [tutors, setTutors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const USER_ID = 1; // TODO: 从认证系统获取
 
-  // 导师数据
-  const tutors = [
+  // 旧的硬编码数据（已废弃，仅作参考）
+  const _oldTutors = [
     {
       id: 1,
       name: '王英语老师',
@@ -164,10 +170,90 @@ const TutorPage = () => {
     setSelectedTutor(null);
   };
 
+  // 加载导师列表
+  const loadTutors = async () => {
+    try {
+      const sortByMap = {
+        '好评优先': 'rating',
+        '经验优先': 'experience',
+        '价格优先': 'price'
+      };
+
+      const response = await tutorService.getTutorList({
+        tutor_type: activeFilters.tutorType.includes('认证导师') && !activeFilters.tutorType.includes('全部') ? 'certified' : null,
+        sort_by: sortByMap[sortBy] || 'rating',
+        page: 1,
+        page_size: 20
+      });
+      
+      // 转换API数据格式
+      const formatted = response.map(item => ({
+        id: item.id,
+        name: item.username || item.name,
+        avatar: item.avatar || '👨‍🏫',
+        type: item.type === 1 ? 'certified' : 'normal',
+        domain: item.domain,
+        metrics: {
+          rating: item.rating,
+          students: item.student_count,
+          successRate: item.success_rate
+        },
+        // 简化的服务数据（实际应该从API获取）
+        services: [
+          { name: '1v1规划', price: 198 },
+          { name: '时间表点评', price: 68 }
+        ],
+        profile: {
+          education: item.education,
+          experience: item.experience,
+          work: item.work_experience,
+          philosophy: item.philosophy
+        }
+      }));
+      
+      setTutors(formatted);
+    } catch (error) {
+      console.error('加载导师列表失败:', error);
+    }
+  };
+
   // 处理搜索
-  const handleSearch = (e) => {
-    if (e.key === 'Enter') {
-      console.log('搜索:', searchQuery);
+  const handleSearch = async (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      try {
+        setLoading(true);
+        const response = await tutorService.searchTutors(searchQuery);
+        
+        // 转换搜索结果
+        const formatted = response.map(item => ({
+          id: item.id,
+          name: item.username || item.name,
+          avatar: item.avatar || '👨‍🏫',
+          type: item.type === 1 ? 'certified' : 'normal',
+          domain: item.domain,
+          metrics: {
+            rating: item.rating,
+            students: item.student_count,
+            successRate: item.success_rate
+          },
+          services: [
+            { name: '1v1规划', price: 198 },
+            { name: '时间表点评', price: 68 }
+          ],
+          profile: {
+            education: item.education,
+            experience: item.experience,
+            work: item.work_experience,
+            philosophy: item.philosophy
+          }
+        }));
+        
+        setTutors(formatted);
+      } catch (error) {
+        console.error('搜索失败:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -184,6 +270,48 @@ const TutorPage = () => {
   const handleFollow = () => {
     console.log('关注导师', selectedTutor?.name);
   };
+
+  // 组件加载时获取数据
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      await loadTutors();
+      setLoading(false);
+    };
+    loadData();
+  }, []);
+
+  // 筛选和排序变化时重新加载
+  useEffect(() => {
+    if (!loading) {
+      loadTutors();
+    }
+  }, [activeFilters, sortBy]);
+
+  // 加载状态UI
+  if (loading && tutors.length === 0) {
+    return (
+      <div className="tutor-page">
+        <UserTopNav />
+        <main className="tutor-content">
+          <div style={{ 
+            textAlign: 'center', 
+            padding: '100px 20px',
+            color: '#666'
+          }}>
+            <div style={{ 
+              fontSize: '48px', 
+              marginBottom: '20px'
+            }}>
+              ⏳
+            </div>
+            <div style={{ fontSize: '16px' }}>加载导师数据中...</div>
+          </div>
+        </main>
+        <BottomNavBar />
+      </div>
+    );
+  }
 
   return (
     <div className="tutor-page">

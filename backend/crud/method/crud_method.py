@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 
@@ -67,16 +68,18 @@ class CRUDMethod:
                 name,
                 description,
                 category,
-                difficulty_level,
-                estimated_time,
-                tags,
-                author_info,
-                is_active,
+                type,
+                steps,
+                scene,
+                tutor_id,
                 checkin_count,
+                rating,
+                review_count,
+                status,
                 create_time,
                 update_time
-            FROM study_methods 
-            WHERE is_active = true
+            FROM study_method 
+            WHERE status = 0
             """
             
             params = {
@@ -90,28 +93,33 @@ class CRUDMethod:
             
             base_query += " ORDER BY checkin_count DESC, create_time DESC LIMIT :limit OFFSET :offset"
             
-            results = db.execute(base_query, params).fetchall()
+            results = db.execute(text(base_query), params).fetchall()
             
             methods = []
             for result in results:
-                methods.append(MethodData(
-                    id=result.id,
-                    name=result.name,
-                    description=result.description,
-                    category=result.category,
-                    difficulty_level=result.difficulty_level,
-                    estimated_time=result.estimated_time,
-                    tags=result.tags,
-                    author_info=result.author_info,
-                    is_active=result.is_active,
-                    checkin_count=result.checkin_count,
-                    create_time=result.create_time,
-                    update_time=result.update_time
-                ))
+                method_dict = {
+                    'id': result[0],
+                    'name': result[1],
+                    'description': result[2],
+                    'category': result[3],
+                    'type': result[4],
+                    'steps': result[5],
+                    'scene': result[6],
+                    'tutor_id': result[7],
+                    'checkin_count': result[8],
+                    'rating': result[9],
+                    'review_count': result[10],
+                    'status': result[11],
+                    'create_time': result[12],
+                    'update_time': result[13]
+                }
+                methods.append(method_dict)
             
             return methods
         except Exception as e:
             print(f"按分类查询方法失败: {e}")
+            import traceback
+            traceback.print_exc()
             return []
     
     def get_suitable_by_user_behavior(

@@ -46,32 +46,32 @@ class MethodService:
             # 补充统计数据
             method_responses = []
             for method in methods:
-                # 获取打卡人数和评分
-                checkin_count = await self.statistic_service.count_method_checkins(
-                    self.db, method.id
-                )
-                rating = await self.statistic_service.calculate_method_rating(
-                    self.db, method.id
-                )
+                # method现在是一个字典
+                # 获取打卡人数和评分（直接从数据库字段获取）
+                checkin_count = method.get('checkin_count', 0)
+                rating = method.get('rating', 0.0)
                 
                 # 构建响应数据
-                method_response = MethodListResponse(
-                    id=method.id,
-                    name=method.name,
-                    description=method.description,
-                    category=method.category,
-                    difficulty_level=method.difficulty_level,
-                    estimated_time=method.estimated_time,
-                    tags=method.tags or [],
-                    author_info=method.author_info,
-                    stats=MethodStatsResponse(
-                        checkin_count=checkin_count,
-                        rating=rating,
-                        completion_rate=await self._calculate_completion_rate(method.id)
-                    ),
-                    create_time=method.create_time,
-                    update_time=method.update_time
-                )
+                method_response = {
+                    'id': method['id'],
+                    'name': method['name'],
+                    'category': method['category'],
+                    'type': method.get('type'),
+                    'meta': {
+                        'scope': method.get('type'),
+                        'checkinCount': checkin_count,
+                        'tutor': None if method.get('tutor_id') is None else f"导师ID: {method['tutor_id']}"
+                    },
+                    'description': method['description'],
+                    'steps': method.get('steps', []),
+                    'scene': method.get('scene', ''),
+                    'stats': {
+                        'rating': float(rating) if rating else 0.0,
+                        'reviews': method.get('review_count', 0)
+                    },
+                    'create_time': method['create_time'].isoformat() if method.get('create_time') else None,
+                    'update_time': method['update_time'].isoformat() if method.get('update_time') else None
+                }
                 method_responses.append(method_response)
             
             # 缓存结果（如果是热门方法）

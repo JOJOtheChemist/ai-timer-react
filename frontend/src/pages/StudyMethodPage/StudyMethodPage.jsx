@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserTopNav from '../../components/Navbar/UserTopNav';
 import BottomNavBar from '../../components/Navbar/BottomNavBar';
 import './StudyMethodPage.css';
+import methodService from '../../services/methodService';
 
 const StudyMethodPage = () => {
   const [activeFilter, setActiveFilter] = useState('全部方法');
@@ -10,15 +11,81 @@ const StudyMethodPage = () => {
   const [checkinType, setCheckinType] = useState('正字打卡');
   const [checkinProgress, setCheckinProgress] = useState(1);
   const [checkinNote, setCheckinNote] = useState('');
+  
+  // 真实数据状态
+  const [studyMethods, setStudyMethods] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const USER_ID = 1; // TODO: 从认证系统获取
 
   // AI推荐状态
   const [aiRecommendation, setAiRecommendation] = useState({
     title: '为你推荐 · 基于你的时间表分析',
     desc: '发现你复习频率低，推荐「艾宾浩斯复习四步法」，已帮助326人提升记忆效率'
   });
+  
+  // 加载学习方法数据
+  const loadMethods = async () => {
+    try {
+      setLoading(true);
+      const filters = {
+        user_id: USER_ID,
+        page: 1,
+        page_size: 20
+      };
+      
+      // 如果有分类筛选，添加category参数
+      if (activeFilter !== '全部方法') {
+        const categoryMap = {
+          '通用方法': 'common',
+          '导师独创': 'tutor'
+        };
+        filters.category = categoryMap[activeFilter];
+      }
+      
+      const methods = await methodService.getMethodList(filters);
+      
+      // 转换数据格式以匹配组件期望的格式
+      const formatted = methods.map(method => ({
+        id: method.id,
+        name: method.name,
+        category: method.category === 'common' ? '通用方法' : '导师独创',
+        type: method.category,
+        meta: {
+          scope: method.meta.scope || method.type,
+          tutor: method.meta.tutor,
+          checkinCount: method.meta.checkinCount
+        },
+        description: method.description,
+        steps: method.steps,
+        scene: method.scene,
+        stats: {
+          rating: method.stats.rating,
+          reviews: method.stats.reviews
+        }
+      }));
+      
+      setStudyMethods(formatted);
+    } catch (error) {
+      console.error('加载学习方法失败:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // 初始加载
+  useEffect(() => {
+    loadMethods();
+  }, []);
 
-  // 学习方法数据
-  const studyMethods = [
+  // 筛选变化时重新加载
+  useEffect(() => {
+    if (!loading) {
+      loadMethods();
+    }
+  }, [activeFilter]);
+
+  // 旧的硬编码数据（已废弃，仅作参考）
+  const _oldStudyMethods = [
     {
       id: 1,
       name: '艾宾浩斯复习四步法',
@@ -122,10 +189,26 @@ const StudyMethodPage = () => {
   };
 
   // 完成打卡
-  const handleCompleteCheckin = () => {
-    const note = checkinNote.trim() ? '，心得已保存' : '';
-    alert(`打卡成功！已完成${checkinProgress}遍复习${note}，同步至你的个人动态~`);
-    closeCheckinModal();
+  const handleCompleteCheckin = async () => {
+    try {
+      const checkinData = {
+        checkin_type: checkinType,
+        progress: checkinProgress,
+        note: checkinNote.trim()
+      };
+      
+      await methodService.submitCheckin(selectedMethod.id, checkinData, USER_ID);
+      
+      const note = checkinNote.trim() ? '，心得已保存' : '';
+      alert(`打卡成功！已完成${checkinProgress}遍复习${note}，同步至你的个人动态~`);
+      
+      closeCheckinModal();
+      // 重新加载数据以更新打卡人数
+      loadMethods();
+    } catch (error) {
+      console.error('打卡失败:', error);
+      alert('打卡失败，请稍后重试');
+    }
   };
 
   // 处理AI推荐
@@ -153,6 +236,28 @@ const StudyMethodPage = () => {
       return ['1', '2', '3', '4'];
     }
   };
+
+  // 加载状态UI
+  if (loading) {
+    return (
+      <div className="study-method-page">
+        <UserTopNav />
+        <main className="study-method-content">
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            height: '400px',
+            fontSize: '18px',
+            color: '#666'
+          }}>
+            加载中...
+          </div>
+        </main>
+        <BottomNavBar />
+      </div>
+    );
+  }
 
   return (
     <div className="study-method-page">

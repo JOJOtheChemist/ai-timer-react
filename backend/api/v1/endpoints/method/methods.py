@@ -12,7 +12,7 @@ from services.method.method_service import MethodService
 
 router = APIRouter()
 
-@router.get("/", response_model=List[MethodListResponse])
+@router.get("/")
 async def get_method_list(
     category: Optional[str] = Query(None, description="方法分类筛选"),
     page: int = Query(1, ge=1, description="页码"),
@@ -37,6 +37,8 @@ async def get_method_list(
         
         return methods
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"获取学习方法列表失败: {str(e)}"

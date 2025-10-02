@@ -1,6 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomNavBar from '../../components/Navbar/BottomNavBar';
+import {
+  ChatTopNav,
+  ChatMessageItem,
+  ChatToolBar,
+  ChatInputArea,
+  JumpModal
+} from './components';
 import './AIChatPage.css';
 
 const AIChatPage = () => {
@@ -120,6 +127,7 @@ const AIChatPage = () => {
   // 初始化消息
   useEffect(() => {
     setMessages(initialMessages);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 自动滚动到底部
@@ -211,211 +219,46 @@ const AIChatPage = () => {
   return (
     <div className={`ai-chat-page ${isMinimized ? 'minimized' : ''}`}>
       {/* 顶部导航栏 */}
-      <div className="nav-top">
-        <div className="back-btn" onClick={handleBack}>←</div>
-        <div className="title">AI时间助手</div>
-        <div className="min-btn" onClick={handleMinimize}>—</div>
-      </div>
+      <ChatTopNav 
+        onBack={handleBack}
+        onMinimize={handleMinimize}
+      />
 
       {/* 页面容器 */}
       <div className="container">
         {/* AI对话区 */}
         <div className="chat-area" ref={chatAreaRef}>
           {messages.map(message => (
-            <div key={message.id} className={`msg-wrapper ${message.type}`}>
-              <div className="msg-avatar">{message.avatar}</div>
-              <div className="msg-bubble">
-                {message.isAnalysis ? (
-                  <div>
-                    <div>你的时间表关键问题：</div>
-                    <div style={{ margin: '8px 0' }}>
-                      {message.analysisData.tags.map((tag, index) => (
-                        <span key={index} className="analysis-tag">{tag}</span>
-                      ))}
-                    </div>
-                    <div>{message.analysisData.analysis}</div>
-
-                    {/* 推荐学习方法 */}
-                    <div className="recommend-section">
-                      <div className="recommend-title">
-                        <i>🔄</i> 为你推荐学习方法
-                      </div>
-                      <div className="recommend-list">
-                        <div 
-                          className="recommend-card"
-                          onClick={() => handleRecommendClick(message.analysisData.recommendations[0])}
-                        >
-                          <div className={`recommend-icon icon-method`}>
-                            {message.analysisData.recommendations[0].icon}
-                          </div>
-                          <div className="recommend-info">
-                            <div className="recommend-name">
-                              {message.analysisData.recommendations[0].name}
-                            </div>
-                            <div className="recommend-desc">
-                              {message.analysisData.recommendations[0].desc}
-                            </div>
-                          </div>
-                          <div className="recommend-tag">
-                            {message.analysisData.recommendations[0].tag}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 推荐相似案例 */}
-                    <div className="recommend-section">
-                      <div className="recommend-title">
-                        <i>📅</i> 相似上岸案例参考
-                      </div>
-                      <div className="recommend-list">
-                        <div 
-                          className="recommend-card"
-                          onClick={() => handleRecommendClick(message.analysisData.recommendations[1])}
-                        >
-                          <div className={`recommend-icon icon-case`}>
-                            {message.analysisData.recommendations[1].icon}
-                          </div>
-                          <div className="recommend-info">
-                            <div className="recommend-name">
-                              {message.analysisData.recommendations[1].name}
-                            </div>
-                            <div className="recommend-desc">
-                              {message.analysisData.recommendations[1].desc}
-                            </div>
-                          </div>
-                          <div className="recommend-tag">
-                            {message.analysisData.recommendations[1].tag}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 推荐匹配导师 */}
-                    <div className="recommend-section">
-                      <div className="recommend-title">
-                        <i>👩‍🏫</i> 匹配擅长领域导师
-                      </div>
-                      <div className="recommend-list">
-                        <div 
-                          className="recommend-card"
-                          onClick={() => handleRecommendClick(message.analysisData.recommendations[2])}
-                        >
-                          <div className={`recommend-icon icon-tutor`}>
-                            {message.analysisData.recommendations[2].icon}
-                          </div>
-                          <div className="recommend-info">
-                            <div className="recommend-name">
-                              {message.analysisData.recommendations[2].name}
-                            </div>
-                            <div className="recommend-desc">
-                              {message.analysisData.recommendations[2].desc}
-                            </div>
-                          </div>
-                          <div className="recommend-tag">
-                            {message.analysisData.recommendations[2].tag}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    {message.content.split('\n').map((line, index) => (
-                      <div key={index}>{line}</div>
-                    ))}
-                    
-                    {message.hasRecommendation && (
-                      <div className="recommend-section" style={{ marginTop: '8px' }}>
-                        <div className="recommend-list">
-                          <div 
-                            className="recommend-card"
-                            onClick={() => handleRecommendClick(message.recommendation)}
-                          >
-                            <div className={`recommend-icon icon-method`}>
-                              {message.recommendation.icon}
-                            </div>
-                            <div className="recommend-info">
-                              <div className="recommend-name">
-                                {message.recommendation.name}
-                              </div>
-                              <div className="recommend-desc">
-                                {message.recommendation.desc}
-                              </div>
-                            </div>
-                            <div className="recommend-tag">
-                              {message.recommendation.tag}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              <div className="msg-time">{message.time}</div>
-            </div>
+            <ChatMessageItem
+              key={message.id}
+              message={message}
+              onRecommendClick={handleRecommendClick}
+            />
           ))}
         </div>
 
         {/* 功能工具条 */}
-        <div className="tool-bar">
-          {toolButtons.map((tool, index) => (
-            <button 
-              key={index}
-              className="tool-btn"
-              onClick={() => handleToolClick(tool)}
-            >
-              <i>{tool.icon}</i> {tool.text}
-            </button>
-          ))}
-        </div>
+        <ChatToolBar
+          tools={toolButtons}
+          onToolClick={handleToolClick}
+        />
 
         {/* 输入区 */}
-        <div className="input-area">
-          <div className="input-container">
-            <div className="input-tools">
-              <i>🎤</i>
-              <i>📷</i>
-              <i>📎</i>
-            </div>
-            <input 
-              type="text" 
-              className="input-box" 
-              placeholder="和AI聊聊你的时间表或需求..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            <button className="send-btn" onClick={handleSendMessage}>→</button>
-          </div>
-        </div>
+        <ChatInputArea
+          inputValue={inputValue}
+          onInputChange={setInputValue}
+          onSend={handleSendMessage}
+          onKeyDown={handleKeyDown}
+        />
       </div>
 
       {/* 跳转提示弹窗 */}
-      {showJumpModal && (
-        <div className="jump-modal show" onClick={() => setShowJumpModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-icon">{modalConfig.icon}</div>
-            <div className="modal-title">{modalConfig.title}</div>
-            <div className="modal-desc">{modalConfig.desc}</div>
-            <div className="modal-actions">
-              <button 
-                className="modal-btn cancel"
-                onClick={() => setShowJumpModal(false)}
-              >
-                取消
-              </button>
-              <button 
-                className="modal-btn confirm"
-                onClick={handleConfirmJump}
-              >
-                确定
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <JumpModal
+        isOpen={showJumpModal}
+        modalConfig={modalConfig}
+        onConfirm={handleConfirmJump}
+        onCancel={() => setShowJumpModal(false)}
+      />
 
       <BottomNavBar />
     </div>

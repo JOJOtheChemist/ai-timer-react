@@ -1,0 +1,388 @@
+/* TutorModal.css - 导师详情弹窗组件样式 */
+
+.tutor-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.tutor-modal.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 25px 20px 20px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.close-modal {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.close-modal:hover {
+  background-color: #e6d0f0;
+}
+
+.modal-header {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0e6f5;
+}
+
+.modal-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #f0e6f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.modal-header-info {
+  flex: 1;
+}
+
+.modal-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.tutor-tag {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 500;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+.tutor-tag.certified {
+  background-color: #fff7e6;
+  color: #ff9800;
+}
+
+.tutor-tag.normal {
+  background-color: #f0e6f5;
+  color: #9d65c9;
+}
+
+.modal-domain {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.modal-metrics {
+  display: flex;
+  gap: 15px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.modal-metric {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: #888;
+}
+
+.modal-metric.highlight {
+  color: #65c985;
+}
+
+/* 导师Profile */
+.modal-section {
+  margin-bottom: 25px;
+}
+
+.section-subtitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #5a3372;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.section-subtitle::before {
+  content: "";
+  width: 4px;
+  height: 16px;
+  background-color: #c888d8;
+  margin-right: 8px;
+  border-radius: 2px;
+}
+
+.profile-content {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  background-color: #f9f7f9;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.profile-content p {
+  margin-bottom: 10px;
+}
+
+.profile-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* 服务列表 */
+.service-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.service-card {
+  border: 1px solid #f0e6f5;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color 0.2s ease;
+}
+
+.service-card:hover {
+  border-color: #9d65c9;
+}
+
+.service-info {
+  flex: 1;
+}
+
+.service-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 3px;
+}
+
+.service-desc {
+  font-size: 12px;
+  color: #888;
+  line-height: 1.4;
+}
+
+.service-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.service-price {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ff6b8b;
+  white-space: nowrap;
+}
+
+.buy-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  background-color: #9d65c9;
+  color: white;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.buy-btn:hover {
+  background-color: #8a4db8;
+}
+
+/* 数据面板 */
+.data-panel {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.data-card {
+  background-color: #f9f7f9;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.data-label {
+  font-size: 12px;
+  color: #7a5490;
+  margin-bottom: 5px;
+}
+
+.data-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #9d65c9;
+}
+
+.data-value.highlight {
+  color: #65c985;
+}
+
+/* 学员评价 */
+.review-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+.review-card {
+  background-color: #f9f7f9;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.reviewer {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.review-rating {
+  color: #ffc107;
+  font-size: 12px;
+}
+
+.review-content {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.review-attach {
+  width: 100%;
+  height: 80px;
+  background-color: #f0e6f5;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 12px;
+}
+
+/* 底部操作栏 */
+.modal-footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  padding: 15px 0 5px;
+  border-top: 1px solid #f0e6f5;
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.footer-btn {
+  flex: 1;
+  height: 42px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.footer-btn.msg {
+  background-color: #f0e6f5;
+  color: #9d65c9;
+}
+
+.footer-btn.msg:hover {
+  background-color: #e6d0f0;
+}
+
+.footer-btn.follow {
+  background-color: #9d65c9;
+  color: white;
+}
+
+.footer-btn.follow:hover {
+  background-color: #8a4db8;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 20px 15px 15px;
+  }
+  
+  .modal-header {
+    gap: 12px;
+  }
+  
+  .modal-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+  
+  .data-panel {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .data-panel .data-card:last-child {
+    grid-column: span 2;
+  }
+} 

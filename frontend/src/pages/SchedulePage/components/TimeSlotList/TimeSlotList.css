@@ -1,0 +1,54 @@
+/* TimeSlotList.css */
+
+.time-slot-list-container {
+  /* Container styling handled by parent */
+}
+
+.time-slot-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn.reset {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.action-btn.reset:hover {
+  background-color: rgba(239, 68, 68, 0.2);
+}
+
+.action-btn.ai {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+}
+
+.action-btn.ai:hover {
+  background-color: rgba(99, 102, 241, 0.2);
+}
+
+.time-slot-list-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-right: 0.25rem;
+} 

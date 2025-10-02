@@ -1,0 +1,8 @@
+/* TaskItem.css */
+.task-item-wrapper {
+  margin-bottom: 0.25rem;
+}
+
+.task-item {
+  cursor: pointer;
+}

@@ -1,0 +1,159 @@
+/* MethodCard.css - 学习方法卡片组件样式 */
+
+.method-card {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(221, 194, 230, 0.2);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.method-card:hover {
+  transform: translateY(-2px);
+}
+
+.method-header {
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #f0e6f5;
+}
+
+.method-info {
+  flex: 1;
+}
+
+.method-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.method-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #888;
+  flex-wrap: wrap;
+}
+
+.method-meta .tutor-tag {
+  color: #65c985;
+  font-weight: 500;
+}
+
+.method-tag {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  background-color: #f0e6f5;
+  color: #9d65c9;
+  flex-shrink: 0;
+}
+
+.method-tag.tutor {
+  background-color: #e6f5f0;
+  color: #65c985;
+}
+
+.method-body {
+  padding: 15px 20px;
+}
+
+.method-desc {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.method-steps {
+  margin-bottom: 15px;
+  padding-left: 20px;
+}
+
+.step-item {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.step-item::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #9d65c9;
+  position: absolute;
+  left: -15px;
+  top: 7px;
+}
+
+.method-scene {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.method-scene i {
+  color: #9d65c9;
+  font-style: normal;
+}
+
+.method-footer {
+  padding: 12px 20px;
+  background-color: #f9f7f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.method-stats {
+  display: flex;
+  gap: 15px;
+  font-size: 12px;
+  color: #888;
+}
+
+.stats-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.stats-item i {
+  color: #c1a3d1;
+  font-style: normal;
+}
+
+.checkin-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  background-color: #9d65c9;
+  color: white;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.checkin-btn:hover {
+  background-color: #8a4db8;
+}
+
+.checkin-btn.tutor {
+  background-color: #65c985;
+}
+
+.checkin-btn.tutor:hover {
+  background-color: #4db570;
+} 

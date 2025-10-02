@@ -1,0 +1,72 @@
+/* FilterPanel.css - 筛选面板组件样式 */
+
+.filter-area {
+  padding: 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #f0e6f5;
+}
+
+.filter-group {
+  margin-bottom: 16px;
+}
+
+.filter-group:last-child {
+  margin-bottom: 0;
+}
+
+.group-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #5a3372;
+  margin-bottom: 8px;
+}
+
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-tag {
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 12px;
+  background-color: #f9f7f9;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.filter-tag:hover {
+  background-color: #f0e6f5;
+  color: #9d65c9;
+}
+
+.filter-tag.active {
+  background-color: #f0e6f5;
+  color: #9d65c9;
+  border-color: #c1a3d1;
+}
+
+.filter-tag.highlight {
+  background-color: #fff7e6;
+  color: #ff9800;
+  border-color: #ffc966;
+}
+
+.filter-tag.highlight.active {
+  background-color: #fff7e6;
+  color: #ff9800;
+  border-color: #ff9800;
+}
+
+.filter-tag.reset {
+  background-color: #fff;
+  color: #9d65c9;
+  border: 1px solid #c1a3d1;
+}
+
+.filter-tag.reset:hover {
+  background-color: #f0e6f5;
+} 

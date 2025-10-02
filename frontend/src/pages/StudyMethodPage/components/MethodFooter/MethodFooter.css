@@ -1,0 +1,23 @@
+/* MethodFooter.css - 底部提示组件样式 */
+
+.bottom-tip {
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #888;
+  border-top: 1px solid #f0e6f5;
+  z-index: 90;
+}
+
+.bottom-tip span {
+  color: #9d65c9;
+  margin: 0 3px;
+  font-weight: 500;
+} 

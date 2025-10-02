@@ -1,0 +1,80 @@
+/* RecommendCard.css - AI推荐卡片组件样式 */
+
+.ai-recommend {
+  background: linear-gradient(135deg, #f0e6f5 0%, #e0d0e8 100%);
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 3px 8px rgba(221, 194, 230, 0.2);
+}
+
+.ai-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d65c9;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.ai-content {
+  flex: 1;
+}
+
+.ai-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5a3372;
+  margin-bottom: 3px;
+}
+
+.ai-desc {
+  font-size: 13px;
+  color: #7a5490;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+.ai-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.ai-btn {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.ai-btn.primary {
+  background-color: #9d65c9;
+  color: white;
+}
+
+.ai-btn.primary:hover {
+  background-color: #8a4db8;
+}
+
+.ai-btn.secondary {
+  background-color: #fff;
+  color: #9d65c9;
+}
+
+.ai-btn.secondary:hover {
+  background-color: #f0e6f5;
+} 

@@ -1,0 +1,49 @@
+/* MethodTabs.css - 分类标签组件样式 */
+
+.filter-tab {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 5px;
+}
+
+.filter-tab::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-type {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  background-color: #fff;
+  border: 1px solid #e0d0e8;
+  color: #666;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-type:hover {
+  border-color: #9d65c9;
+  color: #9d65c9;
+}
+
+.filter-type.active {
+  background-color: #f0e6f5;
+  border-color: #9d65c9;
+  color: #9d65c9;
+  font-weight: 500;
+}
+
+.filter-type.highlight {
+  border-color: #65c985;
+  color: #65c985;
+}
+
+.filter-type.highlight.active {
+  background-color: #e6f5f0;
+  border-color: #65c985;
+  color: #65c985;
+} 

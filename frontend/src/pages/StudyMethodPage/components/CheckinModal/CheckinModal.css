@@ -1,0 +1,177 @@
+/* CheckinModal.css - 打卡弹窗组件样式 */
+
+.checkin-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.checkin-modal.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 25px 20px;
+  width: 90%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-header .icon {
+  font-size: 40px;
+  color: #9d65c9;
+  margin-bottom: 10px;
+}
+
+.modal-header .title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.checkin-type {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.checkin-option {
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: 1px solid #e0d0e8;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkin-option:hover {
+  border-color: #9d65c9;
+  color: #9d65c9;
+}
+
+.checkin-option.active {
+  border-color: #9d65c9;
+  background-color: #f0e6f5;
+  color: #9d65c9;
+  font-weight: 500;
+}
+
+.checkin-content {
+  margin-bottom: 25px;
+}
+
+.checkin-count {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.checkin-item {
+  font-size: 30px;
+  color: #e0d0e8;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  user-select: none;
+}
+
+.checkin-item:hover {
+  color: #c1a3d1;
+}
+
+.checkin-item.active {
+  color: #9d65c9;
+}
+
+.checkin-note {
+  width: 100%;
+  height: 80px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #e0d0e8;
+  resize: none;
+  font-size: 13px;
+  color: #333;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.checkin-note:focus {
+  border-color: #9d65c9;
+}
+
+.checkin-note::placeholder {
+  color: #999;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.modal-btn.cancel {
+  background-color: #f9f7f9;
+  color: #888;
+}
+
+.modal-btn.cancel:hover {
+  background-color: #f0f0f0;
+}
+
+.modal-btn.confirm {
+  background-color: #9d65c9;
+  color: white;
+}
+
+.modal-btn.confirm:hover {
+  background-color: #8a4db8;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 20px 15px;
+    width: 95%;
+  }
+  
+  .checkin-count {
+    gap: 8px;
+  }
+  
+  .checkin-item {
+    font-size: 26px;
+  }
+} 

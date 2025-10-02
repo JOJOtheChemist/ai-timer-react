@@ -83,3 +83,199 @@ INFO:     127.0.0.1:55859 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&p
 INFO:     127.0.0.1:55862 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
 INFO:     127.0.0.1:55863 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
 INFO:     127.0.0.1:55864 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56263 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56266 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56265 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56264 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56263 - "OPTIONS /api/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56266 - "OPTIONS /api/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56265 - "GET /api/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56264 - "GET /api/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56642 - "OPTIONS /api/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56643 - "OPTIONS /api/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 200 OK
+缓存已设置: method_list_None_1_20
+INFO:     127.0.0.1:56642 - "GET /api/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 200 OK
+缓存已设置: method_list_None_1_20
+INFO:     127.0.0.1:56643 - "GET /api/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56855 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56856 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56857 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56858 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56855 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56856 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56857 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56858 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56895 - "OPTIONS /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56896 - "OPTIONS /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56897 - "OPTIONS /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56898 - "OPTIONS /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56895 - "GET /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:56896 - "GET /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:56897 - "GET /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:56898 - "GET /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57127 - "GET /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57128 - "GET /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57129 - "GET /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57130 - "GET /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57127 - "OPTIONS /api/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57128 - "OPTIONS /api/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57129 - "GET /api/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57130 - "GET /api/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57148 - "GET /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57149 - "GET /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57151 - "GET /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57150 - "GET /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57591 - "GET /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57593 - "GET /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57592 - "GET /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57594 - "GET /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:57616 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57617 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57618 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57619 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57616 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57617 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57618 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57619 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57616 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57617 - "OPTIONS /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57618 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57619 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57631 - "OPTIONS /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57632 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57616 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57617 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57618 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57619 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57631 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57632 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57616 - "OPTIONS /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57617 - "OPTIONS /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57618 - "OPTIONS /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57619 - "OPTIONS /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57631 - "OPTIONS /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57632 - "OPTIONS /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57616 - "OPTIONS /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57617 - "OPTIONS /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57618 - "OPTIONS /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57619 - "OPTIONS /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57616 - "GET /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57617 - "GET /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57618 - "GET /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57617 - "GET /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57632 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57631 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57618 - "GET /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57617 - "GET /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57616 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57619 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57646 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57647 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57649 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57648 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59272 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59273 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59274 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59275 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59272 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59273 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59275 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59274 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59310 - "OPTIONS /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59311 - "OPTIONS /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59312 - "OPTIONS /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59313 - "OPTIONS /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59310 - "GET /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:59311 - "GET /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:59312 - "GET /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:59313 - "GET /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:59422 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59423 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59424 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59425 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62352 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62353 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62354 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62355 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62352 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62354 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62355 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62353 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62368 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62369 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62370 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62371 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62369 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62368 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62370 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62371 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62396 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62397 - "OPTIONS /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62398 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62399 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62400 - "OPTIONS /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62401 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62396 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62397 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62398 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62399 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62401 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62400 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62396 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62397 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62398 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62399 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63877 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63878 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63879 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63880 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63877 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63878 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63880 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63879 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63887 - "OPTIONS /api/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63888 - "OPTIONS /api/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 200 OK
+缓存已设置: method_list_None_1_20
+INFO:     127.0.0.1:63887 - "GET /api/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 200 OK
+缓存已设置: method_list_None_1_20
+INFO:     127.0.0.1:63888 - "GET /api/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63895 - "OPTIONS /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63896 - "OPTIONS /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63897 - "OPTIONS /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63898 - "OPTIONS /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63895 - "GET /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:63896 - "GET /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:63898 - "GET /api/v1/cases/?user_id=1&limit=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:63897 - "GET /api/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 500 Internal Server Error
+缓存已设置: method_list_None_1_20
+INFO:     127.0.0.1:63900 - "GET /api/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 200 OK
+缓存已设置: method_list_None_1_20
+INFO:     127.0.0.1:63901 - "GET /api/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63960 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63961 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63963 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63962 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64005 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64006 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64008 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64007 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64022 - "OPTIONS /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64023 - "OPTIONS /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64024 - "OPTIONS /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64025 - "OPTIONS /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64022 - "OPTIONS /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64026 - "OPTIONS /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64027 - "OPTIONS /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64023 - "OPTIONS /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64024 - "OPTIONS /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64025 - "OPTIONS /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64027 - "GET /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64023 - "GET /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64025 - "GET /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64023 - "GET /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64022 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64025 - "GET /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64023 - "GET /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64026 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64024 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64027 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK

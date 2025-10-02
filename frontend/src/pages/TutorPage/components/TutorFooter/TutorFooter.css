@@ -1,0 +1,18 @@
+/* TutorFooter.css - 底部提示组件样式 */
+
+.bottom-tip {
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  color: #888;
+  background-color: #fff;
+  margin: 16px 20px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(221, 194, 230, 0.1);
+}
+
+.bottom-tip span {
+  color: #9d65c9;
+  font-weight: 600;
+  margin: 0 3px;
+} 

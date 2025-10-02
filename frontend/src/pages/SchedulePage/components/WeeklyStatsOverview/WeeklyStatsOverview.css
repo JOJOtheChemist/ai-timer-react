@@ -1,0 +1,80 @@
+/* WeeklyStatsOverview.css */
+
+.weekly-stats-overview {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.stats-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.stats-more-btn {
+  font-size: 0.75rem;
+  color: #3b82f6;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.stats-more-btn:hover {
+  color: #2563eb;
+}
+
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.stat-card {
+  background: #f9fafb;
+  border-radius: 0.5rem;
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value.text-study {
+  color: #3b82f6;
+}
+
+.stat-value.text-frequent {
+  color: #ef4444;
+}
+
+.stat-value.text-warning {
+  color: #f59e0b;
+}
+
+.stat-value.text-ai {
+  color: #6366f1;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+@media (max-width: 640px) {
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+} 

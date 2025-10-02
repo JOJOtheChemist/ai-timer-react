@@ -1,0 +1,70 @@
+/* TaskFilterTabs.css */
+
+.task-filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 0.25rem;
+}
+
+.filter-tab {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.filter-tab.primary {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.filter-tab.primary.active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.filter-tab.study {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.filter-tab.study.active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.filter-tab.life {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.filter-tab.life.active {
+  background-color: #10b981;
+  color: white;
+}
+
+.filter-tab.play {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.filter-tab.play.active {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.filter-tab.work {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+}
+
+.filter-tab.work.active {
+  background-color: #6366f1;
+  color: white;
+} 

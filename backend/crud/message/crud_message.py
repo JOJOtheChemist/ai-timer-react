@@ -57,11 +57,11 @@ class CRUDMessage:
         user_id: int, 
         message_type: Optional[MessageTypeEnum] = None
     ) -> int:
-        """统计指定类型的未读消息数"""
+        """统计指定类型的未读消息数（数据库中1=未读，0=已读）"""
         query = db.query(Message).filter(
             and_(
                 Message.receiver_id == user_id,
-                Message.is_unread == 0
+                Message.is_unread == 1
             )
         )
         

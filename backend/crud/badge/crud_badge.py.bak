@@ -66,7 +66,7 @@ class CRUDBadge:
                 sort_order,
                 create_time,
                 update_time
-            FROM badge 
+            FROM badges 
             WHERE is_active = true
             """
             
@@ -80,7 +80,7 @@ class CRUDBadge:
             
             results = db.execute(base_query, params).fetchall()
             
-            badge = []
+            badges = []
             for result in results:
                 badges.append(BadgeData(
                     id=result.id,
@@ -116,7 +116,7 @@ class CRUDBadge:
                 is_displayed,
                 display_order,
                 create_time
-            FROM user_badge 
+            FROM user_badges 
             WHERE user_id = :user_id
             """
             
@@ -153,7 +153,7 @@ class CRUDBadge:
                 is_displayed,
                 display_order,
                 create_time
-            FROM user_badge 
+            FROM user_badges 
             WHERE user_id = :user_id AND badge_id = :badge_id
             """
             
@@ -198,7 +198,7 @@ class CRUDBadge:
                 params["display_order"] = display_order
             
             query = f"""
-            UPDATE user_badge 
+            UPDATE user_badges 
             SET {', '.join(update_fields)}
             WHERE user_id = :user_id AND badge_id = :badge_id
             """
@@ -212,7 +212,7 @@ class CRUDBadge:
             db.rollback()
             return False
     
-    def get_displayed_user_badge(self, db: Session, user_id: int):
+    def get_displayed_user_badges(self, db: Session, user_id: int):
         """获取用户当前展示的徽章"""
         try:
             query = """
@@ -225,7 +225,7 @@ class CRUDBadge:
                 is_displayed,
                 display_order,
                 create_time
-            FROM user_badge 
+            FROM user_badges 
             WHERE user_id = :user_id AND is_displayed = true
             ORDER BY display_order ASC, obtain_date DESC
             """
@@ -265,7 +265,7 @@ class CRUDBadge:
                 return False  # 已经获得了
             
             query = """
-            INSERT INTO user_badge (
+            INSERT INTO user_badges (
                 user_id, badge_id, obtain_date, obtain_reason, 
                 is_displayed, display_order, create_time
             ) VALUES (
@@ -307,7 +307,7 @@ class CRUDBadge:
         try:
             query = """
             SELECT COUNT(DISTINCT user_id) as count
-            FROM user_badge 
+            FROM user_badges 
             WHERE badge_id = :badge_id
             """
             result = db.execute(query, {"badge_id": badge_id}).fetchone()
@@ -320,7 +320,7 @@ class CRUDBadge:
         """创建新徽章"""
         try:
             query = """
-            INSERT INTO badge (
+            INSERT INTO badges (
                 name, description, icon, category, level, rarity,
                 unlock_condition, unlock_type, is_active, sort_order,
                 create_time, update_time

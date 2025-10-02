@@ -48,7 +48,7 @@ api_router.include_router(
     tags=["统计分析"]
 )
 
-# 消息相关路由
+# 消息相关路由（注意：更具体的路由要放在{id}路由之前）
 api_router.include_router(
     messages.router,
     prefix="/messages",
@@ -56,9 +56,9 @@ api_router.include_router(
 )
 
 api_router.include_router(
-    message_details.router,
+    message_stats.router,
     prefix="/messages",
-    tags=["消息详情"]
+    tags=["消息统计"]
 )
 
 api_router.include_router(
@@ -68,9 +68,9 @@ api_router.include_router(
 )
 
 api_router.include_router(
-    message_stats.router,
+    message_details.router,
     prefix="/messages",
-    tags=["消息统计"]
+    tags=["消息详情"]
 )
 
 # 用户相关路由

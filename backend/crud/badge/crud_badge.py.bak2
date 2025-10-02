@@ -66,7 +66,7 @@ class CRUDBadge:
                 sort_order,
                 create_time,
                 update_time
-            FROM badge 
+            FROM badges 
             WHERE is_active = true
             """
             
@@ -80,7 +80,7 @@ class CRUDBadge:
             
             results = db.execute(base_query, params).fetchall()
             
-            badge = []
+            badges = []
             for result in results:
                 badges.append(BadgeData(
                     id=result.id,
@@ -320,7 +320,7 @@ class CRUDBadge:
         """创建新徽章"""
         try:
             query = """
-            INSERT INTO badge (
+            INSERT INTO badges (
                 name, description, icon, category, level, rarity,
                 unlock_condition, unlock_type, is_active, sort_order,
                 create_time, update_time

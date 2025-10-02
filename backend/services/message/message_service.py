@@ -34,8 +34,8 @@ class MessageService:
         for message in messages:
             message_response = MessageResponse.from_orm(message)
             
-            # 补充扩展字段
-            message_response.is_unread = message.is_unread == 0
+            # 补充扩展字段（数据库中1=未读，0=已读）
+            message_response.is_unread = message.is_unread == 1
             message_response.sender_name = self._get_sender_name(db, message.sender_id)
             message_response.sender_avatar = self._get_sender_avatar(db, message.sender_id)
             message_response.reply_count = self._get_reply_count(db, message.id)
@@ -57,19 +57,42 @@ class MessageService:
     
     def _get_sender_name(self, db: Session, sender_id: int) -> Optional[str]:
         """获取发送方姓名"""
-        # 这里应该调用用户服务获取用户信息
-        # 目前返回模拟数据
-        if sender_id == 0:  # 系统消息
+        from sqlalchemy import text
+        
+        if sender_id is None or sender_id == 0:  # 系统消息
             return "系统"
+        
+        # 从数据库查询用户名
+        query = text('SELECT username FROM "user" WHERE id = :user_id')
+        result = db.execute(query, {"user_id": sender_id}).fetchone()
+        
+        if result:
+            return result[0]
         return f"用户{sender_id}"
     
     def _get_sender_avatar(self, db: Session, sender_id: int) -> Optional[str]:
         """获取发送方头像"""
-        # 这里应该调用用户服务获取用户头像
-        # 目前返回模拟数据
-        if sender_id == 0:  # 系统消息
-            return "/avatars/system.png"
-        return f"/avatars/user_{sender_id}.png"
+        from sqlalchemy import text
+        
+        if sender_id is None or sender_id == 0:  # 系统消息
+            return "🔔"
+        
+        # 从数据库查询用户头像
+        query = text('SELECT avatar FROM "user" WHERE id = :user_id')
+        result = db.execute(query, {"user_id": sender_id}).fetchone()
+        
+        if result and result[0]:
+            return result[0]
+        
+        # 返回默认头像（循环使用5个头像）
+        avatar_files = [
+            "/avatars/avatar1.png",
+            "/avatars/avatar2.png",
+            "/avatars/avatar3.png",
+            "/avatars/avatar4.jpg",
+            "/avatars/avatar5.png"
+        ]
+        return avatar_files[(sender_id - 1) % 5]
     
     def _get_reply_count(self, db: Session, message_id: int) -> int:
         """获取消息回复数量"""

@@ -10,22 +10,22 @@ class CRUDUserRelation:
                 # 统计关注的导师数
                 query = """
                 SELECT COUNT(*) as count
-                FROM user_relations 
-                WHERE follower_id = :user_id AND relation_type = 'tutor'
+                FROM user_relation 
+                WHERE user_id = :user_id AND relation_type = 0
                 """
             elif relation_type == "fan":
                 # 统计粉丝数（有多少人关注了这个用户）
                 query = """
                 SELECT COUNT(*) as count
-                FROM user_relations 
-                WHERE target_id = :user_id AND relation_type IN ('following', 'tutor')
+                FROM user_relation 
+                WHERE target_user_id = :user_id AND relation_type = 1
                 """
             elif relation_type == "following":
                 # 统计关注的普通用户数
                 query = """
                 SELECT COUNT(*) as count
-                FROM user_relations 
-                WHERE follower_id = :user_id AND relation_type = 'following'
+                FROM user_relation 
+                WHERE user_id = :user_id AND relation_type = 2
                 """
             else:
                 return 0

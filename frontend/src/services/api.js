@@ -1,16 +1,22 @@
 // 基础API配置
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/v1';
 
 // 基础请求配置
 const apiRequest = async (endpoint, options = {}) => {
-  const url = `${API_BASE_URL}${endpoint}`;
+  // 处理查询参数
+  let url = `${API_BASE_URL}${endpoint}`;
+  if (options.params) {
+    const queryString = new URLSearchParams(options.params).toString();
+    url = `${url}?${queryString}`;
+  }
   
   const config = {
     headers: {
       'Content-Type': 'application/json',
       ...options.headers,
     },
-    ...options,
+    method: options.method || 'GET',
+    body: options.body,
   };
 
   // 添加认证token（如果存在）

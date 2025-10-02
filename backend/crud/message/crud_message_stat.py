@@ -10,7 +10,7 @@ class CRUDMessageStat:
     """消息统计CRUD操作"""
     
     def count_unread_by_all_types(self, db: Session, user_id: int) -> Dict[str, int]:
-        """按类型统计未读消息数量"""
+        """按类型统计未读消息数量（数据库中1=未读，0=已读）"""
         # 查询各类型未读消息数
         stats = db.query(
             Message.type,
@@ -18,7 +18,7 @@ class CRUDMessageStat:
         ).filter(
             and_(
                 Message.receiver_id == user_id,
-                Message.is_unread == 0
+                Message.is_unread == 1
             )
         ).group_by(Message.type).all()
         
@@ -35,11 +35,11 @@ class CRUDMessageStat:
             count = stat.count
             result["total_count"] += count
             
-            if stat.message_type == 0:
+            if stat.type == 0:
                 result["tutor_count"] = count
-            elif stat.message_type == 1:
+            elif stat.type == 1:
                 result["private_count"] = count
-            elif stat.message_type == 2:
+            elif stat.type == 2:
                 result["system_count"] = count
         
         return result

@@ -66,7 +66,79 @@ const StudyMethodPage = () => {
       
       setStudyMethods(formatted);
     } catch (error) {
-      console.error('加载学习方法失败:', error);
+      console.error('加载学习方法失败，使用示例数据:', error);
+      // API失败时使用示例数据
+      setStudyMethods([
+        {
+          id: 1,
+          name: '艾宾浩斯复习四步法',
+          category: '通用方法',
+          type: 'common',
+          meta: {
+            scope: '记忆类',
+            tutor: null,
+            checkinCount: 3254
+          },
+          description: '基于艾宾浩斯遗忘曲线设计，通过4次关键节点复习，将短期记忆转化为长期记忆，尤其适合单词、公式等知识点记忆。',
+          steps: [
+            '第1次复习：学习后5-10分钟立即回顾',
+            '第2次复习：学习后1小时复习',
+            '第3次复习：学习后1天复习',
+            '第4次复习：学习后2天、4天、7天、15天循环复习'
+          ],
+          scene: '英语单词、数学公式、专业术语等需要大量记忆的学习场景',
+          stats: {
+            rating: 4.8,
+            reviews: 1234
+          }
+        },
+        {
+          id: 2,
+          name: '番茄工作法',
+          category: '通用方法',
+          type: 'common',
+          meta: {
+            scope: '时间管理',
+            tutor: null,
+            checkinCount: 5678
+          },
+          description: '将工作时间分成25分钟的专注时段，每个时段后休息5分钟。完成4个番茄钟后，休息15-30分钟。',
+          steps: [
+            '设定25分钟计时器，开始专注学习',
+            '番茄钟结束后，休息5分钟',
+            '重复4次后，进行15-30分钟的长休息',
+            '记录完成的番茄钟数量'
+          ],
+          scene: '适合需要长时间专注的学习任务，如做题、阅读等',
+          stats: {
+            rating: 4.7,
+            reviews: 2345
+          }
+        },
+        {
+          id: 3,
+          name: '费曼学习法',
+          category: '通用方法',
+          type: 'common',
+          meta: {
+            scope: '理解类',
+            tutor: null,
+            checkinCount: 2156
+          },
+          description: '通过向他人讲解的方式检验自己是否真正理解了知识点，发现理解漏洞后回到教材深入学习。',
+          steps: [
+            '选择一个要学习的概念',
+            '假装向一个完全不懂的人讲解这个概念',
+            '发现讲解中的卡壳点，回到教材深入学习',
+            '简化语言，用类比和例子帮助理解'
+          ],
+          scene: '适合理解复杂概念、原理性知识，如数学定理、专业课理论等',
+          stats: {
+            rating: 4.9,
+            reviews: 1567
+          }
+        }
+      ]);
     } finally {
       setLoading(false);
     }

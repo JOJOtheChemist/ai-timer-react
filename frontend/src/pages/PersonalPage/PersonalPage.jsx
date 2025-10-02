@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BottomNavBar from '../../components/Navbar/BottomNavBar';
 import './PersonalPage.css';
+import userService from '../../services/userService';
 
 const PersonalPage = () => {
   const [showBadgeModal, setShowBadgeModal] = useState(false);
   const [selectedBadge, setSelectedBadge] = useState(null);
+  const USER_ID = 101; // TODO: 从认证系统获取
 
-  // 徽章数据
+  // 数据状态
+  const [profile, setProfile] = useState(null);
+  const [assets, setAssets] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // 徽章数据（暂时硬编码）
   const badgeData = {
     1: { name: "坚持之星", desc: "连续7天完成学习计划打卡", getDate: "2024-07-10", icon: "🔥" },
     2: { name: "复习王者", desc: "连续14天完成复习任务，复习频率达到80%以上", getDate: "2024-07-05", icon: "📚" },
@@ -16,6 +23,29 @@ const PersonalPage = () => {
     6: { name: "进步神速", desc: "单周学习时长较上一周增长50%以上", getDate: "2024-05-20", icon: "📈" },
     7: { name: "上岸先锋", desc: "成功上传考研上岸经验案例，通过官方审核", getDate: "未获得", icon: "🎓" },
     8: { name: "学霸认证", desc: "累计学习时长达到3000小时，且周均打卡率90%以上", getDate: "未获得", icon: "🏅" }
+  };
+
+  // 加载数据
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [profileData, assetsData] = await Promise.all([
+        userService.getCurrentUserProfile(USER_ID),
+        userService.getUserAssets(USER_ID)
+      ]);
+      
+      setProfile(profileData);
+      setAssets(assetsData);
+    } catch (error) {
+      console.error('加载数据失败:', error);
+      alert('加载数据失败，请刷新页面重试');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleBadgeClick = (badgeId) => {
@@ -52,32 +82,48 @@ const PersonalPage = () => {
     alert('跳转至完整徽章墙页面（展示全部20枚徽章）');
   };
 
+  // 加载状态
+  if (loading) {
+    return (
+      <div className="personal-page">
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          加载中...
+        </div>
+        <BottomNavBar />
+      </div>
+    );
+  }
+
   return (
     <div className="personal-page">
       {/* 页面内标题栏 */}
       <div className="page-header">
         <div className="edit-btn" onClick={handleEditProfile}>编辑资料</div>
         <div className="page-title">我的主页</div>
-        <div style={{ width: '60px' }}></div> {/* 占位 */}
+        <div style={{ width: '60px' }}></div>
       </div>
 
       {/* 页面容器 */}
       <div className="container">
         {/* 1. 个人信息卡 */}
         <div className="profile-card">
-          <div className="profile-avatar">👩</div>
-          <div className="profile-name">考研的小艾</div>
+          <div className="profile-avatar">
+            {profile?.avatar ? (
+              <img src={profile.avatar} alt="avatar" style={{width: '100%', height: '100%', borderRadius: '50%'}} />
+            ) : '👩'}
+          </div>
+          <div className="profile-name">{profile?.username || '用户'}</div>
           <div className="profile-meta">
-            <span>Goal：24考研上岸会计学</span>
-            <span>Major：财务管理</span>
+            <span>Goal：{profile?.goal || '暂无目标'}</span>
+            <span>Major：{profile?.major || '暂无专业'}</span>
           </div>
           <div className="profile-stats">
             <div className="stat-item">
-              <div className="stat-value">1286h</div>
+              <div className="stat-value">{profile?.total_study_hours || '0'}h</div>
               <div className="stat-label">总学习时长</div>
             </div>
             <div className="stat-item">
-              <div className="stat-value">2024.03.15</div>
+              <div className="stat-value">{profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : '-'}</div>
               <div className="stat-label">加入日期</div>
             </div>
           </div>
@@ -90,15 +136,20 @@ const PersonalPage = () => {
               <div className="asset-icon">💎</div>
               <div className="asset-detail">
                 <div className="asset-title">我的钻石</div>
-                <div className="asset-value">158</div>
-                <div className="consume-record">最近：3天前 购买导师咨询 50钻石</div>
+                <div className="asset-value">{assets?.diamond_count || 0}</div>
+                <div className="consume-record">
+                  {assets?.recent_consume ? 
+                    `最近：${assets.recent_consume.description} ${Math.abs(assets.recent_consume.amount)}钻石` :
+                    '暂无消费记录'
+                  }
+                </div>
               </div>
             </div>
           </div>
           <button className="recharge-btn" onClick={handleRecharge}>充值</button>
         </div>
 
-        {/* 3. 关系链区（紧凑版） */}
+        {/* 3. 关系链区（紧凑版）- 暂时保留硬编码 */}
         <div className="relation-section">
           <div className="relation-header">
             <div className="relation-title">我的关系</div>
@@ -114,7 +165,7 @@ const PersonalPage = () => {
               <div className="relation-label">我的学员</div>
             </div>
             <div className="relation-item">
-              <div className="relation-value">28</div>
+              <div className="relation-value">4</div>
               <div className="relation-label">粉丝</div>
             </div>
           </div>
@@ -164,17 +215,14 @@ const PersonalPage = () => {
         {/* 4. 核心入口区（紧凑网格） */}
         <div className="section-title">功能入口</div>
         <div className="entry-grid">
-          {/* 我的时间表 */}
           <div className="entry-card" onClick={() => handleEntryClick('时间表')}>
             <div className="entry-icon schedule">📅</div>
             <div className="entry-name">时间表</div>
           </div>
-          {/* 我的动态 */}
           <div className="entry-card" onClick={() => handleEntryClick('动态')}>
             <div className="entry-icon post">📝</div>
             <div className="entry-name">动态</div>
           </div>
-          {/* 更多功能 */}
           <div className="entry-card" onClick={() => handleEntryClick('更多')}>
             <div className="entry-icon more">🔧</div>
             <div className="entry-name">更多</div>
@@ -185,7 +233,7 @@ const PersonalPage = () => {
         <div className="section-title">我的徽章</div>
         <div className="badge-wall">
           <div className="badge-header">
-            <div className="badge-title">已获得8枚徽章（共20枚）</div>
+            <div className="badge-title">已获得6枚徽章（共8枚）</div>
             <div className="badge-more" onClick={handleBadgeMore}>查看全部</div>
           </div>
           <div className="badge-grid">

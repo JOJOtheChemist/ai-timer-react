@@ -213,7 +213,64 @@ const TutorPage = () => {
       
       setTutors(formatted);
     } catch (error) {
-      console.error('加载导师列表失败:', error);
+      console.error('加载导师列表失败，使用示例数据:', error);
+      // API失败时使用示例数据
+      setTutors([
+        {
+          id: 1,
+          name: '王英语老师',
+          avatar: '👨‍🏫',
+          type: 'certified',
+          domain: '考研英语',
+          metrics: { rating: 4.9, students: 256, successRate: 89 },
+          services: [
+            { name: '1v1规划', price: 198 },
+            { name: '时间表点评', price: 68 }
+          ],
+          profile: {
+            education: '北京外国语大学 英语专业硕士',
+            experience: '8年考研英语教学经验，累计帮助500+学员上岸',
+            work: '某知名教育机构首席英语讲师',
+            philosophy: '授人以鱼不如授人以渔，我会教你如何高效学习英语'
+          }
+        },
+        {
+          id: 2,
+          name: '李数学导师',
+          avatar: '👩‍🏫',
+          type: 'certified',
+          domain: '考研数学',
+          metrics: { rating: 4.8, students: 198, successRate: 85 },
+          services: [
+            { name: '1v1规划', price: 198 },
+            { name: '时间表点评', price: 68 }
+          ],
+          profile: {
+            education: '清华大学 数学系博士',
+            experience: '6年考研数学辅导经验',
+            work: '高校数学教师',
+            philosophy: '数学不难，找对方法最重要'
+          }
+        },
+        {
+          id: 3,
+          name: '张专业课学长',
+          avatar: '👨‍🎓',
+          type: 'normal',
+          domain: '计算机专业课',
+          metrics: { rating: 4.7, students: 89, successRate: 82 },
+          services: [
+            { name: '1v1规划', price: 158 },
+            { name: '时间表点评', price: 58 }
+          ],
+          profile: {
+            education: '浙江大学 计算机专业硕士',
+            experience: '刚上岸，愿意分享经验',
+            work: '互联网大厂工程师',
+            philosophy: '用最短的时间掌握最核心的知识点'
+          }
+        }
+      ]);
     }
   };
 
@@ -250,7 +307,8 @@ const TutorPage = () => {
         
         setTutors(formatted);
       } catch (error) {
-        console.error('搜索失败:', error);
+        console.error('搜索失败，显示空结果:', error);
+        setTutors([]);
       } finally {
         setLoading(false);
       }

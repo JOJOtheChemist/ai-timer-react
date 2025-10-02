@@ -6,11 +6,24 @@ from core.database import get_db
 from core.dependencies import get_current_user_dev
 from models.schemas.message import (
     MessageListResponse, MessageTypeEnum, MessageCreate, MessageResponse,
-    MessageBatchOperation, MessageBatchResponse
+    MessageBatchOperation, MessageBatchResponse, UnreadStatsResponse
 )
 from services.message.message_service import message_service
+from services.message.message_stat_service import message_stat_service
 
 router = APIRouter()
+
+@router.get("/unread-stats", response_model=UnreadStatsResponse)
+async def get_unread_stats(
+    db: Session = Depends(get_db),
+    current_user_id: int = Depends(get_current_user_dev)
+):
+    """获取各类型消息的未读数量（用于标签页徽章显示）"""
+    try:
+        unread_stats = message_stat_service.calculate_unread_stats(db, current_user_id)
+        return unread_stats
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取未读统计失败: {str(e)}")
 
 @router.get("", response_model=MessageListResponse)
 async def get_messages(

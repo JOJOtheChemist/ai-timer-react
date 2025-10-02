@@ -1,33 +1,108 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import BottomNavBar from '../../components/Navbar/BottomNavBar';
 import './MessagePage.css';
+import messageService from '../../services/messageService';
 
 const MessagePage = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('tutor');
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState(null);
+  const USER_ID = 101; // TODO: 从认证系统获取
+
+  // 数据状态
+  const [tutorMessages, setTutorMessages] = useState([]);
+  const [privateMessages, setPrivateMessages] = useState([]);
+  const [systemMessages, setSystemMessages] = useState([]);
+  const [unreadStats, setUnreadStats] = useState({ tutor_count: 0, private_count: 0, system_count: 0 });
+  const [loading, setLoading] = useState(true);
+  const [messageDetail, setMessageDetail] = useState(null);
+
+  // 加载消息列表
+  const loadMessages = async (type) => {
+    try {
+      setLoading(true);
+      const response = await messageService.getMessageList({
+        message_type: type,
+        user_id: USER_ID,
+        page: 1,
+        page_size: 20
+      });
+
+      // 根据类型设置不同的状态
+      if (type === 'tutor') {
+        setTutorMessages(response.messages || []);
+      } else if (type === 'private') {
+        setPrivateMessages(response.messages || []);
+      } else if (type === 'system') {
+        setSystemMessages(response.messages || []);
+      }
+    } catch (error) {
+      console.error(`加载${type}消息失败:`, error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 加载未读统计
+  const loadUnreadStats = async () => {
+    try {
+      const stats = await messageService.getUnreadStats(USER_ID);
+      setUnreadStats(stats);
+    } catch (error) {
+      console.error('加载未读统计失败:', error);
+    }
+  };
+
+  // 初始化：加载当前tab的消息和未读统计
+  useEffect(() => {
+    loadMessages(activeTab);
+    loadUnreadStats();
+  }, []);
+
+  // 切换tab时重新加载
+  useEffect(() => {
+    loadMessages(activeTab);
+  }, [activeTab]);
 
   const handleTabClick = (tabType) => {
     setActiveTab(tabType);
   };
 
-  const handleTutorMessageClick = (msgId) => {
-    setSelectedMessage(msgId);
-    setShowDetailModal(true);
+  const handleMessageClick = async (message) => {
+    try {
+      // 获取消息详情
+      const detail = await messageService.getMessageDetail(message.id, USER_ID);
+      setMessageDetail(detail);
+      setSelectedMessage(message);
+      setShowDetailModal(true);
+
+      // 如果消息未读，标记为已读
+      if (message.is_unread) {
+        await messageService.markAsRead(message.id, USER_ID);
+        // 重新加载消息列表和统计
+        loadMessages(activeTab);
+        loadUnreadStats();
+      }
+    } catch (error) {
+      console.error('获取消息详情失败:', error);
+    }
   };
 
   const closeModal = () => {
     setShowDetailModal(false);
     setSelectedMessage(null);
+    setMessageDetail(null);
   };
 
   const handleFeedbackAction = (action) => {
     setShowDetailModal(false);
     
     if (action === '查看时间表') {
-      alert('跳转至7月15日英语学习时间表详情页');
+      navigate('/schedule');
     } else if (action === '回复导师') {
-      alert('跳转至与王英语老师的私信界面');
+      alert('回复功能开发中');
     } else if (action === '查看私信') {
       setActiveTab('private');
     }
@@ -37,11 +112,79 @@ const MessagePage = () => {
     alert('打开消息设置页面（可设置提醒方式、消息清理等）');
   };
 
+  // 格式化时间
+  const formatTime = (timeStr) => {
+    if (!timeStr) return '';
+    const date = new Date(timeStr);
+    const now = new Date();
+    const diff = now - date;
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 60) {
+      return `${minutes}分钟前`;
+    } else if (hours < 24) {
+      return `${hours}小时前`;
+    } else if (days < 7) {
+      return `${days}天前`;
+    } else {
+      return date.toLocaleDateString();
+    }
+  };
+
+  // 渲染消息项
+  const renderMessageItem = (message, type) => {
+    const isUnread = message.is_unread === 1;
+    
+    return (
+      <div 
+        key={message.id} 
+        className="msg-item" 
+        onClick={() => handleMessageClick(message)}
+      >
+        <div className={`msg-avatar ${type === 'system' ? 'system' : type === 'tutor' ? 'tutor' : ''}`}>
+          {message.sender_avatar || '👤'}
+        </div>
+        <div className="msg-content">
+          <div className="msg-header">
+            <div className="msg-name">
+              {message.sender_name || '系统'}
+              {type === 'tutor' && message.tutor_certification && (
+                <span className="msg-tag">
+                  {message.tutor_certification === 'verified' ? '认证导师' : '普通导师'}
+                </span>
+              )}
+            </div>
+            <div className="msg-time">{formatTime(message.create_time)}</div>
+          </div>
+          <div className={`msg-text ${isUnread ? 'highlight' : ''}`}>
+            {isUnread && <span className="msg-badge"></span>}
+            {message.title || message.content.substring(0, 50)}
+            {message.content.length > 50 ? '...' : ''}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // 加载状态
+  if (loading && tutorMessages.length === 0 && privateMessages.length === 0 && systemMessages.length === 0) {
+    return (
+      <div className="message-page">
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          加载中...
+        </div>
+        <BottomNavBar />
+      </div>
+    );
+  }
+
   return (
     <div className="message-page">
       {/* 顶部导航栏 */}
       <div className="nav-top">
-        <div className="back-btn">←</div>
+        <div className="back-btn" onClick={() => navigate(-1)}>←</div>
         <div className="title">消息中心</div>
         <div className="setting-btn" onClick={handleSettingClick}>⚙️</div>
       </div>
@@ -53,69 +196,34 @@ const MessagePage = () => {
           onClick={() => handleTabClick('tutor')}
         >
           导师反馈
-          <span className="badge">2</span>
+          {unreadStats.tutor_count > 0 && <span className="badge">{unreadStats.tutor_count}</span>}
         </button>
         <button 
           className={`tab-btn ${activeTab === 'private' ? 'active' : ''}`}
           onClick={() => handleTabClick('private')}
         >
           私信
-          <span className="badge">1</span>
+          {unreadStats.private_count > 0 && <span className="badge">{unreadStats.private_count}</span>}
         </button>
         <button 
           className={`tab-btn ${activeTab === 'system' ? 'active' : ''}`}
           onClick={() => handleTabClick('system')}
         >
           系统通知
+          {unreadStats.system_count > 0 && <span className="badge">{unreadStats.system_count}</span>}
         </button>
       </div>
 
       {/* 导师反馈页 */}
       <div className={`msg-container ${activeTab === 'tutor' ? 'active' : ''}`}>
         <div className="msg-list">
-          {/* 未读消息：王英语老师 */}
-          <div className="msg-item" onClick={() => handleTutorMessageClick('1')}>
-            <div className="msg-avatar tutor">👩‍🏫</div>
-            <div className="msg-content">
-              <div className="msg-header">
-                <div className="msg-name">王英语老师 <span className="msg-tag">认证导师</span></div>
-                <div className="msg-time">09:42</div>
-              </div>
-              <div className="msg-text highlight">
-                <span className="msg-badge"></span>
-                你的英语时间表有3处可优化，重点调整阅读时长...
-              </div>
+          {tutorMessages.length > 0 ? (
+            tutorMessages.map(msg => renderMessageItem(msg, 'tutor'))
+          ) : (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
+              暂无导师反馈
             </div>
-          </div>
-
-          {/* 未读消息：李会计学姐 */}
-          <div className="msg-item" onClick={() => handleTutorMessageClick('2')}>
-            <div className="msg-avatar tutor">👩‍💼</div>
-            <div className="msg-content">
-              <div className="msg-header">
-                <div className="msg-name">李会计学姐 <span className="msg-tag">普通导师</span></div>
-                <div className="msg-time">昨天 18:30</div>
-              </div>
-              <div className="msg-text highlight">
-                <span className="msg-badge"></span>
-                CPA税法高频考点整理好了，结合你的时间表...
-              </div>
-            </div>
-          </div>
-
-          {/* 已读消息：张编程导师 */}
-          <div className="msg-item" onClick={() => handleTutorMessageClick('3')}>
-            <div className="msg-avatar tutor">👩‍💻</div>
-            <div className="msg-content">
-              <div className="msg-header">
-                <div className="msg-name">张编程导师 <span className="msg-tag">认证导师</span></div>
-                <div className="msg-time">3天前</div>
-              </div>
-              <div className="msg-text">
-                你的Python学习计划很合理，坚持每日代码练习即可~
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
@@ -126,145 +234,96 @@ const MessagePage = () => {
           <input type="text" placeholder="搜索联系人" />
         </div>
         <div className="msg-list">
-          {/* 未读消息：考研的小琳 */}
-          <div className="msg-item">
-            <div className="msg-avatar">👩‍🎓</div>
-            <div className="msg-content">
-              <div className="msg-header">
-                <div className="msg-name">考研的小琳</div>
-                <div className="msg-time">10:15</div>
-              </div>
-              <div className="msg-text highlight">
-                <span className="msg-badge"></span>
-                你用的艾宾浩斯复习法真的好用！求打卡模板~
-              </div>
+          {privateMessages.length > 0 ? (
+            privateMessages.map(msg => renderMessageItem(msg, 'private'))
+          ) : (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
+              暂无私信
             </div>
-          </div>
-
-          {/* 已读消息：学Python的阿美 */}
-          <div className="msg-item">
-            <div className="msg-avatar">👩‍💻</div>
-            <div className="msg-content">
-              <div className="msg-header">
-                <div className="msg-name">学Python的阿美</div>
-                <div className="msg-time">昨天 20:12</div>
-              </div>
-              <div className="msg-text">
-                分享给你一个Python刷题网站，亲测有效！
-              </div>
-            </div>
-          </div>
-
-          {/* 已读消息：考公的小楠 */}
-          <div className="msg-item">
-            <div className="msg-avatar">📝</div>
-            <div className="msg-content">
-              <div className="msg-header">
-                <div className="msg-name">考公的小楠</div>
-                <div className="msg-time">4天前</div>
-              </div>
-              <div className="msg-text">
-                常识模块的复习时间表整理好啦，发你看看~
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
       {/* 系统通知页 */}
       <div className={`msg-container ${activeTab === 'system' ? 'active' : ''}`}>
         <div className="msg-list">
-          {/* 徽章通知 */}
-          <div className="msg-item">
-            <div className="msg-avatar system">🏆</div>
-            <div className="msg-content">
-              <div className="msg-header">
-                <div className="msg-name">徽章通知</div>
-                <div className="msg-time">今天 08:00</div>
-              </div>
-              <div className="msg-text">
-                你连续7天打卡复习法，获得「坚持之星」徽章！
-              </div>
+          {systemMessages.length > 0 ? (
+            systemMessages.map(msg => renderMessageItem(msg, 'system'))
+          ) : (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
+              暂无系统通知
             </div>
-          </div>
-
-          {/* 钻石通知 */}
-          <div className="msg-item">
-            <div className="msg-avatar system">💎</div>
-            <div className="msg-content">
-              <div className="msg-header">
-                <div className="msg-name">钻石通知</div>
-                <div className="msg-time">昨天 14:30</div>
-              </div>
-              <div className="msg-text">
-                分享上岸案例获得10钻石奖励，已到账~
-              </div>
-            </div>
-          </div>
-
-          {/* 活动通知 */}
-          <div className="msg-item">
-            <div className="msg-avatar system">📢</div>
-            <div className="msg-content">
-              <div className="msg-header">
-                <div className="msg-name">活动通知</div>
-                <div className="msg-time">3天前</div>
-              </div>
-              <div className="msg-text">
-                「上传时间表赢真皮包」活动剩最后5天，快去参与！
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
-      {/* 导师反馈详情弹窗 */}
-      {showDetailModal && (
+      {/* 消息详情弹窗 */}
+      {showDetailModal && messageDetail && (
         <div className="detail-modal show" onClick={(e) => e.target.className.includes('detail-modal') && closeModal()}>
           <div className="modal-content">
             <div className="modal-header">
-              <div className="modal-avatar">👩‍🏫</div>
+              <div className="modal-avatar">
+                {messageDetail.sender_avatar || '👤'}
+              </div>
               <div className="modal-info">
-                <div className="modal-name">王英语老师</div>
-                <div className="modal-meta">认证导师 · 考研英语 | 09:42</div>
+                <div className="modal-name">{messageDetail.sender_name || '系统'}</div>
+                <div className="modal-meta">
+                  {activeTab === 'tutor' && messageDetail.tutor_certification && (
+                    <span>{messageDetail.tutor_certification === 'verified' ? '认证导师' : '普通导师'} · </span>
+                  )}
+                  {messageDetail.tutor_major && <span>{messageDetail.tutor_major} | </span>}
+                  {formatTime(messageDetail.create_time)}
+                </div>
               </div>
               <div className="close-modal" onClick={closeModal}>×</div>
             </div>
             <div className="modal-body">
               <div className="feedback-item">
                 <div className="feedback-header">
-                  <div className="feedback-title">针对你7月15日的英语学习时间表</div>
-                  <div className="feedback-time">今天 09:42</div>
+                  {messageDetail.title && (
+                    <div className="feedback-title">{messageDetail.title}</div>
+                  )}
+                  <div className="feedback-time">{formatTime(messageDetail.create_time)}</div>
                 </div>
                 <div className="feedback-content">
-                  你好！查看了你的英语时间表，发现几个可以优化的点：<br />
-                  1. <span className="feedback-highlight">阅读时长过长</span>：每天2.5h远超建议的1.5h，效率会下降，建议拆分1h精读+0.5h泛读；<br />
-                  2. <span className="feedback-highlight">复习缺失</span>：近3天未安排单词复习，推荐用艾宾浩斯法嵌入碎片时间；<br />
-                  3. <span className="feedback-highlight">时段适配</span>：你早上记忆力最佳，可将单词复习调整至7:00-7:30。
+                  {messageDetail.content.split('\n').map((line, idx) => (
+                    <React.Fragment key={idx}>
+                      {line}
+                      {idx < messageDetail.content.split('\n').length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
                 </div>
-                <div className="feedback-actions">
-                  <button className="feedback-btn primary" onClick={() => handleFeedbackAction('查看时间表')}>
-                    查看时间表
-                  </button>
-                  <button className="feedback-btn secondary" onClick={() => handleFeedbackAction('回复导师')}>
-                    回复导师
-                  </button>
-                </div>
+                {activeTab === 'tutor' && (
+                  <div className="feedback-actions">
+                    {messageDetail.related_type === 'schedule' && (
+                      <button className="feedback-btn primary" onClick={() => handleFeedbackAction('查看时间表')}>
+                        查看时间表
+                      </button>
+                    )}
+                    <button className="feedback-btn secondary" onClick={() => handleFeedbackAction('回复导师')}>
+                      回复导师
+                    </button>
+                  </div>
+                )}
               </div>
-              <div className="feedback-item">
-                <div className="feedback-header">
-                  <div className="feedback-title">针对你7月14日的英语学习时间表</div>
-                  <div className="feedback-time">昨天 16:20</div>
+
+              {/* 显示上下文消息（历史对话） */}
+              {messageDetail.context_messages && messageDetail.context_messages.length > 0 && (
+                <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #eee' }}>
+                  <h4 style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>历史对话</h4>
+                  {messageDetail.context_messages.map((ctx, idx) => (
+                    <div key={idx} className="feedback-item" style={{ marginBottom: '15px' }}>
+                      <div className="feedback-header">
+                        {ctx.title && <div className="feedback-title">{ctx.title}</div>}
+                        <div className="feedback-time">{formatTime(ctx.create_time)}</div>
+                      </div>
+                      <div className="feedback-content" style={{ fontSize: '13px' }}>
+                        {ctx.content}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="feedback-content">
-                  作文模板已发送至你的私信，记得结合每日练习套用，重点关注三段式结构~
-                </div>
-                <div className="feedback-actions">
-                  <button className="feedback-btn secondary" onClick={() => handleFeedbackAction('查看私信')}>
-                    查看私信
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

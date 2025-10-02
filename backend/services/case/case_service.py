@@ -23,19 +23,22 @@ class CaseService:
             # 转换为响应模型
             result = []
             for case in hot_cases:
+                # 处理tags字段：如果是列表直接使用，如果是字符串则split
+                tags = case.tags if isinstance(case.tags, list) else (case.tags.split(',') if case.tags else [])
+                
                 result.append(HotCaseResponse(
                     id=case.id,
                     title=case.title,
-                    tags=case.tags.split(',') if case.tags else [],
+                    tags=tags,
                     author_name=case.author_name,
-                    author_id=case.author_id,
-                    views=case.views,
-                    is_hot=True,
+                    author_id=case.user_id if hasattr(case, 'user_id') else None,
+                    views=case.view_count if hasattr(case, 'view_count') else 0,
+                    is_hot=bool(case.is_hot),
                     category=case.category,
                     duration=case.duration,
-                    price=case.price,
-                    currency=case.currency,
-                    created_at=case.created_at
+                    price=case.price if case.price else "免费",
+                    currency="钻石" if case.price else "",
+                    created_at=case.create_time if hasattr(case, 'create_time') else datetime.now()
                 ))
             
             return result
@@ -59,20 +62,22 @@ class CaseService:
             # 转换为响应模型
             result = []
             for case in cases:
+                tags = case.tags if isinstance(case.tags, list) else (case.tags.split(',') if case.tags else [])
+                
                 result.append(CaseListResponse(
                     id=case.id,
                     title=case.title,
-                    tags=case.tags.split(',') if case.tags else [],
+                    tags=tags,
                     author_name=case.author_name,
-                    author_id=case.author_id,
+                    author_id=case.user_id if hasattr(case, 'user_id') else None,
                     duration=case.duration,
                     category=case.category,
-                    price=case.price,
-                    currency=case.currency,
-                    views=case.views,
-                    is_featured=case.is_featured,
-                    created_at=case.created_at,
-                    updated_at=case.updated_at
+                    price=case.price if case.price else "免费",
+                    currency="钻石" if case.price else "",
+                    views=case.view_count if hasattr(case, 'view_count') else 0,
+                    is_featured=bool(case.is_hot) if hasattr(case, 'is_hot') else False,
+                    created_at=case.create_time if hasattr(case, 'create_time') else datetime.now(),
+                    updated_at=case.update_time if hasattr(case, 'update_time') else datetime.now()
                 ))
             
             return result
@@ -93,20 +98,22 @@ class CaseService:
             # 转换为响应模型
             result = []
             for case in cases:
+                tags = case.tags if isinstance(case.tags, list) else (case.tags.split(',') if case.tags else [])
+                
                 result.append(CaseListResponse(
                     id=case.id,
                     title=case.title,
-                    tags=case.tags.split(',') if case.tags else [],
+                    tags=tags,
                     author_name=case.author_name,
-                    author_id=case.author_id,
+                    author_id=case.user_id if hasattr(case, 'user_id') else None,
                     duration=case.duration,
                     category=case.category,
-                    price=case.price,
-                    currency=case.currency,
-                    views=case.views,
-                    is_featured=case.is_featured,
-                    created_at=case.created_at,
-                    updated_at=case.updated_at
+                    price=case.price if case.price else "免费",
+                    currency="钻石" if case.price else "",
+                    views=case.view_count if hasattr(case, 'view_count') else 0,
+                    is_featured=bool(case.is_hot) if hasattr(case, 'is_hot') else False,
+                    created_at=case.create_time if hasattr(case, 'create_time') else datetime.now(),
+                    updated_at=case.update_time if hasattr(case, 'update_time') else datetime.now()
                 ))
             
             return result

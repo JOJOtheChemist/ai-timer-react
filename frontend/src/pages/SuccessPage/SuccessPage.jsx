@@ -1,81 +1,83 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserTopNav from '../../components/Navbar/UserTopNav';
 import BottomNavBar from '../../components/Navbar/BottomNavBar';
 import './SuccessPage.css';
+import successService from '../../services/successService';
 
 const SuccessPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilters, setActiveFilters] = useState({
     category: '全部',
-    duration: '1000-3000小时',
+    duration: '全部',
     experience: '全部',
     foundation: '全部'
   });
+  
+  // 真实数据状态
+  const [hotCases, setHotCases] = useState([]);
+  const [caseList, setCaseList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
+  const USER_ID = 1; // TODO: 从认证系统获取真实用户ID
 
-  // 热门推荐案例数据
-  const hotCases = [
-    {
-      id: 1,
-      icon: '📚',
-      title: '976小时高考逆袭200分上一本',
-      tags: ['高考', '失恋逆袭', '日均13h'],
-      author: '小夏',
-      views: 1286,
-      isHot: true
-    },
-    {
-      id: 2,
-      icon: '💼',
-      title: '4440小时会计学上岸CPA全科',
-      tags: ['考证', '在职备考', '3年规划'],
-      author: '李会计',
-      views: 952,
-      isHot: false
-    },
-    {
-      id: 3,
-      icon: '💻',
-      title: '1800小时0基础逆袭Python开发',
-      tags: ['技能', '0基础', '转行'],
-      author: '张码农',
-      views: 734,
-      isHot: false
+  // 加载热门案例
+  const loadHotCases = async () => {
+    try {
+      const response = await successService.getHotCases(3);
+      // 转换API数据格式
+      const formatted = response.map(item => ({
+        id: item.id,
+        icon: getCategoryIcon(item.category),
+        title: item.title,
+        tags: item.tags,
+        author: item.author_name,
+        views: item.views,
+        isHot: item.is_hot
+      }));
+      setHotCases(formatted);
+    } catch (error) {
+      console.error('加载热门案例失败:', error);
     }
-  ];
+  };
 
-  // 案例列表数据
-  const caseList = [
-    {
-      id: 1,
-      icon: '📚',
-      title: '2100小时考研英语从40分到82分',
-      tags: ['考研', '0基础', { text: '认证导师', type: 'tutor' }],
-      author: '王老师',
-      duration: '2100h',
-      preview: '免费预览3天',
-      price: '88钻石查看'
-    },
-    {
-      id: 2,
-      icon: '🎨',
-      title: '1500小时0基础学UI设计入职大厂',
-      tags: ['技能学习', '转行', '日均6h'],
-      author: '小美学姐',
-      duration: '1500h',
-      preview: '免费预览3天',
-      price: '68钻石查看'
-    },
-    {
-      id: 3,
-      icon: '🏦',
-      title: '2800小时在职备考银行秋招上岸',
-      tags: ['职场晋升', '在职备考', { text: '认证导师', type: 'tutor' }],
-      author: '陈经理',
-      duration: '2800h',
-      preview: '免费预览3天',
-      price: '98钻石查看'
+  // 加载案例列表（支持筛选）
+  const loadCaseList = async () => {
+    try {
+      const response = await successService.getCaseList({
+        ...activeFilters,
+        limit: 20
+      });
+      
+      // 转换API数据格式
+      const formatted = response.map(item => ({
+        id: item.id,
+        icon: getCategoryIcon(item.category),
+        title: item.title,
+        tags: item.tags,
+        author: item.author_name,
+        duration: item.duration,
+        preview: `免费预览3天`,
+        price: `${item.price}钻石查看`
+      }));
+      
+      setCaseList(formatted);
+      setTotalCount(formatted.length);
+    } catch (error) {
+      console.error('加载案例列表失败:', error);
     }
-  ];
+  };
+
+  // 根据分类获取图标
+  const getCategoryIcon = (category) => {
+    const iconMap = {
+      '高考': '📚',
+      '考研': '📚',
+      '考证': '💼',
+      '技能学习': '💻',
+      '职场晋升': '🏦'
+    };
+    return iconMap[category] || '📚';
+  };
 
   // 筛选选项
   const filterOptions = {
@@ -101,15 +103,79 @@ const SuccessPage = () => {
     }
   };
 
+  // 组件加载时获取数据
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      await Promise.all([loadHotCases(), loadCaseList()]);
+      setLoading(false);
+    };
+    loadData();
+  }, []);
+
+  // 筛选变化时重新加载案例列表
+  useEffect(() => {
+    if (!loading) {
+      loadCaseList();
+    }
+  }, [activeFilters]);
+
   const handleCaseView = (caseId) => {
     console.log('查看案例详情:', caseId);
+    // TODO: 导航到案例详情页
   };
 
-  const handleSearch = (e) => {
-    if (e.key === 'Enter') {
-      console.log('搜索:', searchQuery);
+  const handleSearch = async (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      try {
+        setLoading(true);
+        const response = await successService.searchCases(searchQuery);
+        // 转换并设置搜索结果
+        const formatted = response.map(item => ({
+          id: item.id,
+          icon: getCategoryIcon(item.category),
+          title: item.title,
+          tags: item.tags,
+          author: item.author_name,
+          duration: item.duration,
+          preview: `免费预览3天`,
+          price: `${item.price}钻石查看`
+        }));
+        setCaseList(formatted);
+        setTotalCount(formatted.length);
+      } catch (error) {
+        console.error('搜索失败:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
+
+  // 加载状态
+  if (loading) {
+    return (
+      <div className="success-page">
+        <UserTopNav />
+        <main className="success-content">
+          <div style={{ 
+            textAlign: 'center', 
+            padding: '100px 20px',
+            color: '#666'
+          }}>
+            <div style={{ 
+              fontSize: '48px', 
+              marginBottom: '20px',
+              animation: 'spin 2s linear infinite'
+            }}>
+              ⏳
+            </div>
+            <div style={{ fontSize: '16px' }}>加载中...</div>
+          </div>
+        </main>
+        <BottomNavBar />
+      </div>
+    );
+  }
 
   return (
     <div className="success-page">
@@ -225,7 +291,7 @@ const SuccessPage = () => {
         </div>
 
         {/* 案例列表区 */}
-        <div className="section-title">筛选结果 (12)</div>
+        <div className="section-title">筛选结果 ({totalCount})</div>
         <div className="case-list">
           {caseList.map(caseItem => (
             <div key={caseItem.id} className="case-card">

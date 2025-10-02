@@ -48,7 +48,7 @@ class CRUDCase:
                 query = query.filter(SuccessCase.foundation_level == filters['foundation'])
             
             # 排序和分页
-            query = query.order_by(desc(SuccessCase.created_at))
+            query = query.order_by(desc(SuccessCase.create_time))
             query = query.offset(skip).limit(limit)
             
             return query.all()
@@ -80,7 +80,7 @@ class CRUDCase:
             )
             
             # 按相关性排序（这里简化为按创建时间排序）
-            query = query.order_by(desc(SuccessCase.created_at))
+            query = query.order_by(desc(SuccessCase.create_time))
             query = query.offset(skip).limit(limit)
             
             return query.all()
@@ -125,7 +125,7 @@ class CRUDCase:
             return db.query(SuccessCase).filter(
                 and_(
                     SuccessCase.status == 1,
-                    SuccessCase.created_at >= since_date
+                    SuccessCase.create_time >= since_date
                 )
             ).count()
         except Exception as e:
@@ -205,7 +205,7 @@ class CRUDCase:
                 if hasattr(case, key):
                     setattr(case, key, value)
             
-            case.updated_at = datetime.now()
+            case.update_time = datetime.now()
             db.commit()
             return True
         except Exception as e:

@@ -1,0 +1,51 @@
+INFO:     Started server process [24189]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+
+============================================================
+🚀 正在启动 AI Time Management API Server
+============================================================
+✅ AI聊天模块加载成功
+✅ AI推荐模块加载成功
+✅ 成功案例模块加载成功
+✅ 消息模块加载成功
+✅ 学习方法模块加载成功
+✅ 徽章模块加载成功
+✅ 动态模块加载成功
+✅ 动态模块加载成功
+✅ 导师模块加载成功
+✅ 时间表模块加载成功
+✅ 统计模块加载成功
+✅ 任务模块加载成功
+✅ 用户资产模块加载成功
+============================================================
+📚 API文档地址:
+   - Swagger UI: http://localhost:8000/docs
+   - ReDoc:      http://localhost:8000/redoc
+   - OpenAPI:    http://localhost:8000/openapi.json
+============================================================
+
+INFO:     127.0.0.1:57974 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57985 - "GET /api/v1/users/me/assets?user_id=1001 HTTP/1.1" 200 OK
+创建充值订单失败: Textual SQL expression '\n            INSERT INTO ...' should be explicitly declared as text('\n            INSERT INTO ...')
+INFO:     127.0.0.1:57990 - "POST /api/v1/users/me/assets/recharge?user_id=1001 HTTP/1.1" 500 Internal Server Error
+获取资产记录失败: Textual SQL expression '\n            SELECT \n    ...' should be explicitly declared as text('\n            SELECT \n    ...')
+INFO:     127.0.0.1:57992 - "GET /api/v1/users/me/assets/records?user_id=1001&limit=10&offset=0 HTTP/1.1" 200 OK
+扣减钻石失败: Textual SQL expression '\n            SELECT diamo...' should be explicitly declared as text('\n            SELECT diamo...')
+INFO:     127.0.0.1:57996 - "POST /api/v1/users/me/assets/purchase?user_id=1001 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:58000 - "GET /api/v1/users/me/orders/tutor?user_id=1001&page=1&page_size=20 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:58570 - "GET /api/v1/users/me/message-settings?user_id=1001 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58572 - "PUT /api/v1/users/me/message-settings?user_id=1001 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58574 - "POST /api/v1/users/me/message-settings/reset?user_id=1001 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58576 - "GET /api/v1/users/me/message-settings/summary?user_id=1001 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58578 - "GET /api/v1/users/me/reminder-preferences?user_id=1001 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58580 - "GET /api/v1/users/me/cleanup-settings?user_id=1001 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58582 - "POST /api/v1/users/me/check-reminder?user_id=1001&message_type=tutor HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58584 - "GET /api/v1/users/admin/reminder-users/tutor HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58586 - "GET /api/v1/users/admin/auto-read-users HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58588 - "GET /api/v1/users/admin/cleanup-candidates HTTP/1.1" 404 Not Found
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [24189]

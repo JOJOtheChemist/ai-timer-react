@@ -1,0 +1,44 @@
+INFO:     Started server process [27723]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+
+============================================================
+🚀 正在启动 AI Time Management API Server
+============================================================
+✅ AI聊天模块加载成功
+✅ AI推荐模块加载成功
+✅ 成功案例模块加载成功
+✅ 消息模块加载成功
+✅ 学习方法模块加载成功
+✅ 徽章模块加载成功
+✅ 动态模块加载成功
+✅ 动态模块加载成功
+✅ 导师模块加载成功
+✅ 时间表模块加载成功
+✅ 统计模块加载成功
+✅ 任务模块加载成功
+✅ 用户资产模块加载成功
+✅ 用户消息设置模块加载成功
+============================================================
+📚 API文档地址:
+   - Swagger UI: http://localhost:8000/docs
+   - ReDoc:      http://localhost:8000/redoc
+   - OpenAPI:    http://localhost:8000/openapi.json
+============================================================
+
+INFO:     127.0.0.1:58624 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58654 - "GET /api/v1/users/me/message-settings?user_id=1001 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:58657 - "PUT /api/v1/users/me/message-settings?user_id=1001 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58659 - "POST /api/v1/users/me/message-settings/reset?user_id=1001 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58661 - "GET /api/v1/users/me/message-settings/summary?user_id=1001 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:58663 - "GET /api/v1/users/me/reminder-preferences?user_id=1001 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:58665 - "GET /api/v1/users/me/cleanup-settings?user_id=1001 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:58667 - "POST /api/v1/users/me/check-reminder?user_id=1001&message_type=tutor HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:58669 - "GET /api/v1/users/admin/reminder-users/tutor HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:58671 - "GET /api/v1/users/admin/auto-read-users HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:58673 - "GET /api/v1/users/admin/cleanup-candidates HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [27723]

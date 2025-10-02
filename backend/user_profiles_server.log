@@ -1,0 +1,88 @@
+Traceback (most recent call last):
+  File "/Users/yeya/FlutterProjects/ai-time/backend/api_server_with_docs.py", line 408, in <module>
+    from api.v1.endpoints.user import user_profiles
+  File "/Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/user/user_profiles.py", line 64, in <module>
+    @router.get("/{user_id}/simple-info", response_model=UserSimpleInfoResponse)
+     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 1070, in decorator
+    self.add_api_route(
+    ~~~~~~~~~~~~~~~~~~^
+        path,
+        ^^^^^
+    ...<23 lines>...
+        generate_unique_id_function=generate_unique_id_function,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 1009, in add_api_route
+    route = route_class(
+        self.prefix + path,
+    ...<24 lines>...
+        generate_unique_id_function=current_generate_unique_id,
+    )
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 630, in __init__
+    self.dependant = get_dependant(path=self.path_format, call=self.endpoint)
+                     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/dependencies/utils.py", line 300, in get_dependant
+    sub_dependant = get_param_sub_dependant(
+        param_name=param_name,
+    ...<2 lines>...
+        security_scopes=security_scopes,
+    )
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/dependencies/utils.py", line 132, in get_param_sub_dependant
+    return get_sub_dependant(
+        depends=depends,
+    ...<3 lines>...
+        security_scopes=security_scopes,
+    )
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/dependencies/utils.py", line 168, in get_sub_dependant
+    sub_dependant = get_dependant(
+        path=path,
+    ...<3 lines>...
+        use_cache=depends.use_cache,
+    )
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/dependencies/utils.py", line 293, in get_dependant
+    param_details = analyze_param(
+        param_name=param_name,
+    ...<2 lines>...
+        is_path_param=is_path_param,
+    )
+  File "/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/dependencies/utils.py", line 475, in analyze_param
+    assert isinstance(field_info, params.Path), (
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Cannot use `Query` for path param 'user_id'
+INFO:     Started server process [36071]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+
+============================================================
+🚀 正在启动 AI Time Management API Server
+============================================================
+✅ AI聊天模块加载成功
+✅ AI推荐模块加载成功
+✅ 成功案例模块加载成功
+✅ 消息模块加载成功
+✅ 学习方法模块加载成功
+✅ 徽章模块加载成功
+✅ 动态模块加载成功
+✅ 动态模块加载成功
+✅ 导师模块加载成功
+✅ 时间表模块加载成功
+✅ 统计模块加载成功
+✅ 任务模块加载成功
+✅ 用户资产模块加载成功
+✅ 用户消息设置模块加载成功
+⚠️  用户个人信息模块加载失败: Cannot use `Query` for path param 'user_id'
+============================================================
+📚 API文档地址:
+   - Swagger UI: http://localhost:8000/docs
+   - ReDoc:      http://localhost:8000/redoc
+   - OpenAPI:    http://localhost:8000/openapi.json
+============================================================
+
+INFO:     127.0.0.1:60649 - "GET /health HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [36071]

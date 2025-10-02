@@ -18,12 +18,8 @@ class CRUDUserMessageSetting:
         """为新用户创建默认消息设置"""
         db_setting = UserMessageSetting(
             user_id=user_id,
-            tutor_reminder=1,
-            private_reminder=1,
-            system_reminder=1,
-            reminder_type="push",
-            keep_days=30,
-            auto_read_system=0
+            reminder_type=0,  # 0=关闭，1=开启
+            keep_days=7  # 默认保留7天
         )
         db.add(db_setting)
         db.commit()
@@ -43,24 +39,21 @@ class CRUDUserMessageSetting:
         user_id: int, 
         setting_data: UserMessageSettingUpdate
     ) -> Optional[UserMessageSetting]:
-        """更新数据库中的消息设置"""
+        """更新用户消息设置"""
         db_setting = self.get_or_create(db, user_id)
         
         update_data = setting_data.dict(exclude_unset=True)
         
-        # 处理布尔类型转换
-        bool_fields = ['tutor_reminder', 'private_reminder', 'system_reminder', 'auto_read_system']
-        for field in bool_fields:
-            if field in update_data:
-                update_data[field] = 1 if update_data[field] else 0
+        # 只更新存在于数据库中的字段
+        if 'reminder_type' in update_data:
+            if isinstance(update_data['reminder_type'], str):
+                # 映射字符串值到数字
+                db_setting.reminder_type = 1 if update_data['reminder_type'] in ['push', 'email', 'both'] else 0
+            else:
+                db_setting.reminder_type = 1 if update_data['reminder_type'] else 0
         
-        # 处理枚举类型
-        if 'reminder_type' in update_data and update_data['reminder_type']:
-            update_data['reminder_type'] = update_data['reminder_type'].value
-        
-        for field, value in update_data.items():
-            if hasattr(db_setting, field):
-                setattr(db_setting, field, value)
+        if 'keep_days' in update_data:
+            db_setting.keep_days = update_data['keep_days']
         
         db.commit()
         db.refresh(db_setting)
@@ -71,12 +64,8 @@ class CRUDUserMessageSetting:
         db_setting = self.get_or_create(db, user_id)
         
         # 重置为默认值
-        db_setting.tutor_reminder = 1
-        db_setting.private_reminder = 1
-        db_setting.system_reminder = 1
-        db_setting.reminder_type = "push"
-        db_setting.keep_days = 30
-        db_setting.auto_read_system = 0
+        db_setting.reminder_type = 0
+        db_setting.keep_days = 7
         
         db.commit()
         db.refresh(db_setting)
@@ -87,18 +76,9 @@ class CRUDUserMessageSetting:
         db: Session, 
         reminder_type: str = "tutor"
     ) -> list[int]:
-        """获取启用了特定提醒类型的用户ID列表"""
-        field_map = {
-            "tutor": UserMessageSetting.tutor_reminder,
-            "private": UserMessageSetting.private_reminder,
-            "system": UserMessageSetting.system_reminder
-        }
-        
-        if reminder_type not in field_map:
-            return []
-        
+        """获取启用了提醒的用户列表"""
         users = db.query(UserMessageSetting.user_id).filter(
-            field_map[reminder_type] == 1
+            UserMessageSetting.reminder_type == 1
         ).all()
         
         return [user.user_id for user in users]
@@ -119,11 +99,8 @@ class CRUDUserMessageSetting:
     
     def get_auto_read_system_users(self, db: Session) -> list[int]:
         """获取启用系统消息自动已读的用户ID列表"""
-        users = db.query(UserMessageSetting.user_id).filter(
-            UserMessageSetting.auto_read_system == 1
-        ).all()
-        
-        return [user.user_id for user in users]
+        # 由于数据库没有auto_read_system字段，返回空列表
+        return []
 
 # 创建CRUD实例
 crud_user_message_setting = CRUDUserMessageSetting() 

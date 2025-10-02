@@ -181,4 +181,27 @@ class TutorService:
             
             return result
         except Exception as e:
-            raise Exception(f"获取热门导师失败: {str(e)}") 
+            raise Exception(f"获取热门导师失败: {str(e)}")
+
+    async def get_tutor_service_price(self, tutor_id: int, service_id: int) -> Optional[dict]:
+        """获取导师服务的价格信息"""
+        try:
+            service = self.db.query(TutorServiceModel).filter(
+                TutorServiceModel.id == service_id,
+                TutorServiceModel.tutor_id == tutor_id,
+                TutorServiceModel.is_active == 1
+            ).first()
+            
+            if not service:
+                return None
+            
+            return {
+                "id": service.id,
+                "name": service.name,
+                "price": service.price,
+                "description": service.description,
+                "service_type": service.service_type
+            }
+        except Exception as e:
+            print(f"获取服务价格失败: {e}")
+            return None 

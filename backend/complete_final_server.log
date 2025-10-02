@@ -1,0 +1,60 @@
+Traceback (most recent call last):
+  File "/Users/yeya/FlutterProjects/ai-time/backend/api_server_with_docs.py", line 195, in <module>
+    from api.v1.endpoints.case import cases, case_details, case_permissions
+  File "/Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/case/case_permissions.py", line 6, in <module>
+    from services.case.case_permission_service import CasePermissionService
+  File "/Users/yeya/FlutterProjects/ai-time/backend/services/case/case_permission_service.py", line 6, in <module>
+    from crud.user.crud_user_asset import CRUDUserAsset
+  File "/Users/yeya/FlutterProjects/ai-time/backend/crud/user/crud_user_asset.py", line 21
+    """))
+        ^
+SyntaxError: unmatched ')'
+Traceback (most recent call last):
+  File "/Users/yeya/FlutterProjects/ai-time/backend/api_server_with_docs.py", line 380, in <module>
+    from api.v1.endpoints.user import user_assets
+  File "/Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/user/user_assets.py", line 15, in <module>
+    from services.user.user_asset_service import UserAssetService
+  File "/Users/yeya/FlutterProjects/ai-time/backend/services/user/user_asset_service.py", line 7, in <module>
+    from crud.user.crud_user_asset import CRUDUserAsset
+  File "/Users/yeya/FlutterProjects/ai-time/backend/crud/user/crud_user_asset.py", line 21
+    """))
+        ^
+SyntaxError: unmatched ')'
+INFO:     Started server process [6603]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+
+============================================================
+🚀 正在启动 AI Time Management API Server
+============================================================
+✅ AI聊天模块加载成功
+✅ AI推荐模块加载成功
+⚠️  成功案例模块加载失败: unmatched ')' (crud_user_asset.py, line 21)
+✅ 消息模块加载成功
+✅ 学习方法模块加载成功
+✅ 徽章模块加载成功
+✅ 动态模块加载成功
+✅ 动态模块加载成功
+✅ 导师模块加载成功
+✅ 时间表模块加载成功
+✅ 统计模块加载成功
+✅ 任务模块加载成功
+⚠️  用户资产模块加载失败: unmatched ')' (crud_user_asset.py, line 21)
+============================================================
+📚 API文档地址:
+   - Swagger UI: http://localhost:8000/docs
+   - ReDoc:      http://localhost:8000/redoc
+   - OpenAPI:    http://localhost:8000/openapi.json
+============================================================
+
+INFO:     127.0.0.1:57830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57839 - "GET /api/v1/users/me/assets?user_id=1001 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57842 - "POST /api/v1/users/me/assets/recharge?user_id=1001 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57844 - "GET /api/v1/users/me/assets/records?user_id=1001&limit=10&offset=0 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57848 - "POST /api/v1/users/me/assets/purchase?user_id=1001 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57850 - "GET /api/v1/users/me/orders/tutor?user_id=1001&page=1&page_size=20 HTTP/1.1" 404 Not Found
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [6603]

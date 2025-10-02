@@ -223,14 +223,15 @@ class UserAssetService:
                 deduct_success = self.crud_user_asset.deduct_diamonds(
                     self.db, 
                     user_id, 
-                    service_price["price"]
+                    service_price["price"],
+                    f"购买导师服务: {service_price['name']}"
                 )
                 
                 if not deduct_success:
                     raise Exception("钻石扣减失败")
                 
                 # 创建订单
-                order_id = await self.crud_tutor_service_order.create_order(
+                order_no = await self.crud_tutor_service_order.create_order(
                     self.db,
                     user_id=user_id,
                     tutor_id=tutor_id,
@@ -244,7 +245,7 @@ class UserAssetService:
                 self.db.commit()
                 
                 return TutorServiceOrderResponse(
-                    order_id=order_id,
+                    order_id=order_no,
                     user_id=user_id,
                     tutor_id=tutor_id,
                     service_id=service_id,
@@ -280,16 +281,20 @@ class UserAssetService:
             
             result = []
             for order in orders:
+                # Map status integer to string
+                status_map = {0: "pending", 1: "paid", 2: "completed", 3: "cancelled"}
+                status_str = status_map.get(order.status, "unknown")
+                
                 result.append(TutorServiceOrderResponse(
-                    order_id=order.order_id,
+                    order_id=order.order_no,
                     user_id=order.user_id,
                     tutor_id=order.tutor_id,
                     service_id=order.service_id,
-                    service_name=order.service_name,
-                    amount=order.amount,
-                    currency=order.currency,
-                    status=order.status,
-                    created_at=order.created_at
+                    service_name=order.service_name or "未知服务",
+                    amount=float(order.amount),
+                    currency="diamonds",
+                    status=status_str,
+                    created_at=order.create_time
                 ))
             
             return result

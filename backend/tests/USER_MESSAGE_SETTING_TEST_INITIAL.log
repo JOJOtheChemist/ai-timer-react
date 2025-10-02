@@ -1,0 +1,29 @@
+
+🚀 ============================================================================
+   User Message Setting API 测试开始
+================================================================================
+🔧 准备测试数据...
+❌ 准备测试数据失败: column "email" of relation "user" does not exist
+LINE 2: ... INSERT INTO "user" (id, username, password_hash, email, pho...
+                                                             ^
+
+Traceback (most recent call last):
+  File "/Users/yeya/FlutterProjects/ai-time/backend/tests/test_user_message_setting_apis.py", line 407, in <module>
+    main()
+    ~~~~^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/tests/test_user_message_setting_apis.py", line 373, in main
+    setup_test_data()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/tests/test_user_message_setting_apis.py", line 42, in setup_test_data
+    cur.execute("""
+    ~~~~~~~~~~~^^^^
+        INSERT INTO "user" (id, username, password_hash, email, phone)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        VALUES (%s, %s, %s, %s, %s)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    """, (TEST_USER_ID, f"test_user_{TEST_USER_ID}", "hashed_password", f"test{TEST_USER_ID}@example.com", "13800000000"))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column "email" of relation "user" does not exist
+LINE 2: ... INSERT INTO "user" (id, username, password_hash, email, pho...
+                                                             ^
+

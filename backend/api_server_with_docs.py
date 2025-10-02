@@ -375,6 +375,48 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
+# 加载用户资产路由
+try:
+    from api.v1.endpoints.user import user_assets
+    app.include_router(
+        user_assets.router,
+        prefix="/api/v1/users",
+        tags=["用户资产"]
+    )
+    print("✅ 用户资产模块加载成功")
+except Exception as e:
+    print(f"⚠️  用户资产模块加载失败: {e}")
+    import traceback
+    traceback.print_exc()
+
+# 加载用户消息设置路由
+try:
+    from api.v1.endpoints.user import user_message_settings
+    app.include_router(
+        user_message_settings.router,
+        prefix="/api/v1/users",
+        tags=["用户消息设置"]
+    )
+    print("✅ 用户消息设置模块加载成功")
+except Exception as e:
+    print(f"⚠️  用户消息设置模块加载失败: {e}")
+    import traceback
+    traceback.print_exc()
+
+# 加载用户个人信息路由
+try:
+    from api.v1.endpoints.user import user_profiles
+    app.include_router(
+        user_profiles.router,
+        prefix="/api/v1/users",
+        tags=["用户个人信息"]
+    )
+    print("✅ 用户个人信息模块加载成功")
+except Exception as e:
+    print(f"⚠️  用户个人信息模块加载失败: {e}")
+    import traceback
+    traceback.print_exc()
+
 # ============= 全局异常处理 =============
 
 @app.exception_handler(Exception)

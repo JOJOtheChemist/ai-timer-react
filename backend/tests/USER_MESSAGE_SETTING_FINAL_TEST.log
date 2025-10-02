@@ -1,0 +1,108 @@
+
+🚀 ============================================================================
+   User Message Setting API 测试开始
+================================================================================
+🔧 准备测试数据...
+✅ 测试数据准备完成
+   - 测试用户ID: 1001
+
+================================================================================
+测试1: GET /api/v1/users/me/message-settings - 获取用户消息设置
+================================================================================
+请求: GET http://localhost:8000/api/v1/users/me/message-settings
+参数: {'user_id': 1001}
+响应状态: 500
+响应内容: {'detail': "获取消息设置失败: Foreign key associated with column 'user_message_setting.user_id' could not find table 'user' with which to generate a foreign key to target column 'id'"}
+❌ 测试失败: {'detail': "获取消息设置失败: Foreign key associated with column 'user_message_setting.user_id' could not find table 'user' with which to generate a foreign key to target column 'id'"}
+
+================================================================================
+测试2: PUT /api/v1/users/me/message-settings - 更新用户消息设置
+================================================================================
+请求: PUT http://localhost:8000/api/v1/users/me/message-settings
+参数: {'user_id': 1001}
+请求体: {'reminder_type': 'email', 'keep_days': 60}
+响应状态: 200
+响应内容: {'success': False, 'message': "更新消息设置时发生错误: Foreign key associated with column 'user_message_setting.user_id' could not find table 'user' with which to generate a foreign key to target column 'id'", 'data': None}
+❌ 测试异常: 更新操作失败
+
+================================================================================
+测试3: POST /api/v1/users/me/message-settings/reset - 重置消息设置
+================================================================================
+请求: POST http://localhost:8000/api/v1/users/me/message-settings/reset
+参数: {'user_id': 1001}
+响应状态: 200
+响应内容: {'success': False, 'message': "重置消息设置时发生错误: Foreign key associated with column 'user_message_setting.user_id' could not find table 'user' with which to generate a foreign key to target column 'id'", 'data': None}
+❌ 测试异常: 重置操作失败
+
+================================================================================
+测试4: GET /api/v1/users/me/message-settings/summary - 获取设置摘要
+================================================================================
+请求: GET http://localhost:8000/api/v1/users/me/message-settings/summary
+参数: {'user_id': 1001}
+响应状态: 500
+响应内容: {'detail': "获取设置摘要失败: Foreign key associated with column 'user_message_setting.user_id' could not find table 'user' with which to generate a foreign key to target column 'id'"}
+❌ 测试失败: {'detail': "获取设置摘要失败: Foreign key associated with column 'user_message_setting.user_id' could not find table 'user' with which to generate a foreign key to target column 'id'"}
+
+================================================================================
+测试5: GET /api/v1/users/me/reminder-preferences - 获取提醒偏好
+================================================================================
+请求: GET http://localhost:8000/api/v1/users/me/reminder-preferences
+参数: {'user_id': 1001}
+响应状态: 500
+响应内容: {'detail': "获取提醒偏好失败: Foreign key associated with column 'user_message_setting.user_id' could not find table 'user' with which to generate a foreign key to target column 'id'"}
+❌ 测试失败: {'detail': "获取提醒偏好失败: Foreign key associated with column 'user_message_setting.user_id' could not find table 'user' with which to generate a foreign key to target column 'id'"}
+
+================================================================================
+测试6: GET /api/v1/users/me/cleanup-settings - 获取清理设置
+================================================================================
+请求: GET http://localhost:8000/api/v1/users/me/cleanup-settings
+参数: {'user_id': 1001}
+响应状态: 500
+响应内容: {'detail': "获取清理设置失败: Foreign key associated with column 'user_message_setting.user_id' could not find table 'user' with which to generate a foreign key to target column 'id'"}
+❌ 测试失败: {'detail': "获取清理设置失败: Foreign key associated with column 'user_message_setting.user_id' could not find table 'user' with which to generate a foreign key to target column 'id'"}
+
+================================================================================
+测试7: POST /api/v1/users/me/check-reminder - 检查提醒设置
+================================================================================
+请求: POST http://localhost:8000/api/v1/users/me/check-reminder
+参数: {'user_id': 1001, 'message_type': 'tutor'}
+响应状态: 500
+响应内容: {'detail': "检查提醒设置失败: Foreign key associated with column 'user_message_setting.user_id' could not find table 'user' with which to generate a foreign key to target column 'id'"}
+❌ 测试失败: {'detail': "检查提醒设置失败: Foreign key associated with column 'user_message_setting.user_id' could not find table 'user' with which to generate a foreign key to target column 'id'"}
+
+================================================================================
+测试8: 管理员接口测试
+================================================================================
+
+  获取提醒用户列表:
+  请求: GET http://localhost:8000/api/v1/users/admin/reminder-users/tutor
+  响应状态: 200
+  ✅ 获取提醒用户列表 - 通过
+
+  获取自动已读用户列表:
+  请求: GET http://localhost:8000/api/v1/users/admin/auto-read-users
+  响应状态: 200
+  ✅ 获取自动已读用户列表 - 通过
+
+  获取清理候选用户:
+  请求: GET http://localhost:8000/api/v1/users/admin/cleanup-candidates
+  响应状态: 200
+  ✅ 获取清理候选用户 - 通过
+
+🧹 清理测试数据...
+✅ 测试数据清理完成
+
+================================================================================
+📊 测试总结
+================================================================================
+❌ 失败 - 获取用户消息设置
+❌ 失败 - 更新用户消息设置
+❌ 失败 - 重置消息设置
+❌ 失败 - 获取设置摘要
+❌ 失败 - 获取提醒偏好
+❌ 失败 - 获取清理设置
+❌ 失败 - 检查提醒设置
+✅ 通过 - 管理员接口
+================================================================================
+总计: 1/8 测试通过 (12.5%)
+================================================================================

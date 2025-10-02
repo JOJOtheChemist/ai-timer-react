@@ -1,11 +1,10 @@
 from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
-from sqlalchemy import desc, and_
+from sqlalchemy import desc, and_, text
 from datetime import datetime
 import uuid
 
-# 注意：这里假设有对应的数据库模型，实际使用时需要根据具体的模型进行调整
-# from models.tutor import TutorServiceOrder
+from models.tutor import TutorServiceOrder
 
 class CRUDTutorServiceOrder:
     def __init__(self):
@@ -23,39 +22,46 @@ class CRUDTutorServiceOrder:
     ) -> str:
         """创建导师服务订单（记录订单状态、金额、时间）"""
         try:
-            # 生成订单ID
-            order_id = f"TUTOR_{tutor_id}_{user_id}_{int(datetime.now().timestamp())}"
+            # 生成订单号
+            order_no = f"TUTOR{int(datetime.now().timestamp())}{user_id:04d}"
             
-            order = TutorServiceOrder(
-                order_id=order_id,
-                user_id=user_id,
-                tutor_id=tutor_id,
-                service_id=service_id,
-                service_name=service_name,
-                amount=amount,
-                currency=currency,
-                status="completed",  # 钻石支付直接完成
-                created_at=datetime.now(),
-                updated_at=datetime.now()
+            # 使用raw SQL插入
+            insert_query = text("""
+            INSERT INTO tutor_service_order (
+                user_id, tutor_id, service_id, order_no, amount, status, create_time, update_time
+            ) VALUES (
+                :user_id, :tutor_id, :service_id, :order_no, :amount, :status, :create_time, :update_time
             )
+            """)
             
-            db.add(order)
+            db.execute(insert_query, {
+                "user_id": user_id,
+                "tutor_id": tutor_id,
+                "service_id": service_id,
+                "order_no": order_no,
+                "amount": int(amount),
+                "status": 1,  # 1=已支付
+                "create_time": datetime.now(),
+                "update_time": datetime.now()
+            })
+            
             db.commit()
-            db.refresh(order)
             
-            return order_id
+            return order_no
         except Exception as e:
             db.rollback()
             raise Exception(f"创建订单失败: {str(e)}")
 
-    async def get_by_order_id(self, db: Session, order_id: str) -> Optional[Any]:
-        """根据订单ID获取订单详情"""
+    async def get_by_order_no(self, db: Session, order_no: str) -> Optional[Any]:
+        """根据订单号获取订单详情"""
         try:
-            order = db.query(TutorServiceOrder).filter(
-                TutorServiceOrder.order_id == order_id
-            ).first()
+            query = text("""
+            SELECT * FROM tutor_service_order WHERE order_no = :order_no
+            """)
             
-            return order
+            result = db.execute(query, {"order_no": order_no}).fetchone()
+            
+            return result
         except Exception as e:
             raise Exception(f"查询订单失败: {str(e)}")
 
@@ -68,11 +74,31 @@ class CRUDTutorServiceOrder:
     ) -> List[Any]:
         """获取用户的导师服务订单列表"""
         try:
-            orders = db.query(TutorServiceOrder).filter(
-                TutorServiceOrder.user_id == user_id
-            ).order_by(desc(TutorServiceOrder.created_at)).offset(skip).limit(limit).all()
+            query = text("""
+            SELECT 
+                tso.id,
+                tso.user_id,
+                tso.tutor_id,
+                tso.service_id,
+                tso.order_no,
+                tso.amount,
+                tso.status,
+                tso.create_time,
+                ts.name as service_name
+            FROM tutor_service_order tso
+            LEFT JOIN tutor_service ts ON tso.service_id = ts.id
+            WHERE tso.user_id = :user_id
+            ORDER BY tso.create_time DESC
+            LIMIT :limit OFFSET :skip
+            """)
             
-            return orders
+            results = db.execute(query, {
+                "user_id": user_id,
+                "skip": skip,
+                "limit": limit
+            }).fetchall()
+            
+            return results
         except Exception as e:
             raise Exception(f"获取用户订单失败: {str(e)}")
 

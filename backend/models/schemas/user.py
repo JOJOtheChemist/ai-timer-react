@@ -24,11 +24,11 @@ class UserProfileResponse(BaseModel):
     """用户个人信息响应模型"""
     user_id: int
     username: str
-    nickname: Optional[str] = None
     avatar: Optional[str] = None
-    email: Optional[str] = None
     phone: Optional[str] = None
     goal: Optional[str] = None
+    major: Optional[str] = None
+    real_name: Optional[str] = None
     bio: Optional[str] = None
     
     # 统计信息
@@ -36,12 +36,8 @@ class UserProfileResponse(BaseModel):
     total_moments: int = Field(default=0, description="发布动态数")
     total_badges: int = Field(default=0, description="获得徽章数")
     
-    # 设置信息
-    is_public: bool = Field(default=True, description="是否公开个人信息")
-    allow_follow: bool = Field(default=True, description="是否允许被关注")
-    
-    create_time: datetime
-    update_time: datetime
+    created_at: datetime
+    updated_at: datetime
     
     class Config:
         from_attributes = True
@@ -49,14 +45,11 @@ class UserProfileResponse(BaseModel):
 class UserProfileUpdate(BaseModel):
     """用户信息更新请求模型"""
     username: Optional[str] = Field(None, min_length=1, max_length=50, description="用户名")
-    nickname: Optional[str] = Field(None, max_length=100, description="昵称")
     avatar: Optional[str] = Field(None, description="头像URL")
-    email: Optional[str] = Field(None, description="邮箱")
     phone: Optional[str] = Field(None, max_length=20, description="手机号")
-    goal: Optional[str] = Field(None, max_length=1000, description="学习目标")
+    goal: Optional[str] = Field(None, max_length=100, description="学习目标")
+    real_name: Optional[str] = Field(None, max_length=50, description="真实姓名")
     bio: Optional[str] = Field(None, max_length=500, description="个人简介")
-    is_public: Optional[bool] = Field(None, description="是否公开个人信息")
-    allow_follow: Optional[bool] = Field(None, description="是否允许被关注")
 
 # 资产相关
 class UserAssetResponse(BaseModel):

@@ -14,17 +14,20 @@ class UserMessageSettingService:
         # 获取或创建用户消息设置
         db_setting = crud_user_message_setting.get_or_create(db, user_id)
         
+        # 根据reminder_type映射到前端格式
+        reminder_enabled = bool(db_setting.reminder_type)
+        
         # 转换为响应模型
         return UserMessageSettingResponse(
             user_id=db_setting.user_id,
-            tutor_reminder=bool(db_setting.tutor_reminder),
-            private_reminder=bool(db_setting.private_reminder),
-            system_reminder=bool(db_setting.system_reminder),
-            reminder_type=db_setting.reminder_type,
+            tutor_reminder=reminder_enabled,
+            private_reminder=reminder_enabled,
+            system_reminder=reminder_enabled,
+            reminder_type="push",  # 默认总是返回push（因为enum不接受none）
             keep_days=db_setting.keep_days,
-            auto_read_system=bool(db_setting.auto_read_system),
-            create_time=db_setting.create_time,
-            update_time=db_setting.update_time
+            auto_read_system=False,
+            create_time=db_setting.created_at,
+            update_time=db_setting.updated_at
         )
     
     def update_message_settings(
@@ -45,7 +48,7 @@ class UserMessageSettingService:
                     data={
                         "user_id": user_id,
                         "updated_fields": setting_data.dict(exclude_unset=True),
-                        "update_time": updated_setting.update_time
+                        "update_time": updated_setting.updated_at
                     }
                 )
             else:
@@ -70,14 +73,10 @@ class UserMessageSettingService:
                 message="消息设置已重置为默认值",
                 data={
                     "user_id": user_id,
-                    "reset_time": reset_setting.update_time,
+                    "reset_time": reset_setting.updated_at,
                     "default_settings": {
-                        "tutor_reminder": True,
-                        "private_reminder": True,
-                        "system_reminder": True,
-                        "reminder_type": "push",
-                        "keep_days": 30,
-                        "auto_read_system": False
+                        "reminder_type": 0,
+                        "keep_days": 7
                     }
                 }
             )
@@ -91,14 +90,15 @@ class UserMessageSettingService:
     def get_reminder_preferences(self, db: Session, user_id: int) -> dict:
         """获取用户的提醒偏好（用于消息推送服务）"""
         db_setting = crud_user_message_setting.get_or_create(db, user_id)
+        reminder_enabled = bool(db_setting.reminder_type)
         
         return {
             "user_id": user_id,
-            "tutor_reminder_enabled": bool(db_setting.tutor_reminder),
-            "private_reminder_enabled": bool(db_setting.private_reminder),
-            "system_reminder_enabled": bool(db_setting.system_reminder),
-            "reminder_type": db_setting.reminder_type,
-            "auto_read_system": bool(db_setting.auto_read_system)
+            "tutor_reminder_enabled": reminder_enabled,
+            "private_reminder_enabled": reminder_enabled,
+            "system_reminder_enabled": reminder_enabled,
+            "reminder_type": "push" if reminder_enabled else "none",
+            "auto_read_system": False
         }
     
     def check_should_send_reminder(
@@ -110,14 +110,10 @@ class UserMessageSettingService:
         """检查是否应该发送提醒"""
         preferences = self.get_reminder_preferences(db, user_id)
         
-        if message_type == "tutor":
+        # 简化版：所有类型的提醒状态相同
+        if message_type in ["tutor", "private", "system"]:
             return preferences["tutor_reminder_enabled"]
-        elif message_type == "private":
-            return preferences["private_reminder_enabled"]
-        elif message_type == "system":
-            return preferences["system_reminder_enabled"]
-        else:
-            return False
+        return False
     
     def get_cleanup_settings(self, db: Session, user_id: int) -> dict:
         """获取用户的消息清理设置"""
@@ -145,50 +141,30 @@ class UserMessageSettingService:
         """验证设置更新数据"""
         # 验证保留天数
         if setting_data.keep_days is not None:
-            if setting_data.keep_days < 0 or setting_data.keep_days > 365:
-                return False, "消息保留天数必须在0-365之间"
-        
-        # 验证提醒类型
-        if setting_data.reminder_type is not None:
-            valid_types = ["push", "email", "both"]
-            if setting_data.reminder_type.value not in valid_types:
-                return False, f"提醒类型必须是以下之一: {', '.join(valid_types)}"
+            if setting_data.keep_days < 1 or setting_data.keep_days > 365:
+                return False, "消息保留天数必须在1-365之间"
         
         return True, "验证通过"
     
     def get_setting_summary(self, db: Session, user_id: int) -> dict:
         """获取用户消息设置摘要"""
         db_setting = crud_user_message_setting.get_or_create(db, user_id)
+        reminder_enabled = bool(db_setting.reminder_type)
         
         # 统计启用的提醒类型
         enabled_reminders = []
-        if db_setting.tutor_reminder:
-            enabled_reminders.append("导师反馈")
-        if db_setting.private_reminder:
-            enabled_reminders.append("私信")
-        if db_setting.system_reminder:
-            enabled_reminders.append("系统通知")
+        if reminder_enabled:
+            enabled_reminders = ["导师反馈", "私信", "系统通知"]
         
         return {
             "user_id": user_id,
             "enabled_reminders": enabled_reminders,
             "reminder_count": len(enabled_reminders),
-            "reminder_type": db_setting.reminder_type,
+            "reminder_type": "push" if reminder_enabled else "none",
             "keep_days": db_setting.keep_days,
-            "auto_read_system": bool(db_setting.auto_read_system),
-            "is_default_settings": self._is_default_settings(db_setting)
+            "auto_read_system": False,
+            "is_default_settings": db_setting.reminder_type == 0 and db_setting.keep_days == 7
         }
-    
-    def _is_default_settings(self, setting) -> bool:
-        """检查是否为默认设置"""
-        return (
-            setting.tutor_reminder == 1 and
-            setting.private_reminder == 1 and
-            setting.system_reminder == 1 and
-            setting.reminder_type == "push" and
-            setting.keep_days == 30 and
-            setting.auto_read_system == 0
-        )
 
 # 创建服务实例
 user_message_setting_service = UserMessageSettingService() 

@@ -52,7 +52,7 @@ class UserMessageSetting(Base):
     __tablename__ = "user_message_setting"
     
     id = Column(BigInteger, primary_key=True, index=True)
-    user_id = Column(BigInteger, ForeignKey("user.id", ondelete="CASCADE"), nullable=False, unique=True, index=True)
+    user_id = Column(BigInteger, nullable=False, unique=True, index=True)  # 移除ForeignKey，数据库中已有约束
     reminder_type = Column(SmallInteger, default=0)  # 0-关闭，1-开启
     keep_days = Column(BigInteger, default=7)  # 消息保留天数
     created_at = Column(DateTime(timezone=True), server_default=func.now())

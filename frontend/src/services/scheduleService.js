@@ -17,7 +17,7 @@ import api from './api';
 export const getTaskList = async (params = {}) => {
   try {
     const queryString = new URLSearchParams(params).toString();
-    const response = await api.get(`/v1/tasks?${queryString}`);
+    const response = await api.get(`/tasks?${queryString}`);
     return response;
   } catch (error) {
     console.error('获取任务列表失败:', error);
@@ -33,7 +33,7 @@ export const getTaskList = async (params = {}) => {
  */
 export const createTask = async (taskData, user_id) => {
   try {
-    const response = await api.post(`/v1/tasks?user_id=${user_id}`, taskData);
+    const response = await api.post(`/tasks?user_id=${user_id}`, taskData);
     return response;
   } catch (error) {
     console.error('创建任务失败:', error);
@@ -49,7 +49,7 @@ export const createTask = async (taskData, user_id) => {
  */
 export const quickAddTask = async (taskName, user_id) => {
   try {
-    const response = await api.post(`/v1/tasks/quick-add?user_id=${user_id}`, {
+    const response = await api.post(`/tasks/quick-add?user_id=${user_id}`, {
       name: taskName,
       type: 'study'
     });
@@ -69,7 +69,7 @@ export const quickAddTask = async (taskName, user_id) => {
  */
 export const updateTask = async (taskId, taskData, user_id) => {
   try {
-    const response = await api.patch(`/v1/tasks/${taskId}?user_id=${user_id}`, taskData);
+    const response = await api.patch(`/tasks/${taskId}?user_id=${user_id}`, taskData);
     return response;
   } catch (error) {
     console.error('更新任务失败:', error);
@@ -85,7 +85,7 @@ export const updateTask = async (taskId, taskData, user_id) => {
  */
 export const deleteTask = async (taskId, user_id) => {
   try {
-    const response = await api.delete(`/v1/tasks/${taskId}?user_id=${user_id}`);
+    const response = await api.delete(`/tasks/${taskId}?user_id=${user_id}`);
     return response;
   } catch (error) {
     console.error('删除任务失败:', error);
@@ -107,7 +107,7 @@ export const getTodayTimeSlots = async (user_id, target_date = null) => {
     if (target_date) params.target_date = target_date;
     const queryString = new URLSearchParams(params).toString();
     
-    const response = await api.get(`/v1/schedule/time-slots?${queryString}`);
+    const response = await api.get(`/schedule/time-slots?${queryString}`);
     return response;
   } catch (error) {
     console.error('获取时间表失败:', error);
@@ -125,7 +125,7 @@ export const getTodayTimeSlots = async (user_id, target_date = null) => {
 export const saveMoodRecord = async (slotId, mood, user_id) => {
   try {
     const response = await api.post(
-      `/v1/schedule/time-slots/${slotId}/mood?user_id=${user_id}`,
+      `/schedule/time-slots/${slotId}/mood?user_id=${user_id}`,
       { mood }
     );
     return response;
@@ -145,7 +145,7 @@ export const saveMoodRecord = async (slotId, mood, user_id) => {
 export const bindTaskToSlot = async (slotId, taskId, user_id) => {
   try {
     const response = await api.post(
-      `/v1/schedule/time-slots/${slotId}/task?user_id=${user_id}`,
+      `/schedule/time-slots/${slotId}/task?user_id=${user_id}`,
       { task_id: taskId }
     );
     return response;
@@ -164,7 +164,7 @@ export const bindTaskToSlot = async (slotId, taskId, user_id) => {
 export const completeTimeSlot = async (slotId, user_id) => {
   try {
     const response = await api.patch(
-      `/v1/schedule/time-slots/${slotId}/complete?user_id=${user_id}`
+      `/schedule/time-slots/${slotId}/complete?user_id=${user_id}`
     );
     return response;
   } catch (error) {
@@ -182,7 +182,7 @@ export const completeTimeSlot = async (slotId, user_id) => {
 export const startTimeSlot = async (slotId, user_id) => {
   try {
     const response = await api.patch(
-      `/v1/schedule/time-slots/${slotId}/start?user_id=${user_id}`
+      `/schedule/time-slots/${slotId}/start?user_id=${user_id}`
     );
     return response;
   } catch (error) {
@@ -205,7 +205,7 @@ export const getWeeklyOverview = async (user_id, year_week = null) => {
     if (year_week) params.year_week = year_week;
     const queryString = new URLSearchParams(params).toString();
     
-    const response = await api.get(`/v1/statistics/weekly-overview?${queryString}`);
+    const response = await api.get(`/statistics/weekly-overview?${queryString}`);
     return response;
   } catch (error) {
     console.error('获取周统计失败:', error);
@@ -225,7 +225,7 @@ export const getWeeklyChart = async (user_id, year_week = null) => {
     if (year_week) params.year_week = year_week;
     const queryString = new URLSearchParams(params).toString();
     
-    const response = await api.get(`/v1/statistics/weekly-chart?${queryString}`);
+    const response = await api.get(`/statistics/weekly-chart?${queryString}`);
     return response;
   } catch (error) {
     console.error('获取图表数据失败:', error);
@@ -240,7 +240,7 @@ export const getWeeklyChart = async (user_id, year_week = null) => {
  */
 export const getDashboardData = async (user_id) => {
   try {
-    const response = await api.get(`/v1/statistics/dashboard?user_id=${user_id}`);
+    const response = await api.get(`/statistics/dashboard?user_id=${user_id}`);
     return response;
   } catch (error) {
     console.error('获取仪表盘数据失败:', error);
@@ -257,7 +257,7 @@ export const getDashboardData = async (user_id) => {
  */
 export const getAIRecommendedSlots = async (user_id) => {
   try {
-    const response = await api.get(`/v1/schedule/time-slots/ai-recommended?user_id=${user_id}`);
+    const response = await api.get(`/schedule/time-slots/ai-recommended?user_id=${user_id}`);
     return response;
   } catch (error) {
     console.error('获取AI推荐失败:', error);
@@ -272,7 +272,7 @@ export const getAIRecommendedSlots = async (user_id) => {
  */
 export const getPersonalizedRecommendations = async (user_id) => {
   try {
-    const response = await api.get(`/v1/ai/recommendations/personalized?user_id=${user_id}`);
+    const response = await api.get(`/ai/recommendations/personalized?user_id=${user_id}`);
     return response;
   } catch (error) {
     console.error('获取个性化推荐失败:', error);
@@ -290,7 +290,7 @@ export const getPersonalizedRecommendations = async (user_id) => {
 export const acceptAIRecommendation = async (recId, accept, user_id) => {
   try {
     const response = await api.post(
-      `/v1/ai/recommendations/feedback?user_id=${user_id}`,
+      `/ai/recommendations/feedback?user_id=${user_id}`,
       {
         method_id: recId,
         feedback_type: accept ? 'helpful' : 'not_helpful'

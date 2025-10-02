@@ -2,7 +2,6 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // 导入页面组件
-import SchedulePage from '../pages/SchedulePage/SchedulePage';
 import MainSchedulePage from '../pages/SchedulePage/MainSchedulePage';
 import PersonalPage from '../pages/PersonalPage/PersonalPage';
 import OthersPage from '../pages/OthersPage/OthersPage';
@@ -24,7 +23,7 @@ const AppRoutes = () => {
       
       {/* 主要页面路由 */}
       <Route path="/main-schedule" element={<MainSchedulePage />} />
-      <Route path="/schedule" element={<SchedulePage />} />
+      <Route path="/schedule" element={<MainSchedulePage />} />
       <Route path="/personal" element={<PersonalPage />} />
       <Route path="/others" element={<OthersPage />} />
       <Route path="/study-method" element={<StudyMethodPage />} />

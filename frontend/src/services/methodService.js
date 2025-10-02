@@ -32,7 +32,7 @@ export const getMethodList = async (filters = {}) => {
     }
     
     const queryString = params.toString();
-    const url = `/v1/methods/?${queryString}`;
+    const url = `/methods/?${queryString}`;
     
     const response = await api.get(url);
     return response;
@@ -50,7 +50,7 @@ export const getMethodList = async (filters = {}) => {
  */
 export const getMethodDetail = async (methodId, userId = 1) => {
   try {
-    const response = await api.get(`/v1/methods/${methodId}?user_id=${userId}`);
+    const response = await api.get(`/methods/${methodId}?user_id=${userId}`);
     return response;
   } catch (error) {
     console.error('获取学习方法详情失败:', error);
@@ -67,7 +67,7 @@ export const getMethodDetail = async (methodId, userId = 1) => {
  */
 export const getAIRecommendation = async (userId = 1) => {
   try {
-    const response = await api.get(`/v1/ai/recommendations/method?user_id=${userId}`);
+    const response = await api.get(`/ai/recommendations/method?user_id=${userId}`);
     return response;
   } catch (error) {
     console.error('获取AI推荐失败:', error);
@@ -90,7 +90,7 @@ export const getAIRecommendation = async (userId = 1) => {
 export const submitCheckin = async (methodId, checkinData, userId = 1) => {
   try {
     const response = await api.post(
-      `/v1/methods/${methodId}/checkin?user_id=${userId}`,
+      `/methods/${methodId}/checkin?user_id=${userId}`,
       checkinData
     );
     return response;
@@ -108,7 +108,7 @@ export const submitCheckin = async (methodId, checkinData, userId = 1) => {
  */
 export const getCheckinHistory = async (methodId, userId = 1) => {
   try {
-    const response = await api.get(`/v1/methods/${methodId}/checkins/history?user_id=${userId}`);
+    const response = await api.get(`/methods/${methodId}/checkins/history?user_id=${userId}`);
     return response;
   } catch (error) {
     console.error('获取打卡历史失败:', error);

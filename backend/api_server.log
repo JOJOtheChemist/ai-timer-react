@@ -1,4 +1,4 @@
-INFO:     Started server process [91277]
+INFO:     Started server process [17867]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
@@ -28,374 +28,84 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
    - OpenAPI:    http://localhost:8000/openapi.json
 ============================================================
 
-INFO:     127.0.0.1:53684 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53687 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53689 - "GET /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53696 - "GET /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 404 Not Found
-查询用户徽章关联失败: Textual SQL expression '\n            SELECT \n    ...' should be explicitly declared as text('\n            SELECT \n    ...')
-获取徽章列表失败: Textual SQL expression '\n            SELECT \n    ...' should be explicitly declared as text('\n            SELECT \n    ...')
-INFO:     127.0.0.1:53698 - "GET /api/v1/badges/my?user_id=101 HTTP/1.1" 200 OK
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID delete_message_api_v1_messages__message_id__delete for function delete_message at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/message/message_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_unread_stats_api_v1_messages_unread_stats_get for function get_unread_stats at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/message/message_stats.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID health_check_api_v1_messages_health_get for function health_check at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/message/message_stats.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID health_check_api_v1_moments_health_get for function health_check at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_moments_api_v1_moments_get for function get_moments at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID create_moment_api_v1_moments_post for function create_moment at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID search_moments_api_v1_moments_search_get for function search_moments at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_moment_detail_api_v1_moments__moment_id__get for function get_moment_detail at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID update_moment_api_v1_moments__moment_id__put for function update_moment at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID delete_moment_api_v1_moments__moment_id__delete for function delete_moment at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_user_moments_api_v1_moments_user__user_id__get for function get_user_moments at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_popular_tags_api_v1_moments_tags_popular_get for function get_popular_tags at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_my_moments_api_v1_moments_me_published_get for function get_my_moments at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID health_check_api_v1_moments_health_get for function health_check at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moments.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID toggle_like_api_v1_moments__moment_id__like_post for function toggle_like at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID toggle_bookmark_api_v1_moments__moment_id__bookmark_post for function toggle_bookmark at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_comments_api_v1_moments__moment_id__comments_get for function get_comments at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID create_comment_api_v1_moments__moment_id__comments_post for function create_comment at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID delete_comment_api_v1_moments_comments__comment_id__delete for function delete_comment at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID share_moment_api_v1_moments__moment_id__share_post for function share_moment at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID record_view_api_v1_moments__moment_id__view_post for function record_view at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_interaction_status_api_v1_moments__moment_id__interaction_status_get for function get_interaction_status at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_interaction_stats_api_v1_moments__moment_id__stats_get for function get_interaction_stats at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_interaction_summary_api_v1_moments__moment_id__summary_get for function get_interaction_summary at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_my_bookmarks_api_v1_moments_me_bookmarks_get for function get_my_bookmarks at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_my_likes_api_v1_moments_me_likes_get for function get_my_likes at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-/Users/yeya/FlutterProjects/ai-time/backend/venv/lib/python3.13/site-packages/fastapi/openapi/utils.py:245: UserWarning: Duplicate Operation ID get_my_interaction_stats_api_v1_moments_me_stats_get for function get_my_interaction_stats at /Users/yeya/FlutterProjects/ai-time/backend/api/v1/endpoints/moment/moment_interactions.py
-  warnings.warn(message, stacklevel=1)
-INFO:     127.0.0.1:53736 - "GET /openapi.json HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53810 - "GET /api/users/me/profile HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53811 - "GET /api/users/me/assets HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53817 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53819 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53854 - "GET /api/users/me/profile HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53855 - "GET /api/users/me/assets HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53856 - "GET /api/users/me/profile HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53857 - "GET /api/users/me/assets HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53897 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53899 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53898 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53900 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53897 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53899 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53898 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53900 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53897 - "GET /api/users/me/profile HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53899 - "GET /api/users/me/assets HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53898 - "GET /api/users/me/profile HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53900 - "GET /api/users/me/assets HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53918 - "GET /api/users/me/profile HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53919 - "GET /api/users/me/assets HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53920 - "GET /api/users/me/profile HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53921 - "GET /api/users/me/assets HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53935 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53936 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53938 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53937 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53940 - "GET /api/users/me/profile HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53941 - "GET /api/users/me/assets HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53942 - "GET /api/users/me/profile HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53943 - "GET /api/users/me/assets HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:53996 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54032 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54035 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54104 - "GET /api/v1/users/me/profile HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54105 - "GET /api/v1/users/me/assets HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54107 - "GET /api/v1/users/me/assets HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54106 - "GET /api/v1/users/me/profile HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54114 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54115 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54116 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54117 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54114 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54115 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54116 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54117 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54114 - "GET /api/v1/messages HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54115 - "GET /api/v1/messages/unread-stats HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54116 - "GET /api/v1/messages HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54117 - "GET /api/v1/messages HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54125 - "GET /api/v1/messages/unread-stats HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54126 - "GET /api/v1/messages HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54114 - "GET /api/v1/users/me/profile HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54117 - "GET /api/v1/users/me/assets HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54115 - "GET /api/v1/users/me/assets HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54116 - "GET /api/v1/users/me/profile HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54138 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54139 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54140 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54141 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54138 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54139 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54140 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54141 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54138 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54139 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54140 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54141 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54138 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54139 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54140 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54141 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54138 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54139 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54140 - "GET /api/v1/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54141 - "GET /api/v1/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54138 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54139 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54140 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54141 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54138 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54139 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54140 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54141 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54138 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54139 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54140 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54141 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54138 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54139 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54140 - "GET /api/v1/messages HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54141 - "GET /api/v1/messages/unread-stats HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54138 - "GET /api/v1/messages HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54139 - "GET /api/v1/messages HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54161 - "GET /api/v1/messages/unread-stats HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54162 - "GET /api/v1/messages HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54140 - "GET /api/v1/users/me/profile HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54139 - "GET /api/v1/users/me/assets HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54141 - "GET /api/v1/users/me/assets HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54138 - "GET /api/v1/users/me/profile HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:54283 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54284 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54286 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54285 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54283 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54284 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54286 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54285 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54283 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54284 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54286 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54285 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54291 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54292 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54331 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54369 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54373 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54371 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54370 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54372 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54374 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54396 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54400 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54398 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54397 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54399 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54401 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54420 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54422 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54425 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54424 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54421 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54423 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54571 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54573 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54572 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54574 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54575 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54576 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54571 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54573 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54572 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54574 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54575 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54576 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54571 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54573 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54572 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54575 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54574 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54576 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54573 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54571 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54601 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54602 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54603 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54605 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54606 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54604 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54601 - "GET /api/v1/messages?message_type=1&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54601 - "GET /api/v1/messages?message_type=2&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54601 - "GET /api/v1/messages?message_type=1&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54601 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54601 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54611 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54612 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54613 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54637 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54638 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54639 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54640 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54641 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54642 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54637 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54638 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54639 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54640 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54680 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54681 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54682 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54683 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54708 - "GET /api/v1/messages?message_type=0&page=1&page_size=3&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54710 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54712 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54742 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54743 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54744 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54745 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54742 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54743 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54744 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54745 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54742 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54743 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54744 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54745 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54742 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54743 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54744 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54745 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54742 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54743 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54744 - "GET /api/v1/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54745 - "GET /api/v1/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54742 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54743 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54744 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54745 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54742 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54743 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54744 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54745 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54837 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54838 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54839 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54840 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54877 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54878 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54879 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54880 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54891 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54892 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54893 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54894 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54891 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54892 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54893 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54894 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54946 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54947 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54946 - "GET /api/v1/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54947 - "GET /api/v1/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54957 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54958 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54959 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54960 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54957 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54958 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54957 - "GET /api/v1/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54958 - "GET /api/v1/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54957 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:54958 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55027 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55028 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55027 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55028 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55035 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55036 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55027 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55028 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55035 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55036 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55707 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55708 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55709 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55710 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55707 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55708 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55709 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55710 - "GET /api/v1/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55727 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55728 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55729 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55730 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55727 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55728 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55729 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:55730 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56782 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56783 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56784 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56785 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56806 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56807 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56808 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56809 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56806 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56807 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56808 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56809 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56806 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56807 - "GET /api/v1/v1/tutors/?user_id=1&sort_by=rating&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56806 - "GET /api/v1/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56807 - "GET /api/v1/v1/methods/?user_id=1&page=1&page_size=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56806 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56807 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56831 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56832 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56896 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56898 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56899 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56897 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56896 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56898 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56899 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56897 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56896 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56898 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56899 - "GET /api/v1/v1/cases/hot?user_id=1&limit=3 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56897 - "GET /api/v1/v1/cases/?user_id=1&limit=20 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56963 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56964 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56965 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:56966 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:57403 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:57404 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:57405 - "GET /api/v1/v1/tasks?user_id=1 HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:57406 - "GET /api/v1/v1/schedule/time-slots?user_id=1 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61544 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61556 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61557 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61558 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61559 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61556 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61558 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61557 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61559 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61556 - "OPTIONS /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61558 - "OPTIONS /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61557 - "OPTIONS /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61559 - "OPTIONS /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61558 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61556 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61557 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61559 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61558 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61556 - "OPTIONS /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61557 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61559 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61563 - "OPTIONS /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61564 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61558 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61556 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61557 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61559 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61563 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61564 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61558 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61556 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61557 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61559 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61563 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61558 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61564 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61556 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61557 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61559 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61563 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61558 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61564 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61557 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61556 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61559 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61563 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61558 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61564 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61557 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61559 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61556 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61563 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61557 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61558 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61564 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61559 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61556 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61557 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61563 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61558 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dryGoods&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61564 - "GET /api/v1/moments?user_id=1&moment_type=dryGoods&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61608 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61610 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61609 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61611 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61613 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61612 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61608 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61611 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61609 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61610 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61612 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61613 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61608 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61611 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61610 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61609 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61612 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61608 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61613 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61611 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK

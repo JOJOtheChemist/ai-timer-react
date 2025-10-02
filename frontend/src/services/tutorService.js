@@ -46,7 +46,7 @@ export const getTutorList = async (filters = {}) => {
     }
     
     const queryString = params.toString();
-    const url = `/v1/tutors/?${queryString}`;
+    const url = `/tutors/?${queryString}`;
     
     const response = await api.get(url);
     return response;
@@ -64,7 +64,7 @@ export const getTutorList = async (filters = {}) => {
  */
 export const searchTutors = async (keyword, userId = 1) => {
   try {
-    const response = await api.get(`/v1/tutors/search?user_id=${userId}&keyword=${encodeURIComponent(keyword)}`);
+    const response = await api.get(`/tutors/search?user_id=${userId}&keyword=${encodeURIComponent(keyword)}`);
     return response;
   } catch (error) {
     console.error('搜索导师失败:', error);
@@ -79,7 +79,7 @@ export const searchTutors = async (keyword, userId = 1) => {
  */
 export const getTutorDomains = async (userId = 1) => {
   try {
-    const response = await api.get(`/v1/tutors/domains?user_id=${userId}`);
+    const response = await api.get(`/tutors/domains?user_id=${userId}`);
     return response;
   } catch (error) {
     console.error('获取导师领域失败:', error);
@@ -97,7 +97,7 @@ export const getTutorDomains = async (userId = 1) => {
  */
 export const getTutorDetail = async (tutorId, userId = 1) => {
   try {
-    const response = await api.get(`/v1/tutors/${tutorId}?user_id=${userId}`);
+    const response = await api.get(`/tutors/${tutorId}?user_id=${userId}`);
     return response;
   } catch (error) {
     console.error('获取导师详情失败:', error);
@@ -113,7 +113,7 @@ export const getTutorDetail = async (tutorId, userId = 1) => {
  */
 export const getTutorServices = async (tutorId, userId = 1) => {
   try {
-    const response = await api.get(`/v1/tutors/${tutorId}/services?user_id=${userId}`);
+    const response = await api.get(`/tutors/${tutorId}/services?user_id=${userId}`);
     return response;
   } catch (error) {
     console.error('获取导师服务失败:', error);
@@ -133,10 +133,10 @@ export const getTutorServices = async (tutorId, userId = 1) => {
 export const toggleTutorFollow = async (tutorId, userId = 1, isFollow = true) => {
   try {
     if (isFollow) {
-      const response = await api.post(`/v1/users/me/relations/follow/tutor/${tutorId}?user_id=${userId}`);
+      const response = await api.post(`/users/me/relations/follow/tutor/${tutorId}?user_id=${userId}`);
       return response;
     } else {
-      const response = await api.delete(`/v1/users/me/relations/follow/tutor/${tutorId}?user_id=${userId}`);
+      const response = await api.delete(`/users/me/relations/follow/tutor/${tutorId}?user_id=${userId}`);
       return response;
     }
   } catch (error) {
@@ -155,7 +155,7 @@ export const toggleTutorFollow = async (tutorId, userId = 1, isFollow = true) =>
 export const sendTutorMessage = async (tutorId, content, userId = 1) => {
   try {
     const response = await api.post(
-      `/v1/users/me/relations/message/tutor/${tutorId}?user_id=${userId}`,
+      `/users/me/relations/message/tutor/${tutorId}?user_id=${userId}`,
       { content }
     );
     return response;
@@ -175,7 +175,7 @@ export const sendTutorMessage = async (tutorId, content, userId = 1) => {
 export const purchaseTutorService = async (tutorId, serviceId, userId = 1) => {
   try {
     const response = await api.post(
-      `/v1/users/me/assets/purchase?user_id=${userId}`,
+      `/users/me/assets/purchase?user_id=${userId}`,
       { tutor_id: tutorId, service_id: serviceId }
     );
     return response;

@@ -20,9 +20,9 @@ class UserProfileService:
             if not user_profile:
                 return None
             
-            # 获取学习统计数据（暂时返回空，待StatisticService修复后启用）
-            # study_stats = await self.statistic_service.get_user_study_stats(user_id)
-            study_stats = {"total_hours": Decimal('0.0')}
+            # 获取学习统计数据（从statistic_daily表计算）
+            total_hours = await self._calculate_total_study_hours(user_id)
+            study_stats = {"total_hours": total_hours}
             
             # 获取动态和徽章统计
             moment_count = await self._get_user_moment_count(user_id)
@@ -107,6 +107,19 @@ class UserProfileService:
             return 0
         except Exception:
             return 0
+    
+    async def _calculate_total_study_hours(self, user_id: int) -> Decimal:
+        """计算用户的总学习时长"""
+        try:
+            from sqlalchemy import text
+            result = self.db.execute(
+                text("SELECT COALESCE(SUM(total_study_hours), 0) FROM statistic_daily WHERE user_id = :user_id"),
+                {"user_id": user_id}
+            ).scalar()
+            return Decimal(str(result)) if result else Decimal('0.0')
+        except Exception as e:
+            print(f"计算总学习时长失败: {e}")
+            return Decimal('0.0')
 
     async def get_simple_user_info(self, user_id: int) -> Optional[UserSimpleInfoResponse]:
         """获取用户简易信息（仅名称、头像等非敏感信息，用于案例作者展示）"""

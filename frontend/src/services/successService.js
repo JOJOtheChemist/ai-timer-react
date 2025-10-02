@@ -14,7 +14,7 @@ import api from './api';
  */
 export const getHotCases = async (limit = 3, userId = 1) => {
   try {
-    const response = await api.get(`/v1/cases/hot?user_id=${userId}&limit=${limit}`);
+    const response = await api.get(`/cases/hot?user_id=${userId}&limit=${limit}`);
     return response;
   } catch (error) {
     console.error('获取热门案例失败:', error);
@@ -66,7 +66,7 @@ export const getCaseList = async (filters = {}) => {
     }
     
     const queryString = params.toString();
-    const url = `/v1/cases/?${queryString}`; // 注意添加了斜杠
+    const url = `/cases/?${queryString}`; // 注意添加了斜杠
     
     const response = await api.get(url);
     return response;
@@ -86,7 +86,7 @@ export const getCaseList = async (filters = {}) => {
  */
 export const searchCases = async (keyword, userId = 1) => {
   try {
-    const response = await api.get(`/v1/cases/search?user_id=${userId}&keyword=${encodeURIComponent(keyword)}`);
+    const response = await api.get(`/cases/search?user_id=${userId}&keyword=${encodeURIComponent(keyword)}`);
     return response;
   } catch (error) {
     console.error('搜索案例失败:', error);
@@ -104,7 +104,7 @@ export const searchCases = async (keyword, userId = 1) => {
  */
 export const getCaseDetail = async (caseId, userId = 1) => {
   try {
-    const response = await api.get(`/v1/cases/${caseId}?user_id=${userId}`);
+    const response = await api.get(`/cases/${caseId}?user_id=${userId}`);
     return response;
   } catch (error) {
     console.error('获取案例详情失败:', error);
@@ -120,7 +120,7 @@ export const getCaseDetail = async (caseId, userId = 1) => {
  */
 export const getCasePermission = async (caseId, userId) => {
   try {
-    const response = await api.get(`/v1/cases/${caseId}/permission?user_id=${userId}`);
+    const response = await api.get(`/cases/${caseId}/permission?user_id=${userId}`);
     return response;
   } catch (error) {
     console.error('获取案例权限失败:', error);
@@ -137,7 +137,7 @@ export const getCasePermission = async (caseId, userId) => {
  */
 export const getUserSimpleInfo = async (userId) => {
   try {
-    const response = await api.get(`/v1/users/${userId}/simple-info`);
+    const response = await api.get(`/users/${userId}/simple-info`);
     return response;
   } catch (error) {
     console.error('获取用户信息失败:', error);

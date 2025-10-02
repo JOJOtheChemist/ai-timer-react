@@ -46,7 +46,7 @@ export const getMomentList = async (params = {}) => {
     }
     
     const queryString = queryParams.toString();
-    const url = `/v1/moments?${queryString}`;
+    const url = `/moments?${queryString}`;
     
     const response = await api.get(url);
     return response;
@@ -72,7 +72,7 @@ export const searchMoments = async (keyword, page = 1, page_size = 10) => {
       user_id: 1
     });
     
-    const response = await api.get(`/v1/moments/search?${queryParams.toString()}`);
+    const response = await api.get(`/moments/search?${queryParams.toString()}`);
     return response;
   } catch (error) {
     console.error('搜索动态失败:', error);
@@ -87,7 +87,7 @@ export const searchMoments = async (keyword, page = 1, page_size = 10) => {
  */
 export const getPopularTags = async (moment_type = 'dynamic') => {
   try {
-    const response = await api.get(`/v1/moments/popular-tags?moment_type=${moment_type}&user_id=1`);
+    const response = await api.get(`/moments/popular-tags?moment_type=${moment_type}&user_id=1`);
     return response;
   } catch (error) {
     console.error('获取热门标签失败:', error);
@@ -114,7 +114,7 @@ export const publishDynamic = async (dynamicData) => {
       image_url: dynamicData.image_url || null
     };
     
-    const response = await api.post('/v1/moments?user_id=1', data);
+    const response = await api.post('/moments?user_id=1', data);
     return response;
   } catch (error) {
     console.error('发布动态失败:', error);
@@ -141,7 +141,7 @@ export const publishDryGoods = async (dryGoodsData) => {
       image_url: dryGoodsData.image_url || null
     };
     
-    const response = await api.post('/v1/moments?user_id=1', data);
+    const response = await api.post('/moments?user_id=1', data);
     return response;
   } catch (error) {
     console.error('发布干货失败:', error);
@@ -158,7 +158,7 @@ export const publishDryGoods = async (dryGoodsData) => {
  */
 export const toggleLike = async (momentId) => {
   try {
-    const response = await api.post(`/v1/moments/${momentId}/like?user_id=1`);
+    const response = await api.post(`/moments/${momentId}/like?user_id=1`);
     return response;
   } catch (error) {
     console.error('点赞操作失败:', error);
@@ -175,7 +175,7 @@ export const toggleLike = async (momentId) => {
  */
 export const getComments = async (momentId, page = 1, page_size = 20) => {
   try {
-    const response = await api.get(`/v1/moments/${momentId}/comments?user_id=1&page=${page}&page_size=${page_size}`);
+    const response = await api.get(`/moments/${momentId}/comments?user_id=1&page=${page}&page_size=${page_size}`);
     return response;
   } catch (error) {
     console.error('获取评论失败:', error);
@@ -191,7 +191,7 @@ export const getComments = async (momentId, page = 1, page_size = 20) => {
  */
 export const submitComment = async (momentId, content) => {
   try {
-    const response = await api.post(`/v1/moments/${momentId}/comments?user_id=1`, { content });
+    const response = await api.post(`/moments/${momentId}/comments?user_id=1`, { content });
     return response;
   } catch (error) {
     console.error('提交评论失败:', error);
@@ -206,7 +206,7 @@ export const submitComment = async (momentId, content) => {
  */
 export const shareMoment = async (momentId) => {
   try {
-    const response = await api.post(`/v1/moments/${momentId}/share?user_id=1`);
+    const response = await api.post(`/moments/${momentId}/share?user_id=1`);
     return response;
   } catch (error) {
     console.error('分享失败:', error);
@@ -221,7 +221,7 @@ export const shareMoment = async (momentId) => {
  */
 export const toggleBookmark = async (momentId) => {
   try {
-    const response = await api.post(`/v1/moments/${momentId}/bookmark?user_id=1`);
+    const response = await api.post(`/moments/${momentId}/bookmark?user_id=1`);
     return response;
   } catch (error) {
     console.error('收藏操作失败:', error);

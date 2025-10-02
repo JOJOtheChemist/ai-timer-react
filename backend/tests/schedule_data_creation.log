@@ -1,0 +1,44 @@
+Traceback (most recent call last):
+  File "/Users/yeya/FlutterProjects/ai-time/backend/tests/create_schedule_test_data.py", line 319, in main
+    create_test_statistics()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/yeya/FlutterProjects/ai-time/backend/tests/create_schedule_test_data.py", line 230, in create_test_statistics
+    cur.execute("DELETE FROM statistic WHERE user_id = %s", (TEST_USER_ID,))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedTable: relation "statistic" does not exist
+LINE 1: DELETE FROM statistic WHERE user_id = 1
+                    ^
+
+
+🚀 ======================================================================
+   创建 MainSchedulePage 测试数据
+========================================================================
+测试用户ID: 1
+
+📝 创建测试任务...
+  ✅ 创建任务: 考研复习 (ID: 10)
+  ✅ 创建任务: 英语阅读训练 (ID: 11)
+  ✅ 创建任务: 数学公式背诵 (ID: 12)
+  ✅ 创建任务: 日常作息 (ID: 13)
+  ✅ 创建任务: 运动健身 (ID: 14)
+  ✅ 创建任务: 兼职工作 (ID: 15)
+✅ 成功创建 6 个任务
+
+📅 创建今日时间表...
+  ✅ 创建时间段: 07:30-08:30 - 英语阅读训练 (ID: 6)
+  ✅ 创建时间段: 09:00-11:00 - 考研复习 (ID: 7)
+  ✅ 创建时间段: 11:00-13:00 - 数学公式背诵 (ID: 8)
+  ✅ 创建时间段: 14:00-16:00 - 考研复习 (ID: 9)
+  ✅ 创建时间段: 16:00-18:00 - 空闲 (ID: 10)
+✅ 成功创建 5 个时间段
+
+📊 创建统计数据...
+❌ 创建统计数据失败: relation "statistic" does not exist
+LINE 1: DELETE FROM statistic WHERE user_id = 1
+                    ^
+
+
+❌ 创建测试数据失败: relation "statistic" does not exist
+LINE 1: DELETE FROM statistic WHERE user_id = 1
+                    ^
+

@@ -1,19 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserTopNav from '../../components/Navbar/UserTopNav';
 import BottomNavBar from '../../components/Navbar/BottomNavBar';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import './MainSchedulePage.css';
+import scheduleService from '../../services/scheduleService';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
 const MainSchedulePage = () => {
-  const [expandedTasks, setExpandedTasks] = useState({ 1: true, 3: true });
+  const [expandedTasks, setExpandedTasks] = useState({});
   const [activeFilter, setActiveFilter] = useState("全部");
   const [showFullStats, setShowFullStats] = useState(false);
   const [quickInput, setQuickInput] = useState("");
-  const [selectedMoods, setSelectedMoods] = useState({ 2: 'focused', 1: 'happy' });
+  const [selectedMoods, setSelectedMoods] = useState({});
   const [aiRecommendations, setAiRecommendations] = useState({});
+  
+  // 真实数据状态
+  const [tasks, setTasks] = useState([]);
+  const [timeSlots, setTimeSlots] = useState([]);
+  const [scheduleOverview, setScheduleOverview] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const USER_ID = 1; // TODO: 从认证系统获取真实用户ID
 
   const toggleTaskExpansion = (taskId) => {
     setExpandedTasks(prev => ({
@@ -36,10 +46,18 @@ const MainSchedulePage = () => {
     }));
   };
 
-  const handleQuickAdd = () => {
+  const handleQuickAdd = async () => {
     if (quickInput.trim()) {
-      console.log('快速添加任务:', quickInput);
-      setQuickInput("");
+      try {
+        console.log('快速添加任务:', quickInput);
+        await scheduleService.quickAddTask(quickInput, USER_ID);
+        setQuickInput("");
+        // 重新加载任务列表
+        await loadTasks();
+      } catch (error) {
+        console.error('添加任务失败:', error);
+        alert('添加任务失败，请重试');
+      }
     }
   };
 
@@ -47,128 +65,116 @@ const MainSchedulePage = () => {
     setActiveFilter(filter);
   };
 
-  // 任务数据
-  const tasks = [
-    {
-      id: 1,
-      name: "考研复习",
-      type: "study",
-      category: "学习",
-      weeklyHours: 8.5,
-      isHighFrequency: true,
-      isOvercome: false,
-      expanded: true,
-      subTasks: [
-        { id: 11, name: "英语阅读训练", hours: 3, isHighFrequency: true, isOvercome: false },
-        { id: 12, name: "数学公式背诵", hours: 2, isHighFrequency: false, isOvercome: true },
-        { id: 13, name: "专业课复习", hours: 3.5, isHighFrequency: false, isOvercome: false }
-      ]
-    },
-    {
-      id: 2,
-      name: "日常作息",
-      type: "life",
-      category: "生活",
-      weeklyHours: 5,
-      isHighFrequency: false,
-      isOvercome: false,
-      expanded: false,
-      subTasks: []
-    },
-    {
-      id: 3,
-      name: "兼职工作",
-      type: "work",
-      category: "工作",
-      weeklyHours: 4,
-      isHighFrequency: false,
-      isOvercome: false,
-      expanded: true,
-      subTasks: [
-        { id: 31, name: "撰写报告", hours: 2.5, isHighFrequency: false, isOvercome: true },
-        { id: 32, name: "整理资料", hours: 1.5, isHighFrequency: true, isOvercome: false }
-      ]
-    },
-    {
-      id: 4,
-      name: "运动健身",
-      type: "life",
-      category: "生活",
-      weeklyHours: 2.5,
-      isHighFrequency: true,
-      isOvercome: false,
-      expanded: false,
-      subTasks: []
+  // 加载任务列表
+  const loadTasks = async () => {
+    try {
+      const response = await scheduleService.getTaskList({ user_id: USER_ID });
+      const apiTasks = response.tasks || [];
+      
+      // 转换API数据格式为组件需要的格式
+      const formattedTasks = apiTasks.map(task => ({
+        id: task.id,
+        name: task.name,
+        type: task.type,
+        category: task.category || task.type,
+        weeklyHours: parseFloat(task.weekly_hours) || 0,
+        isHighFrequency: task.is_high_frequency,
+        isOvercome: task.is_overcome,
+        expanded: false,
+        subTasks: (task.subtasks || []).map(subtask => ({
+          id: subtask.id,
+          name: subtask.name,
+          hours: parseFloat(subtask.hours) || 0,
+          isHighFrequency: subtask.is_high_frequency,
+          isOvercome: subtask.is_overcome
+        }))
+      }));
+      
+      setTasks(formattedTasks);
+    } catch (error) {
+      console.error('❌ 加载任务失败:', error);
+      setError('加载任务失败');
     }
-  ];
+  };
 
-  // 时间表数据
-  const timeSlots = [
-    {
-      id: 1,
-      time: "07:30-08:30",
-      task: "数学公式背诵",
-      type: "study",
-      category: "学习",
-      status: "completed",
-      isHighFrequency: false,
-      isOvercome: true,
-      isAIRecommended: false,
-      note: "完成了微积分前3章公式背诵，正确率85%"
-    },
-    {
-      id: 2,
-      time: "09:00-11:00",
-      task: "英语阅读训练",
-      type: "study",
-      category: "学习",
-      status: "in-progress",
-      isHighFrequency: true,
-      isOvercome: false,
-      isAIRecommended: false,
-      note: "完成2篇考研阅读，重点突破长难句分析",
-      aiTip: "每篇阅读控制在18分钟内，完成后花2分钟总结错题类型"
-    },
-    {
-      id: 3,
-      time: "11:00-13:00",
-      task: "午餐与休息",
-      type: "life",
-      category: "生活",
-      status: "pending",
-      isHighFrequency: false,
-      isOvercome: false,
-      isAIRecommended: true,
-      aiTip: "午餐后休息15分钟，可提高下午学习效率30%"
-    },
-    {
-      id: 4,
-      time: "14:00-16:00",
-      task: "专业课复习",
-      type: "study",
-      category: "学习",
-      status: "pending",
-      isHighFrequency: false,
-      isOvercome: false,
-      isAIRecommended: false,
-      note: "重点复习第5章，结合课堂笔记和习题"
-    },
-    {
-      id: 5,
-      time: "16:00-18:00",
-      task: null,
-      status: "empty",
-      isAIRecommended: false,
-      aiTip: "安排运动健身（根据你的高频任务）"
+  // 加载今日时间表
+  const loadTimeSlots = async () => {
+    try {
+      const response = await scheduleService.getTodayTimeSlots(USER_ID);
+      const apiSlots = response.time_slots || [];
+      
+      // 转换API数据格式
+      const formattedSlots = apiSlots.map(slot => ({
+        id: slot.id,
+        time: slot.time_range,
+        task: slot.task_name || '空闲时间',
+        type: slot.task_type || 'life',
+        category: slot.task_type || '空闲',
+        status: slot.status,
+        isHighFrequency: slot.is_high_frequency || false,
+        isOvercome: slot.is_overcome || false,
+        isAIRecommended: slot.is_ai_recommended,
+        note: slot.note,
+        aiTip: slot.ai_tip,
+        mood: slot.mood
+      }));
+      
+      setTimeSlots(formattedSlots);
+      setScheduleOverview(response.overview);
+      
+      console.log('✅ 数据加载成功:', {
+        任务数: formattedSlots.length,
+        概览: response.overview
+      });
+    } catch (error) {
+      console.error('❌ 加载时间表失败:', error);
+      setError('加载时间表失败');
     }
-  ];
+  };
 
-  // 统计数据
-  const stats = [
-    { title: "总学习时长", value: "8.5h", color: "text-study" },
-    { title: "高频任务完成", value: "4/5", color: "text-frequent" },
-    { title: "待克服任务", value: "1/2", color: "text-warning" },
-    { title: "AI推荐采纳率", value: "75%", color: "text-ai" }
+  // 组件加载时获取数据
+  useEffect(() => {
+    const loadAllData = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([loadTasks(), loadTimeSlots()]);
+      } catch (error) {
+        console.error('加载数据失败:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadAllData();
+  }, []);
+
+  // 计算统计数据（从真实API数据）
+  const stats = scheduleOverview ? [
+    { 
+      title: "总学习时长", 
+      value: `${scheduleOverview.total_study_hours || 0}h`, 
+      color: "text-study" 
+    },
+    { 
+      title: "已完成", 
+      value: `${scheduleOverview.completed_slots || 0}/${scheduleOverview.total_slots || 0}`, 
+      color: "text-frequent" 
+    },
+    { 
+      title: "完成率", 
+      value: `${(scheduleOverview.completion_rate || 0).toFixed(1)}%`, 
+      color: "text-warning" 
+    },
+    { 
+      title: "进行中", 
+      value: `${scheduleOverview.in_progress_slots || 0}`, 
+      color: "text-ai" 
+    }
+  ] : [
+    { title: "总学习时长", value: "0h", color: "text-study" },
+    { title: "已完成", value: "0/0", color: "text-frequent" },
+    { title: "完成率", value: "0%", color: "text-warning" },
+    { title: "进行中", value: "0", color: "text-ai" }
   ];
 
   // 图表数据
@@ -290,6 +296,49 @@ const MainSchedulePage = () => {
     }
     return `${baseStyle} bg-gray-100 text-gray-500 hover:bg-${mood === 'happy' ? 'yellow' : mood === 'focused' ? 'blue' : 'red'}-100`;
   };
+
+  // 加载状态
+  if (loading) {
+    return (
+      <div className="main-schedule-page bg-gray-50 font-sans text-gray-800">
+        <UserTopNav />
+        <main className="px-4 py-3 pb-24">
+          <div className="flex items-center justify-center h-screen">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-gray-600">加载中...</p>
+            </div>
+          </div>
+        </main>
+        <BottomNavBar />
+      </div>
+    );
+  }
+
+  // 错误状态
+  if (error) {
+    return (
+      <div className="main-schedule-page bg-gray-50 font-sans text-gray-800">
+        <UserTopNav />
+        <main className="px-4 py-3 pb-24">
+          <div className="flex items-center justify-center h-screen">
+            <div className="text-center">
+              <div className="text-red-500 text-5xl mb-4">⚠️</div>
+              <p className="text-gray-800 text-lg mb-2">加载失败</p>
+              <p className="text-gray-600 mb-4">{error}</p>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90"
+              >
+                重新加载
+              </button>
+            </div>
+          </div>
+        </main>
+        <BottomNavBar />
+      </div>
+    );
+  }
 
   return (
     <div className="main-schedule-page bg-gray-50 font-sans text-gray-800">

@@ -417,6 +417,20 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
+# 加载用户关系路由
+try:
+    from api.v1.endpoints.user import user_relations
+    app.include_router(
+        user_relations.router,
+        prefix="/api/v1/users",
+        tags=["用户关系"]
+    )
+    print("✅ 用户关系模块加载成功")
+except Exception as e:
+    print(f"⚠️  用户关系模块加载失败: {e}")
+    import traceback
+    traceback.print_exc()
+
 # ============= 全局异常处理 =============
 
 @app.exception_handler(Exception)

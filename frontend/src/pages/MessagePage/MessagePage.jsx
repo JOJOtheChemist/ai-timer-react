@@ -76,7 +76,7 @@ const MessagePage = () => {
       const detail = await messageService.getMessageDetail(message.id, USER_ID);
       setMessageDetail(detail);
       setSelectedMessage(message);
-      setShowDetailModal(true);
+    setShowDetailModal(true);
 
       // 如果消息未读，标记为已读
       if (message.is_unread) {
@@ -294,16 +294,16 @@ const MessagePage = () => {
                   ))}
                 </div>
                 {activeTab === 'tutor' && (
-                  <div className="feedback-actions">
+                <div className="feedback-actions">
                     {messageDetail.related_type === 'schedule' && (
-                      <button className="feedback-btn primary" onClick={() => handleFeedbackAction('查看时间表')}>
-                        查看时间表
-                      </button>
+                  <button className="feedback-btn primary" onClick={() => handleFeedbackAction('查看时间表')}>
+                    查看时间表
+                  </button>
                     )}
-                    <button className="feedback-btn secondary" onClick={() => handleFeedbackAction('回复导师')}>
-                      回复导师
-                    </button>
-                  </div>
+                  <button className="feedback-btn secondary" onClick={() => handleFeedbackAction('回复导师')}>
+                    回复导师
+                  </button>
+                </div>
                 )}
               </div>
 
@@ -313,14 +313,14 @@ const MessagePage = () => {
                   <h4 style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>历史对话</h4>
                   {messageDetail.context_messages.map((ctx, idx) => (
                     <div key={idx} className="feedback-item" style={{ marginBottom: '15px' }}>
-                      <div className="feedback-header">
+                <div className="feedback-header">
                         {ctx.title && <div className="feedback-title">{ctx.title}</div>}
                         <div className="feedback-time">{formatTime(ctx.create_time)}</div>
                       </div>
                       <div className="feedback-content" style={{ fontSize: '13px' }}>
                         {ctx.content}
-                      </div>
-                    </div>
+                </div>
+                </div>
                   ))}
                 </div>
               )}

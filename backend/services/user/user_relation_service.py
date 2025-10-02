@@ -65,10 +65,15 @@ class UserRelationService:
                 self.db, user_id, relation_type="tutor", limit=limit, offset=offset
             )
             
+            print(f"DEBUG: tutor_relations count = {len(tutor_relations)}")
+            for rel in tutor_relations:
+                print(f"DEBUG: relation - user_id={rel.user_id}, target_id={rel.target_id}")
+            
             # 获取导师详细信息
             tutors = []
             for relation in tutor_relations:
                 tutor_info = await self._get_tutor_info(relation.target_id)
+                print(f"DEBUG: tutor_info for id {relation.target_id} = {tutor_info}")
                 if tutor_info:
                     tutors.append(tutor_info)
             
@@ -83,6 +88,8 @@ class UserRelationService:
             )
         except Exception as e:
             print(f"获取关注导师列表失败: {e}")
+            import traceback
+            traceback.print_exc()
             return FollowedTutorResponse(tutors=[], total=0)
     
     async def get_recent_fans(
@@ -101,7 +108,8 @@ class UserRelationService:
             # 获取粉丝详细信息
             fans = []
             for relation in fan_relations:
-                user_info = await self._get_user_info(relation.follower_id)
+                # relation.user_id is the follower (fan)
+                user_info = await self._get_user_info(relation.user_id)
                 if user_info:
                     fans.append(user_info)
             
@@ -116,6 +124,8 @@ class UserRelationService:
             )
         except Exception as e:
             print(f"获取粉丝列表失败: {e}")
+            import traceback
+            traceback.print_exc()
             return RecentFanResponse(fans=[], total=0)
     
     async def follow_user(self, follower_id: int, target_user_id: int) -> bool:
@@ -155,33 +165,66 @@ class UserRelationService:
     
     async def _get_tutor_info(self, tutor_id: int) -> Optional[TutorInfo]:
         """获取导师信息"""
+        import sys
         try:
-            # 这里应该调用导师服务获取导师信息
-            # 暂时返回模拟数据，待导师服务实现后替换
-            return TutorInfo(
-                tutor_id=tutor_id,
-                name=f"导师{tutor_id}",
-                avatar=None,
-                title="资深导师",
-                is_verified=True
-            )
+            from sqlalchemy import text
+            query = """
+            SELECT id, username, avatar
+            FROM tutor
+            WHERE id = :tutor_id
+            """
+            print(f"DEBUG _get_tutor_info: Querying for tutor_id={tutor_id}", flush=True)
+            sys.stdout.flush()
+            result = self.db.execute(text(query), {"tutor_id": tutor_id}).fetchone()
+            print(f"DEBUG _get_tutor_info: result={result}", flush=True)
+            sys.stdout.flush()
+            
+            if result:
+                tutor_info = TutorInfo(
+                    tutor_id=result[0],
+                    name=result[1],
+                    avatar=result[2],
+                    title="资深导师",
+                    is_verified=True
+                )
+                print(f"DEBUG _get_tutor_info: returning {tutor_info}", flush=True)
+                sys.stdout.flush()
+                return tutor_info
+            else:
+                print(f"DEBUG _get_tutor_info: No result found for tutor_id={tutor_id}", flush=True)
+                sys.stdout.flush()
+                return None
         except Exception as e:
-            print(f"获取导师信息失败: {e}")
+            print(f"获取导师信息失败: {e}", flush=True)
+            sys.stdout.flush()
+            import traceback
+            traceback.print_exc()
             return None
     
     async def _get_user_info(self, user_id: int) -> Optional[UserInfo]:
         """获取用户信息"""
         try:
-            # 这里应该调用用户服务获取用户基础信息
-            # 暂时返回模拟数据，待用户服务完善后替换
-            return UserInfo(
-                user_id=user_id,
-                username=f"用户{user_id}",
-                nickname=f"昵称{user_id}",
-                avatar=None
-            )
+            from sqlalchemy import text
+            query = """
+            SELECT id, username, avatar
+            FROM "user"
+            WHERE id = :user_id
+            """
+            result = self.db.execute(text(query), {"user_id": user_id}).fetchone()
+            
+            if result:
+                return UserInfo(
+                    user_id=result[0],
+                    username=result[1],
+                    nickname=result[1],  # Use username as nickname if no separate nickname field
+                    avatar=result[2]
+                )
+            else:
+                return None
         except Exception as e:
             print(f"获取用户信息失败: {e}")
+            import traceback
+            traceback.print_exc()
             return None
 
     async def send_tutor_message(

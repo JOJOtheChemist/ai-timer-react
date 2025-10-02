@@ -1,4 +1,4 @@
-INFO:     Started server process [17867]
+INFO:     Started server process [42652]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
@@ -21,6 +21,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 ✅ 用户资产模块加载成功
 ✅ 用户消息设置模块加载成功
 ✅ 用户个人信息模块加载成功
+✅ 用户关系模块加载成功
 ============================================================
 📚 API文档地址:
    - Swagger UI: http://localhost:8000/docs
@@ -28,145 +29,104 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
    - OpenAPI:    http://localhost:8000/openapi.json
 ============================================================
 
-INFO:     127.0.0.1:61544 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61556 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61557 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61558 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61559 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61556 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61558 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61557 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61559 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61556 - "OPTIONS /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61558 - "OPTIONS /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61557 - "OPTIONS /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61559 - "OPTIONS /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61558 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61556 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61557 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61559 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61558 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61556 - "OPTIONS /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61557 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61559 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61563 - "OPTIONS /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61564 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61558 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61556 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61557 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61559 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61563 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61564 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61558 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61556 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61557 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61559 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61563 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61558 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61564 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61556 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61557 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61559 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61563 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61558 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61564 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61557 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61556 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61559 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61563 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61558 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61564 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61557 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61559 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61556 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61563 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61557 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61558 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61564 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61559 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61556 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61557 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61563 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61558 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dryGoods&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61564 - "GET /api/v1/moments?user_id=1&moment_type=dryGoods&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61608 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61610 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61609 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61611 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61613 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61612 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61608 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61611 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61609 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61610 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61612 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61613 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61608 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61611 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61610 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61609 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61612 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61608 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61613 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61611 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62252 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62253 - "OPTIONS /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62254 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62255 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62256 - "OPTIONS /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62257 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62252 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62253 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62254 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62255 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62256 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62257 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62252 - "OPTIONS /api/v1/messages?message_type=1&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62253 - "GET /api/v1/messages?message_type=1&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62254 - "OPTIONS /api/v1/messages?message_type=2&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62255 - "GET /api/v1/messages?message_type=2&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62256 - "GET /api/v1/messages?message_type=1&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62257 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62252 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62253 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62254 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62255 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62256 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62257 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62252 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62253 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62270 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62271 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62272 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62273 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62270 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62272 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62271 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62273 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62279 - "OPTIONS /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62280 - "OPTIONS /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62281 - "OPTIONS /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62282 - "OPTIONS /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62279 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62280 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62282 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62281 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62346 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62347 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62348 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62349 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62355 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62356 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62357 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62358 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62355 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dryGoods&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62356 - "GET /api/v1/moments?user_id=1&moment_type=dryGoods&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62355 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62356 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62363 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62364 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62355 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62364 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62363 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62356 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62372 - "GET /api/v1/moments?user_id=1&moment_type=dryGoods&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50912 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50913 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50914 - "OPTIONS /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50915 - "OPTIONS /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50912 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50913 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50914 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50915 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50950 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50951 - "OPTIONS /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50952 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50953 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50954 - "OPTIONS /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50955 - "OPTIONS /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50950 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50951 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50952 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50953 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50954 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50955 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50961 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50950 - "OPTIONS /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50951 - "OPTIONS /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50952 - "OPTIONS /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50953 - "OPTIONS /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50954 - "OPTIONS /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50955 - "OPTIONS /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50950 - "OPTIONS /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50951 - "OPTIONS /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50952 - "OPTIONS /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50953 - "OPTIONS /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50954 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50955 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50952 - "GET /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 200 OK
+DEBUG: tutor_relations count = 3
+DEBUG: relation - user_id=101, target_id=2
+DEBUG: relation - user_id=101, target_id=3
+DEBUG: relation - user_id=101, target_id=4
+DEBUG: tutor_info for id 2 = None
+DEBUG: tutor_info for id 3 = None
+DEBUG: tutor_info for id 4 = None
+INFO:     127.0.0.1:50951 - "GET /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50950 - "GET /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50953 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50954 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50955 - "GET /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 200 OK
+DEBUG: tutor_relations count = 3
+DEBUG: relation - user_id=101, target_id=2
+DEBUG: relation - user_id=101, target_id=3
+DEBUG: relation - user_id=101, target_id=4
+DEBUG: tutor_info for id 2 = None
+DEBUG: tutor_info for id 3 = None
+DEBUG: tutor_info for id 4 = None
+INFO:     127.0.0.1:50952 - "GET /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50951 - "GET /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50950 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50955 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50954 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50953 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50952 - "GET /api/v1/messages/unread-stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50951 - "GET /api/v1/messages?message_type=0&page=1&page_size=20&user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50950 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50955 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50954 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50953 - "OPTIONS /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50952 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50950 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50951 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50955 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51008 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51010 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51011 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51009 - "GET /api/v1/moments?user_id=1&moment_type=dynamic&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51008 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51009 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51010 - "GET /api/v1/schedule/time-slots?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51011 - "GET /api/v1/tasks?user_id=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51080 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51081 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51084 - "GET /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51080 - "GET /api/v1/users/me/assets?user_id=101 HTTP/1.1" 200 OK
+DEBUG: tutor_relations count = 3
+DEBUG: relation - user_id=101, target_id=2
+DEBUG: relation - user_id=101, target_id=3
+DEBUG: relation - user_id=101, target_id=4
+DEBUG: tutor_info for id 2 = None
+DEBUG: tutor_info for id 3 = None
+DEBUG: tutor_info for id 4 = None
+INFO:     127.0.0.1:51083 - "GET /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51082 - "GET /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51085 - "GET /api/v1/users/me/profile?user_id=101 HTTP/1.1" 200 OK
+DEBUG: tutor_relations count = 3
+DEBUG: relation - user_id=101, target_id=2
+DEBUG: relation - user_id=101, target_id=3
+DEBUG: relation - user_id=101, target_id=4
+DEBUG: tutor_info for id 2 = None
+DEBUG: tutor_info for id 3 = None
+DEBUG: tutor_info for id 4 = None
+INFO:     127.0.0.1:51084 - "GET /api/v1/users/me/relations/tutors?user_id=101&limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51081 - "GET /api/v1/users/me/relations/stats?user_id=101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51080 - "GET /api/v1/users/me/relations/fans?user_id=101&limit=4 HTTP/1.1" 200 OK

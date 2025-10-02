@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
-from core.dependencies import get_db, get_current_user
+from core.dependencies import get_db, get_current_user, get_current_user_dev
 from models.schemas.user import (
     RelationStatsResponse,
     FollowedTutorResponse,
@@ -18,13 +18,13 @@ router = APIRouter()
 
 @router.get("/me/relations/stats", response_model=RelationStatsResponse)
 async def get_user_relation_stats(
-    current_user: dict = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user_dev),
     db: Session = Depends(get_db)
 ):
     """获取用户关系统计（关注导师数、粉丝数）"""
     try:
         user_relation_service = UserRelationService(db)
-        stats = await user_relation_service.get_relation_stats(current_user["id"])
+        stats = await user_relation_service.get_relation_stats(current_user_id)
         
         return stats
     except Exception as e:
@@ -37,14 +37,14 @@ async def get_user_relation_stats(
 async def get_followed_tutors(
     limit: int = 3,
     offset: int = 0,
-    current_user: dict = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user_dev),
     db: Session = Depends(get_db)
 ):
     """获取用户关注的导师列表（紧凑版，默认前3条）"""
     try:
         user_relation_service = UserRelationService(db)
         tutors = await user_relation_service.get_followed_tutors(
-            current_user["id"], 
+            current_user_id, 
             limit=limit, 
             offset=offset
         )
@@ -60,14 +60,14 @@ async def get_followed_tutors(
 async def get_recent_fans(
     limit: int = 4,
     offset: int = 0,
-    current_user: dict = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user_dev),
     db: Session = Depends(get_db)
 ):
     """获取用户的最近粉丝列表（紧凑版，默认前4条）"""
     try:
         user_relation_service = UserRelationService(db)
         fans = await user_relation_service.get_recent_fans(
-            current_user["id"], 
+            current_user_id, 
             limit=limit, 
             offset=offset
         )

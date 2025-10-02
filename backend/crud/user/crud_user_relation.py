@@ -6,6 +6,8 @@ class CRUDUserRelation:
     def count_relations(self, db: Session, user_id: int, relation_type: str) -> int:
         """统计指定类型的关系数量（导师/粉丝）"""
         try:
+            from sqlalchemy import text
+            
             if relation_type == "tutor":
                 # 统计关注的导师数
                 query = """
@@ -30,10 +32,12 @@ class CRUDUserRelation:
             else:
                 return 0
             
-            result = db.execute(query, {"user_id": user_id}).fetchone()
-            return result.count if result else 0
+            result = db.execute(text(query), {"user_id": user_id}).fetchone()
+            return result[0] if result else 0
         except Exception as e:
             print(f"统计关系数量失败: {e}")
+            import traceback
+            traceback.print_exc()
             return 0
     
     def get_followed_by_type(
@@ -46,39 +50,54 @@ class CRUDUserRelation:
     ):
         """查询指定类型的关系列表"""
         try:
+            # Convert relation_type string to integer
+            type_map = {"tutor": 0, "fan": 1, "following": 2}
+            relation_type_int = type_map.get(relation_type, 0)
+            
             query = """
             SELECT 
                 id,
-                follower_id,
-                target_id,
+                user_id,
+                target_user_id,
                 relation_type,
                 create_time
-            FROM user_relations 
-            WHERE follower_id = :user_id AND relation_type = :relation_type
+            FROM user_relation 
+            WHERE user_id = :user_id AND relation_type = :relation_type
             ORDER BY create_time DESC
             LIMIT :limit OFFSET :offset
             """
             
-            results = db.execute(query, {
+            from sqlalchemy import text
+            results = db.execute(text(query), {
                 "user_id": user_id,
-                "relation_type": relation_type,
+                "relation_type": relation_type_int,
                 "limit": limit,
                 "offset": offset
             }).fetchall()
             
             relations = []
             for result in results:
-                relations.append(UserRelationData(
-                    id=result.id,
-                    follower_id=result.follower_id,
-                    target_id=result.target_id,
-                    relation_type=result.relation_type,
-                    create_time=result.create_time
+                class RelationData:
+                    def __init__(self, id, user_id, target_id, relation_type, create_time):
+                        self.id = id
+                        self.user_id = user_id
+                        self.target_id = target_id
+                        self.relation_type = relation_type
+                        self.create_time = create_time
+                
+                relations.append(RelationData(
+                    id=result[0],
+                    user_id=result[1],
+                    target_id=result[2],
+                    relation_type=result[3],
+                    create_time=result[4]
                 ))
             
             return relations
         except Exception as e:
             print(f"查询关系列表失败: {e}")
+            import traceback
+            traceback.print_exc()
             return []
     
     def get_fans_by_user_id(self, db: Session, user_id: int, limit: int, offset: int = 0):
@@ -87,17 +106,18 @@ class CRUDUserRelation:
             query = """
             SELECT 
                 id,
-                follower_id,
-                target_id,
+                user_id,
+                target_user_id,
                 relation_type,
                 create_time
-            FROM user_relations 
-            WHERE target_id = :user_id AND relation_type IN ('following', 'tutor')
+            FROM user_relation 
+            WHERE target_user_id = :user_id AND relation_type IN (1, 2)
             ORDER BY create_time DESC
             LIMIT :limit OFFSET :offset
             """
             
-            results = db.execute(query, {
+            from sqlalchemy import text
+            results = db.execute(text(query), {
                 "user_id": user_id,
                 "limit": limit,
                 "offset": offset
@@ -105,17 +125,27 @@ class CRUDUserRelation:
             
             relations = []
             for result in results:
-                relations.append(UserRelationData(
-                    id=result.id,
-                    follower_id=result.follower_id,
-                    target_id=result.target_id,
-                    relation_type=result.relation_type,
-                    create_time=result.create_time
+                class RelationData:
+                    def __init__(self, id, user_id, target_id, relation_type, create_time):
+                        self.id = id
+                        self.user_id = user_id
+                        self.target_id = target_id
+                        self.relation_type = relation_type
+                        self.create_time = create_time
+                
+                relations.append(RelationData(
+                    id=result[0],
+                    user_id=result[1],
+                    target_id=result[2],
+                    relation_type=result[3],
+                    create_time=result[4]
                 ))
             
             return relations
         except Exception as e:
             print(f"查询粉丝列表失败: {e}")
+            import traceback
+            traceback.print_exc()
             return []
     
     def get_relation(self, db: Session, follower_id: int, target_id: int):
